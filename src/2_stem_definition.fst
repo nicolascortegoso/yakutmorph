@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:          Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:          Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:      SPBGU, Saint-Petersburg State University
 %  Department:      Mathematical linguistics
-%  Document index:  2. Primary roots
-%  Description:     Read the lexicon
-%  Last review:     10/08/2023
+%  Document index:  2. Stem definition
+%  Description:     This section defines both primary and derived types of stems and also reads the lexicon.
+%  Last review:     19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -14,8 +14,11 @@
 #include "1_alfabet_definition.fst"
 
 
-%%% 2. STEM DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Defines stem classes and types.
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Nothing to remark.
 
 
 
@@ -40,11 +43,12 @@
 #cards# = <card-c> <card-v>
 
 
+
 % Primary prononimal stems ---------------------------------------------------------------------------------------------
 
-%separate derivated.
 
 #prons# = <prs> <dem> <dem-n> <dt1> <dt2> <int-c> <int-v> <int-p> <int-a> <ind> <ps> <col>
+
 
 
 % Primary nominal stems ------------------------------------------------------------------------------------------------
@@ -52,6 +56,7 @@
 #nouns-v# = <noun-v> <noun-2v> <noun-1v>
 #nouns-c# = <noun-c> <noun-2c> <noun-1c>
 #nouns# = #nouns-v# #nouns-c#
+
 
 
 % Primary proper noun stems --------------------------------------------------------------------------------------------
@@ -64,19 +69,24 @@
 
 #parts# = <part-c> <part-v> <part-ac> <part-av>
 
+
+
 % Primary particle stems -----------------------------------------------------------------------------------------------
 
 #modals# = <mod>
 
 
-% Primary postposition stems -----------------------------------------------------------------------------------------------
+
+% Primary postposition stems -------------------------------------------------------------------------------------------
 
 #posts# = <post-c> <post-v>
 
 
-% Primary auxiliary stems -----------------------------------------------------------------------------------------------
+
+% Primary auxiliary stems ----------------------------------------------------------------------------------------------
 
 #auxs# = <aux-c> <aux-v>
+
 
 
 % Primary onomatopeias stems -------------------------------------------------------------------------------------------
@@ -86,6 +96,7 @@
 
 
 % Primary verbal stems (intransitive and transitive) -------------------------------------------------------------------
+
 
 #intr-c# = <intr-3c> <intr-2c> <intr-1c> <intr-1cov> <intr-1cdi>
 #intr-j# = <intr-3j> <intr-2j> <intr-1j>
@@ -99,7 +110,6 @@
 #intransitives-c# = #intr-c# #intr-j# #intr-aj# #intr-yj# #intr-dij# #intr-r# #intr-l# #intr-n#
 #intransitives-v# = #intr-v#
 #intransitives# = #intransitives-c# #intransitives-v#
-
 
 #tran-c# = <tran-3c> <tran-2c> <tran-1c>
 #tran-j# = <tran-3j> <tran-2j> <tran-1j>
@@ -118,17 +128,15 @@
 #verbs# = #verbs-c# #verbs-v#
 
 
-% Aggregated primary stems (nominals) ----------------------------------------------------------------------------------
+
+% Aggregated primary stems ---------------------------------------------------------------------------------------------
 
 
 #noms-v# = #adjs-v# #nouns-v# #advs-v#
 #noms-c# = #adjs-c# #nouns-c# #advs-c#
 #noms# = #noms-v# #noms-c#
 
-
 #verbs-c-exc-j# = #intr-c# #intr-r# #intr-l# #intr-n# #tran-c# #tran-r# #tran-l#
-
-
 #verbals# = <verb-v> <verb-c> <verb-j> #intransitives# #transitives#
 
 
@@ -136,10 +144,8 @@
 
 
 
-% Aggregated primary stems (nominals) ----------------------------------------------------------------------------------
+% Reads the lexical roots from the lexicon files and classifies them accordingly to its lexical base stem type ---------
 
-
-% Reads the lexical roots from the lexicon files and classifies them accordingly to its lexical base stem type.
 
 $adverbs$ =       ([#letters#]+ {\^adv}:[#advs#])           || "lexicon.lex"
 $adjectives$ =    ([#letters#]+ {\^adj}:[#adjs#])           || "lexicon.lex"
@@ -155,9 +161,6 @@ $interjections$ = ([#letters#]+ {\^intj}:<intj>)            || "lexicon.lex"
 $postpositions$ = ([#letters#]+ {\^post}:[#posts#])         || "lexicon.lex"
 $auxiliaries$ =   ([#letters#]+ {\^aux}:[#auxs#])           || "lexicon.lex"
 $modals$ =        ([#letters#]+ {\^mod}:[#modals#])         || "lexicon.lex"
-
-
-
 
 $lex-roots$ = $adverbs$ | $adjectives$ | $nouns$ | $propnouns$ | $pronouns$ | $cardinals$ | $conjunctions$ | \
               $particles$ | $verbs$ | $onomatopoeias$ | $interjections$ | $postpositions$ | $auxiliaries$ | $modals$
@@ -184,7 +187,9 @@ $lex-roots$ = $adverbs$ | $adjectives$ | $nouns$ | $propnouns$ | $pronouns$ | $c
 #derived-stems# = #derived-adv# #derived-adj# #verbals# #voices# #aspect# #negation# #participle# #general# #special# #derived-nums# #gerunds# <imp>
 
 
+
 % Inflected stems ------------------------------------------------------------------------------------------------------
+
 
 #cases# = <case-v> <case-c> <acc> <dat> <case-p>
 #inflected-stems# = <plur> <psor> <psor-3> <ps-sg> <ps-pl> #cases# <ina> <in>
@@ -195,7 +200,6 @@ $lex-roots$ = $adverbs$ | $adjectives$ | $nouns$ | $propnouns$ | $pronouns$ | $c
 
 
 #stem-types# = #primary-roots# #derived-stems# #inflected-stems# <end>
-
 
 #syl-1# = <tran-1c> <tran-1j> <tran-1dij> <tran-1r> <tran-1l> <tran-1v> <tran-1di> <tran-1di2>
 

@@ -1,16 +1,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:          Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:          Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:      SPBGU, Saint-Petersburg State University
 %  Department:      Mathematical linguistics
 %  Document index:  1. Alphabet definition
-%  Description:     This section defines the characters that are going to be recognized by the transducer
-%  Last review:     10/08/2023
+%  Description:     This section defines the characters that are going to be recognized by the transducer.
+%  Last review:     19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% INFORMATION: All character are lower case, therefore, in analysis mode, strings must be converted to lowercase before input.
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% All character are lower case, therefore, in analysis mode, strings must be converted to lowercase before input.
+
+
 
 
 % 1.1 Vowel definition -------------------------------------------------------------------------------------------------

@@ -1,17 +1,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:     SPBGU, Saint-Petersburg State University
 %  Department:     Mathematical linguistics
 %  Document index: 5. Morphotactics
-%  Description:    Applies suffixes to the roots and filters out non-valid combinations
-%  Last review:    10/08/2023
+%  Description:    This section concatenates suffixes to lexical roots and filters out non-valid combinations.
+%  Last review:    19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % This section depends on inflectional affixes, that already includes derivational affixes.
 #include "4_inflectional_affixes.fst"
+
+
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Nothing to remark.
 
 
 
