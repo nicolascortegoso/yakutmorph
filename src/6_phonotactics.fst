@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:     SPBGU, Saint-Petersburg State University
 %  Department:     Mathematical linguistics
 %  Document index: 6. Phonotactics
-%  Description:    Describes and applies all phonotactic rules
+%  Description:    This section describes and applies phonological rules.
 %  Last review:    19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -14,7 +14,11 @@
 #include "5_morphotactics.fst"
 
 
-% IMPORTANT: UNDER DEVELOPMENT
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% THIS SECTION IS UNDER DEVELOPMENT.
 
 
 
@@ -73,14 +77,14 @@ $R-DIP1$ = {ох}:{г} ^-> ту __ <int-a>+ ( <C> | <C>н<O>н )
 $R-DIP$ = $R-DIP1$
 
 
-% Passive alteration before affixes -------------------------------------------------------------------------------------
+% Passive alteration before affixes ------------------------------------------------------------------------------------
 
 $R-PASS1$ = {<C>н}:{л<C>} ^-> л __ <pass>+ [#letters#]+
 $R-PASS2$ = <C>:<> ^-> лл __ <pass>+ [#letters#]+ [<part1> <part3-c> <gnd1> <gnd4>]
 $R-PASS$ = $R-PASS1$ || $R-PASS2$
 
 
-% Reciprocal alteration before affixes -------------------------------------------------------------------------------------
+% Reciprocal alteration before affixes ---------------------------------------------------------------------------------
 
 $R-RECP1$ = {<C>с}:с ^->  [#verbs-c#] __ <recp>+ [#letters#]+ <gnd1>
 $R-RECP$ = $R-RECP1$
@@ -125,7 +129,7 @@ $R-RECP$ = $R-RECP1$
 
 
 % Prevent regressive assimilation in voice affixes
-$R-VO01$ = {<C>н}:<D1> ^-> [<tran-1c> <tran-1l> <tran-1aj>]+ __ <refl>+ [#letters#]+ [^<part3-v>]   % The future ending in vowel is excluded
+$R-VO01$ = {<C>н}:<D1> ^-> [<tran-1c> <tran-1l> <tran-1aj>]+ __ <refl>+ [#letters#]+ [^<part3-v>]                       % The future ending in vowel is excluded
 $R-VO02$ = {<C>с}:с ^-> [<tran-1c> <tran-1l> <tran-1r>]+ __ <recp>+ [#letters#]+
 $R-VO$ = $R-VO01$ || $R-VO02$
 
@@ -305,7 +309,7 @@ $D-SOFT$ = ь:<> ^-> __ [#stem-types#]+ [#letters#]+
 
 % Since rules are applied in cascade, the order is important
 $ALTER-PRON$ = $R-DR$ || $R-BP$ || $R-DIP$
-$ALTER$ = $R-PO$ || $R-RECP$ || $ALTER-PRON$ || $R-ROOT$ || $R-PS$ || $R-RYJ$ || $I-CBYT$ || $R-ROVJ$                             %    %%%%|| $D-T$
+$ALTER$ = $R-PO$ || $R-RECP$ || $ALTER-PRON$ || $R-ROOT$ || $R-PS$ || $R-RYJ$ || $I-CBYT$ || $R-ROVJ$
 $BPREMOD1$ = $D-CG$ || $I-S$ || $R-NEG$ || $R-VO$ || $D-2SC$ || $R-DEVOICE$ || $change-consonant$ || $I-C$
 $BPREMOD2$ = $D-LO$ || $D-R$ || $R-RL$ || $R-LO$ || $R-DI$ || $D-G$
 $base-pre-modifications$ = $ALTER$ || $BPREMOD1$ || $BPREMOD2$ || $I-SOFT$ || $R-PASS$ || $R-RECP$ %|| $D-SOFT$

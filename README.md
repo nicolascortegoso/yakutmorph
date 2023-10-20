@@ -79,12 +79,12 @@ For example, the stem type &lt;verb-2c> describes a two-syllable verb stem endin
 Derivational affixes serve to create new words or modify the core meaning or grammatical category of a base word. These affixes are defined by specifying both their analysis and surface representations, which are separated by a colon. For instance, the affix ^verb1:&lt;D1>&lt;LO> is used to form verb stems, where &lt;D1> represents dental-alveolar consonants and &lt;LO> represents long back vowels.
 
 In addition to their analysis and surface representations, derivational affixes also specify:
-* the set of stems they can be attached to, such as {<noun-1c> <noun-2c>, <noun-1v>, ...};
-* the new type of stem that is formed as a result of the affix, for example, <verb1>.
+* the set of stems they can be attached to, such as {&lt;noun-1c> &lt;noun-2c>, &lt;noun-1v>, ...};
+* the new type of stem that is formed as a result of the affix, for example, &lt;verb1>.
 
 ### 4. Inflectional affixes
 
-Inflectional affixes are used to indicate grammatical information such as tense, number, gender, case, mood, or aspect. These affixes don't alter the core meaning or the part of speech of a word; instead, they express its grammatical characteristics.
+Inflectional affixes are used to indicate grammatical information such as case, number, person. These affixes don't alter the core meaning or the part of speech of a word; instead, they express its grammatical characteristics.
 
 The implementation of inflectional affixes is similar to that used for representing derivational affixes. The main difference is that their analysis form is preceded by the symbol +, instead of ^.
 
@@ -156,7 +156,7 @@ To execute the transducer, use the command 'fst-mor,' followed by the name of th
 fst-mor morph.a
 ```
 
-To recompile the transducer, use the 'fst-compiler-utf8' command followed by the file name '6_phonotactics.fst' (which includes the rest of the files) and a name for the compiled transducer:
+To recompile the transducer, navigate to the 'src' directory and use the 'fst-compiler-utf8' command inside the 'src' directory, followed by the file name '6_phonotactics.fst' (which includes the rest of the files) and a name for the compiled transducer:
 
 ```
 fst-compiler-utf8 6_phonotactics.fst morph.a

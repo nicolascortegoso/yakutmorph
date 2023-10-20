@@ -1,20 +1,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:     SPBGU, Saint-Petersburg State University
 %  Department:     Mathematical linguistics
 %  Document index: 3. Derivational affixes
-%  Description:    A definition of derivational affixes
+%  Description:    This section defines derivational affixes.
 %  Last review:    19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% This section depends on the primary root definitions, so the file is included.
+% This section depends on the stem definitions, so the file is included.
 #include "2_stem_definition.fst"
 
 
-%%% GERERAL DESCRIPION: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Derivational affixes are grouped by type in blocks of code.
 % Inside each block there are 3 columns:

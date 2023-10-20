@@ -1,20 +1,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Viktor Pavlovich
+%  Author:         Cortegoso-Vissio, Nicolas; Zakharov, Victor Pavlovich
 %  University:     SPBGU, Saint-Petersburg State University
 %  Department:     Mathematical linguistics
 %  Document index: 4. Inflectional affixes
-%  Description:    A definition of inflectional affixes
+%  Description:    This section defines inflectional affixes.
 %  Last review:    19/10/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% This section depends on the primary root definitions, that was already included on the derivational affixes
+% This section depends on the stems definitions, that was already included on the derivational affixes
 #include "3_derivational_affixes.fst"
 
 
-%%% GERERAL DESCRIPION: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Inflectional afixes are grouped by type in blocks of code.
 % Inside each block there are 3 columns:
