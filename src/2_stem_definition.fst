@@ -11,7 +11,7 @@
 
 
 % This section depends on the alphabet definition, so the file is included.
-#include "1_alfabet_definition.fst"
+#include "1_alphabet_definition.fst"
 
 
 

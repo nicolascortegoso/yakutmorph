@@ -50,13 +50,13 @@ $affixes$ = $derivational-affixes$ | $inflectional-affixes$
 
 $=C1$ = [#stem-types#]
 $joint$ = $=C1$ $=C1$
-$derivation-filter$ = [#letters#]+ ($joint$ [#letters#]+)* [#stem-types#]
+$concatenation-filter$ = [#letters#]+ ($joint$ [#letters#]+)* [#stem-types#]
 
 
 
 % Concatenates affixes to a lexical root and applies the filter --------------------------------------------------------
 
 
-$wordforms$ = $lex-roots$ ($affixes$)* || $derivation-filter$
+$wordforms$ = $lex-roots$ ($affixes$)* || $concatenation-filter$
 
 $morph$ = $wordforms$ <>:<end>
