@@ -22,15 +22,16 @@
 
 
 
-
-% 6.1 Base stem transformations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6.1 Lexical root transformations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Defines the symbols that may be represented as the wildcard *
 ALPHABET = [#letters#] [#stem-types#]
 
 
+
 % Root alterations for demonstrative pronouns --------------------------------------------------------------------------
+
 
 $R-DR0$ = у:а ^-> с __ бу <dem>+ [#letters#]+ [#cases# <plur> <psor>  <psor-3> <dt1> <dt2>] % for the strong form
 $R-DR1$ = {бу}:{ба} ^-> __ <dem>+ чч<O> <dt2>
@@ -49,6 +50,7 @@ $R-DR$ = $R-DR0$ || $R-DR1$ || $R-DR2$ || $R-DR3$ || $R-DR4$ || $R-DR5$ || $R-DR
          $R-DR10$ || $R-DR11$
 
 
+
 % Root alterations for personal pronouns -------------------------------------------------------------------------------
 
 $R-BP1$ = н:{йн} ^-> э __ <prs>+ [#letters#]+
@@ -63,12 +65,12 @@ $R-BP9$ = {<D1><O>}:<O> ^-> кини <prs>+ <D2><O>р <plur>+ __ <case-v>
 $R-BP10$ = {[и<C>]г[и<C>]}:<> ^-> __ <prs>+ иэн <ps>
 $R-BP11$ = и:<> ^-> (кин | м) __ <prs>+ иэн <ps>
 
-
 % Inserts an н before the adverbial affix
 $R-BP12$ = <prs>:{н<prs>} ^-> __ <prs> <D2><C>к <adv-c>
 
 $R-BP$ = $R-BP1$ || $R-BP2$ || $R-BP3$ || $R-BP4$ || $R-BP5$ || $R-BP6$ || $R-BP7$ || $R-BP8$ || $R-BP9$ || \
          $R-BP10$ || $R-BP11$ || $R-BP12$
+
 
 
 % Root alterations for interrogative pronouns --------------------------------------------------------------------------
@@ -77,34 +79,43 @@ $R-DIP1$ = {ох}:{г} ^-> ту __ <int-a>+ ( <C> | <C>н<O>н )
 $R-DIP$ = $R-DIP1$
 
 
+
+% 6.2 Base stem transformations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 % Passive alteration before affixes ------------------------------------------------------------------------------------
+
 
 $R-PASS1$ = {<C>н}:{л<C>} ^-> л __ <pass>+ [#letters#]+
 $R-PASS2$ = <C>:<> ^-> лл __ <pass>+ [#letters#]+ [<part1> <part3-c> <gnd1> <gnd4>]
 $R-PASS$ = $R-PASS1$ || $R-PASS2$
 
 
+
 % Reciprocal alteration before affixes ---------------------------------------------------------------------------------
+
 
 $R-RECP1$ = {<C>с}:с ^->  [#verbs-c#] __ <recp>+ [#letters#]+ <gnd1>
 $R-RECP$ = $R-RECP1$
 
 
+
 % Postpositions --------------------------------------------------------------------------------------------------------
+
 
 $R-PS01$ = {ли}:{н} ^-> __ н <noun-2c>+ [#letters#]+ [<psor> <psor-3> <case-c>]
 $R-PS$ = $R-PS01$
 
 
+
 % General base stem transformations ------------------------------------------------------------------------------------
+
 
 % Deletes uvular voiced fricative
 $D-CG$ = {<C>г}:<> ^-> [<B><V>] __ <O>р <case-c>
 
-
 % Inserts a sibilant before affixation
 $I-S$ = э:{эс} ^-> сүүрб __ <card-v>+ <C>с <ord>
-
 
 % Changes negative affix form before certain affixes
 $R-NEG1$ = {<C>м}:<B> ^-> __ <O> <neg>+ <D1> <part6>
@@ -116,23 +127,19 @@ $R-NEG6$ = м:<B> ^-> __ <O> <neg>+ <D1><O>р <cond>
 $R-NEG7$ = <O>:<> ^-> __ <neg>+ [#letters#]+ [<part3-c> <part3-v> <gnd3> <gnd4> <noun-v>]
 $R-NEG$ = $R-NEG1$ || $R-NEG2$ || $R-NEG3$ || $R-NEG4$ || $R-NEG5$ || $R-NEG6$ || $R-NEG7$
 
-
 % Change possessive
 $R-PO01$ = {лы}:н ^-> __ н <noun-2c>+ [#letters#]+ [<psor> <psor-3>]
 $R-PO02$ = {р[ыуо]}:н ^-> __ н <noun-2c>+ [#letters#]+ [<psor> <psor-3>]
 $R-PO$ = $R-PO01$ || $R-PO02$
 
-
 % Invert order in reciprocal before certain affixes
 $R-RECP1$ = {<C>с}:{с<C>} ^-> __ <recp>+ [#letters#]+ <part2>
 $R-RECP$ = $R-RECP1$
-
 
 % Prevent regressive assimilation in voice affixes
 $R-VO01$ = {<C>н}:<D1> ^-> [<tran-1c> <tran-1l> <tran-1aj>]+ __ <refl>+ [#letters#]+ [^<part3-v>]                       % The future ending in vowel is excluded
 $R-VO02$ = {<C>с}:с ^-> [<tran-1c> <tran-1l> <tran-1r>]+ __ <recp>+ [#letters#]+
 $R-VO$ = $R-VO01$ || $R-VO02$
-
 
 % Deletes open vowel in negative before certain affixes
 $D-OP1$ = <O>:<> ^-> __ <neg>+ [#letters#]+ [<part3-v> <part3-c>]
@@ -140,10 +147,8 @@ $D-OP2$ = <O>:<> ^-> __ <neg>+ <LC>һ<C> <cert>
 $D-OP3$ = <O>:<> ^-> __ <neg>+ <LO>р<O>й <will>
 $D-OP$ = $D-OP1$ || $D-OP2$ || $D-OP3$
 
-
 % Deletes final vowel in cardinals
 $D-V$ = [#vowels#]:<> ^-> __ <card-v>+ <C>с <ord>
-
 
 % Deletes closed vowels in two syllables stems when an affix in attached
 $D-2SC1$ = [#closed-vowels#]:<> ^-> [#consonants#] __ [#consonants#] [<intr-2c> <tran-2c>]+ <C>с <recp>
@@ -155,11 +160,9 @@ $D-2SC6$ = [#closed-vowels#]:<> ^-> ([#consonants#] - [скй]) __ [стн] [<in
 $D-2SC7$ = [#closed-vowels#]:<> ^-> [^ь] __ т <noun-2c>+ [#letters#]+ [<psor-3> <case-c>]                               % үрүт -> үрдэ
 $D-2SC$ = $D-2SC1$ || $D-2SC2$ || $D-2SC3$ || $D-2SC4$ || $D-2SC5$ || $D-2SC6$ || $D-2SC7$
 
-
 % Deletes closed vowels in two syllables stems when an affix in attached
 $D-C1$ = [#closed-vowels#]:<> ^-> [#closed-vowels#] __ [#noms-v#]+ й <verb-j>
 $D-C$ = $D-C1$
-
 
 % Devoices velar-uvular fricative before voiceless dental alveolar fricative
 $R-VC1$ = г:к ^-> __ с [<noun-2c> <adj-2c>]+ [#letters#]+ [<verb-v> <psor-3>]
@@ -172,12 +175,10 @@ $R-VC7$ = һ:с ^-> __ т [#verbs#]+ <C>г<O>н <adj-dc>
 $R-VC8$ = б:п ^-> __ [ст] [#verbs#]+ [#letters#]+ [<noun-v> <iter>]
 $R-DEVOICE$ = $R-VC1$ || $R-VC2$ || $R-VC3$ || $R-VC4$ || $R-VC5$ || $R-VC6$ || $R-VC7$ || $R-VC8$
 
-
 $R-CC1$ = н:т ^-> [хкст] __ [<intr-2c> <intr-2n> <tran-2c>]+
 $R-CC2$ = н:д ^-> й __ [<tran-1aj> <intr-2n> <tran-2c>]+
 $R-CC3$ = н:л ^-> л __ [<intr-2n>]+
 $change-consonant$ =  $R-CC1$ || $R-CC2$ || $R-CC3$
-
 
 % Insert close vowel between affixes
 $I-C1$ = <B>:{<C>б} ^-> <part6>+ __ <C>т <psor>
@@ -193,7 +194,6 @@ $I-C10$ = с:{с<C>} ^-> х __ <tran-2c>+ <B><C>т <part2>
 $I-C11$ = с:{с<C>} ^-> х __ <intr-2c>+ <B><O>т <part1>
 $I-C$ = $I-C1$ || $I-C2$ || $I-C3$ || $I-C4$ || $I-C5$ || $I-C6$ || $I-C7$ || $I-C8$ || $I-C9$ || $I-C10$ || $I-C11$
 
-
 % Shortens diphthong
 $R-DI1$ = [#closed-vowels#]:<> ^-> __ [#open-vowels#] [#consonants#] [<intr-1cov> <intr-1lov>]+ <O>р <cstv-r>
 $R-DI2$ = [#closed-vowels#]:<> ^-> __ [#open-vowels#] <tran-1di2>+ <D1> <caus-c>
@@ -205,7 +205,6 @@ $R-DI7$ = <C>:<> ^-> __ <pass>+ <DI> (х <part3-c> | <part3-v>)                 
 $R-DI8$ = <C>:<> ^-> __ <pass>+ <LO>чч<C> <part5>+                                                                      % FUTURE PART
 $R-DI9$ = и:<> ^-> б __ эс <card-c>+ [#letters#]+
 $R-DI$ = $R-DI1$ || $R-DI2$ || $R-DI3$ || $R-DI4$ || $R-DI5$ || $R-DI6$ || $R-DI7$ || $R-DI8$ || $R-DI9$
-
 
 % Shortens long open vowel
 $R-LO1$ = [#vowels#]:<> ^-> __ [#vowels#] [#intr-v# #tran-v#]+ <D1> [<cstv-c> <caus-c>]
@@ -219,7 +218,6 @@ $R-LO8$ = <LO>:<O> ^-> __ [<verb-v> <iter>]+ с <recp>
 $R-LO9$ = <LO>:<O> ^-> __ [<verb-v>]+ [схр] <adj-dc>
 $R-LO10$ = <LO>:<O> ^-> __ [<verb-v>]+ ннь<O>ҥ <adj-dc>
 $R-LO$ = $R-LO1$ || $R-LO2$ || $R-LO3$ || $R-LO4$ || $R-LO5$ || $R-LO6$ || $R-LO7$ || $R-LO8$ || $R-LO9$ || $R-LO10$
-
 
 % Deletes long open vowels
 $D-LO1$ = {[#open-vowels#] [#open-vowels#]}:<> ^-> __ [#verbs#]+ <O>ҕ<O>с <adj-dc>
@@ -237,7 +235,6 @@ $D-LO12$ = <LO>:<> ^-> __ [#verbs#]+ <LC> <gnd2>
 $D-LO$ = $D-LO1$ || $D-LO2$ || $D-LO3$ || $D-LO4$ || $D-LO5$ || $D-LO6$ || $D-LO7$ || $D-LO8$ || $D-LO9$ || \
          $D-LO10$ || $D-LO11$ || $D-LO12$
 
-
 % Deletes ending glide
 $D-G1$ = й:<> ^-> __ [<intr-3j> <intr-2j> <intr-2yj>]+ <D1> <cstv-c>
 $D-G2$ = й:<> ^-> __ [<tran-j> <tran-2j> <tran-1dij> <tran-2aj>]+ л<C>н <pass>
@@ -249,26 +246,21 @@ $D-G7$ = й:<> ^-> __ [#verb-j#]+ ҕ<O>й <adj-dj>
 $D-G8$ = й:<> ^-> __ [#verb-j#]+ [кр] <adj-dc>
 $D-G$ = $D-G1$ || $D-G2$ || $D-G3$ || $D-G4$ || $D-G5$ || $D-G6$ || $D-G7$ || $D-G8$
 
-
 % Deletes both ending glide and previous closed vowel
 $D-GC$ = {[#closed-vowels#] й}:<> ^-> __ [#verbs#]+ х<O>й <adj-dj>
-
 
 % Deletes ending nasal
 $D-N1$ = н:<> ^-> __ [#adjs#]+ мс<C>к <adj-dac>
 $D-N$ = $D-N1$
 
-
 % Special case will (must be before D-R)
 $R-ROVJ$ = {р<O>й}:{й<O>р} ^-> [#verbals# <refl> <neg> <caus-r>]+ <LO>? __ <will>+ [#letters#]+ [<predsg> <predpl> <plur>]
-
 
 % Modifies participles 1
 $D-R1$ = р:<> ^-> [#consonants#] [#verbals# #voices#]+ <O> __ <part1>+ [#letters#]+ [<predsg> <predpl>]
 $D-R2$ = р:<> ^-> __ <part1>+ [#letters#]+ [<predsg> <predpl>]
 $D-R3$ = р:<> ^-> [#verbals# <refl> <neg> <caus-r>]+ <LO>? й <O>__ <will>+ [#letters#]+ [<predsg> <predpl>]
 $D-R$ = $D-R1$ || $D-R2$ || $D-R3$
-
 
 % Modifies participles 2
 $R-R1$ = р:л ^-> [#consonants#] [#verbals# #voices#]+ <O> __ <part1>+ <D2><O>р <plur>
@@ -278,16 +270,13 @@ $R-R4$ = р:л ^-> <LO>? й<O> __ <will>+ <D2><O>р <plur>
 $R-R5$ = т:ч ^-> __ <part2>+ [#letters#]+ <gnd6>
 $R-RL$ = $R-R1$ || $R-R2$ || $R-R3$ || $R-R4$ || $R-R5$
 
-
 % Modifies affix <D1><C>й
 $R-DA1$ = <D1>:с ^-> [хмҥр] [<nom-3c> <nom-2c>]+ __ <C>й <verb-j>
-
 
 % Modifies stem when ар and byt is attached (it works as pregressive assimilation inside the root)
 $R-RYJ1$ = {рый}:{лдь} ^-> __ [<intr-2yj>]+ [#letters#]+ [<part1> <part2> <part3-c> <part5>]
 $R-RYJ2$ = {рыт}:{лдь} ^-> __ [<intr-2c>]+ [#letters#]+ [<part1> <part2> <part3-c>]
 $R-RYJ$ = $R-RYJ1$ || $R-RYJ2$
-
 
 % Special roots
 $R-ROOT1$ = с:{ннь} ^-> [^и] __ [<intr-1c> <tran-1c>]+ [#letters#]+ [<part1> <pass>]
@@ -295,10 +284,8 @@ $R-ROOT2$ = й:{ннь} ^-> оо __ <noun-1c>+ [#letters#]+ [<psor> <psor-3>]
 $R-ROOT3$ = {р[үи]н}:{ннь} ^-> с[үи] __ <noun-2c>+ [#letters#]+ [<psor> <psor-3>]
 $R-ROOT$ = $R-ROOT1$ || $R-ROOT2$ || $R-ROOT3$
 
-
 % Inserts vowels when byt is attached
 $I-CBYT$ = {лдь}:{лдь<C>} ^-> __ [<intr-2c> <intr-2yj>]+ <B><C>т <part2>
-
 
 % Miscellaneous
 $D-T$ = <D1>:<> ^-> <tran-1c>+ __ <O>р <caus-r>
@@ -307,7 +294,10 @@ $I-SOFT$ = д:{дь} ^-> л __ <intr-2c>+ <O>р <part1>
 $D-SOFT$ = ь:<> ^-> __ [#stem-types#]+ [#letters#]+
 
 
-% Since rules are applied in cascade, the order is important
+
+% Since phonetical rules are applied sequentially, the listing order is important
+
+
 $ALTER-PRON$ = $R-DR$ || $R-BP$ || $R-DIP$
 $ALTER$ = $R-PO$ || $R-RECP$ || $ALTER-PRON$ || $R-ROOT$ || $R-PS$ || $R-RYJ$ || $I-CBYT$ || $R-ROVJ$
 $BPREMOD1$ = $D-CG$ || $I-S$ || $R-NEG$ || $R-VO$ || $D-2SC$ || $R-DEVOICE$ || $change-consonant$ || $I-C$
@@ -316,7 +306,7 @@ $base-pre-modifications$ = $ALTER$ || $BPREMOD1$ || $BPREMOD2$ || $I-SOFT$ || $R
 
 
 
-% 6.2 Progressive assimilation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6.3 Progressive assimilation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 $PAT00$ = <D1>:т ^-> [#stem-types#]+ __ [#stem-types#][<end>]
@@ -362,7 +352,7 @@ $progressive-assimilation$ = $PAT$ || $PAL$ || $PAB$ || $PAH$ || $PAK$ || $PAG$
 
 
 
-% 6.3 Regressive assimilation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6.4 Regressive assimilation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Voiceless consonants changes to it voiced pair at the end of a stem before an affix beginning with a vowel
@@ -381,7 +371,7 @@ $regressive-assimilation$ = $RA01$ || $RA02$ || $RA03$ || $RA04$ || $RA05$ || $R
 
 
 
-% 6.4 Vowel harmony %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6.5 Vowel harmony %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 $BVH1$ = <O>:а ^-> ([#back-unrounded-vowels# <A>] .*) | (у .* ) | (о .* [<LC><C><DI>] .* ) __
@@ -414,7 +404,7 @@ $vowel-harmony$ = $back-harmony$ || $front-harmony$ || $diphthong-harmony$
 
 
 
-% 6.5 Special cases and exceptions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6.6 Special cases and exceptions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 $=FBV$ = [эө]
@@ -456,9 +446,11 @@ $post-alterations$ = $post-harmony-alterations$ || $R-H$
 % 6.6 Apply rules %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Delete base types from the surface representation
+% Delete base types from the surface representation --------------------------------------------------------------------
 ALPHABET = [#letters#] [#stem-types#]:<> <A>:<>
 $delete-base-types$ = .*
+
+
 
 $consonant-assimilation$ = $progressive-assimilation$ || $regressive-assimilation$
 $morph$ || $base-pre-modifications$ || $consonant-assimilation$ || $vowel-harmony$ || $post-alterations$ || $delete-base-types$
