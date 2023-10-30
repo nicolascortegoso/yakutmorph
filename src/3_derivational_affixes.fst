@@ -77,15 +77,15 @@ $partz$ = <>:[#verbs-c# #voices# <verb-c> <verb-j> <aux-c>]            {\^part1}
 % Gerund affixes -------------------------------------------------------------------------------------------------------
 
 
-$gndz$ =  <>:[#verbs-c# #voices# <verb-c> <verb-j> <cstv>]             {\^gnd1}:{<O>н}                 <>:<gnd1>      | \
-          <>:[#verbs-v# <verb-v> <iter> <part3-v>]                     {\^gnd1}:н                      <>:<gnd1>      | \
-          <>:[#verbs-c# <verb-c> <caus-c><caus-r><pass><refl><recp>]   {\^gnd2}:<O>                    <>:<gnd2>      | \
-          <>:[#verbs-v# <verb-v> <iter> <cstv-c> <cstv-r>]             {\^gnd2}:<LC>                   <>:<gnd2>      | \
-          <>:[<neg>]                                                   {\^gnd3}:{<C>н<O>}              <>:<gnd3>      | \
-          <>:[<neg>]                                                   {\^gnd3a}:{н<O>}                <>:<gnd3>      | \
-          <>:[#verbs-c# #voices# <verb-c> <verb-j> <neg>]              {\^gnd4}:{<LO>р<C>}             <>:<gnd4>      | \
-          <>:[#verbs-v# <verb-v>]                                      {\^gnd4}:{р<C>}                 <>:<gnd4>      | \
-          <>:[#verbs# #voices# <verb-v> <verb-c> <verb-j> <neg>]       {\^gnd5}:{<LO>т}                <>:<gnd5>      | \
+$gndz$ =  <>:[#verbs-c# #voices# <verb-c> <verb-j> <cstv>]             {\^gnd1}:{<O>н}                 <>:<gnd1>     | \
+          <>:[#verbs-v# <verb-v> <iter> <part3-v>]                     {\^gnd1}:н                      <>:<gnd1>     | \
+          <>:[#verbs-c# <verb-c> <caus-c><caus-r><pass><refl><recp>]   {\^gnd2}:<O>                    <>:<gnd2>     | \
+          <>:[#verbs-v# <verb-v> <iter> <cstv-c> <cstv-r>]             {\^gnd2}:<LC>                   <>:<gnd2>     | \
+          <>:[<neg>]                                                   {\^gnd3}:{<C>н<O>}              <>:<gnd3>     | \
+          <>:[<neg>]                                                   {\^gnd3a}:{н<O>}                <>:<gnd3>     | \
+          <>:[#verbs-c# #voices# <verb-c> <verb-j> <neg>]              {\^gnd4}:{<LO>р<C>}             <>:<gnd4>     | \
+          <>:[#verbs-v# <verb-v>]                                      {\^gnd4}:{р<C>}                 <>:<gnd4>     | \
+          <>:[#verbs# #voices# <verb-v> <verb-c> <verb-j> <neg>]       {\^gnd5}:{<LO>т}                <>:<gnd5>     | \
           <>:[<part2>]                                                 {\^gnd6}:{ч<O>}                 <>:<gnd6>
 
 
