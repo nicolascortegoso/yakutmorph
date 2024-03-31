@@ -49,6 +49,7 @@ $D-2SC06$ = [#closed-vowels#]:<> ^-> [гҕрб] __ с (<intr-2c><intr-2c> | <tra
                                      <C>л<C>н     <pass>             | \
                                      <C>?ҥ        <psor>             )          % imperative
 $D-2SC07$ = [#closed-vowels#]:<> ^-> [мнҥгтлһҕ] __ н (<intr-2c><intr-2c> | <intr-2nl><intr-2nl> | <tran-2c><tran-2c>) ( \
+                                     <C>л<C>н     <pass>             | \
                                      <O>р?        <part1>            | \
                                      <B><O>т      <part1-n>          | \
                                      <B><C>т      <part2>            | \
@@ -58,6 +59,7 @@ $D-2SC07$ = [#closed-vowels#]:<> ^-> [мнҥгтлһҕ] __ н (<intr-2c><intr-2c
                                      <LC>         <noun-dv>          | \
                                      <O>н         <gnd1>             | \
                                      <O>          <gnd2>             | \
+                                     <LO>р<C>     <gnd5>             | \
                                      <LO>т        <gnd6>             | \
                                      <C>ҥ         <psor>             )
 $D-2SC08$ = [#closed-vowels#]:<> ^-> һ __ т (<intr-2c><intr-2c> | <tran-2c><tran-2c>) ( \
@@ -103,9 +105,9 @@ $R-ANL$ = $R-ANL01$ || $R-ANL02$
 
 $R-ARL02$ = р:н         ^-> <begin> (са|му|о|ха) __ н <noun-2c><noun-2c> %%%%%[#symbols#]+ (<psor> | <psor-3> | <D2><LO>х <poss>)
 $R-ARL03$ = {рый}:{лдь} ^-> <begin> ыа __ <intr-2j><intr-2j> [#symbols#]+ \
-                        (<part1> | <part2> | <part3-c> | <iter> | <gnd1> | <acce>)
+                        (<part1> | <part2> | <part3-c> | <part5> | <iter> | <gnd1> | <gnd5> | <acce>)
 $R-ARL04$ = {рыт}:{лдь} ^-> <begin> сы __ <intr-2c><intr-2c> [#symbols#]+ \
-                        (<part1> | <part2> | <part3-c> | <part3-v> | <iter> | <gnd1> | <acce>)
+                        (<part1> | <part2> | <part3-c> | <part3-v> | <part5> | <iter> | <gnd1> | <gnd5> | <acce>)
 $R-ARL05$ = р:т         ^-> <begin> ө __ т <noun-2c><noun-2c> %%%%[#symbols#]+ (<psor> | <psor-3>)
 
 % $R-ARL01$ || This needs narrowed context, otherwise collides

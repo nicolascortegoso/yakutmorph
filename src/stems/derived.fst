@@ -73,7 +73,8 @@
 
 % Previcative, imperative and mood affixes.
 
-#general# = <predsg> <predpl> <psor> <poss>
+#predicatives# = <predsg> <predpl>
+#general# = #predicatives# <psor> <poss>
 #imperative# = <imp-v> <imp-c> <imp-r> <imp-n> <imp>
 #moods# = <cond> <cert> <pot> #imperative#
 #dem-prons# = <ka-v> <ka-c>

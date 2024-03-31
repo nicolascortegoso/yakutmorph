@@ -196,6 +196,9 @@ $advzn$ = \
 <>:[<ord> <coll-c>]                                                              {\^ADVZ9}:{<C>н}        <>:<adv-dc> | \
 <>:[<coll-v>]                                                                    {\^ADVZ10}:н            <>:<adv-col>
 
+% DEVELOPMENT NOTES:
+% - биирдиилээн is the diminutive form of биирдии?
+
 
 % 1.9 Adverbialization affixes from adverbial stems --------------------------------------------------------------------
 
@@ -356,7 +359,7 @@ $caus$ = \
 $cstv$ = \
 <>:[#intrs-v# #intrs-j# <intr-2r> <intr-1r> <verb-r> <verb-j>]                 {\^CSTV}:т                <>:<cstv-c> | \
 <>:[#intrs-c# #intrs-j# #intrs-r# #recps#]                                     {\^CSTV}:{<C>т}           <>:<cstv-c> | \
-<>:[#intrs-nl#]                                                                {\^CSTV}:{<D1><O>р}       <>:<cstv-r> | \
+<>:[#intrs-nl# <intr-1c>]                                                      {\^CSTV}:{<D1><O>р}       <>:<cstv-r> | \
 <>:[<intr-1c>]                                                                 {\^CSTV}:{<O>р}           <>:<cstv-r> | \
 <>:[<intr-1c> <intr-1r>]                                                       {\^CSTV}:{<DI>р}          <>:<cstv-r>
 
@@ -477,15 +480,15 @@ $aspc$ = \
 % p. 221].
 
 $partz$ = \
-<>:[#verbs-crjnl# #d-verbs-jrc# #voices#                <aux-c>]         {\^PART\_PRES}:{<O>р}          <>:<part1>   | \
-<>:[#verbs-v#     <verb-v>               #aspect#              ]         {\^PART\_PRES}:{<LC>р}         <>:<part1>   | \
-<>:[#verbs#       #d-verbs#     #voices# #aspect#       #auxs# ]         {\^NEG\^PART\_PRES}:{<B><O>т}  <>:<part1-n> | \
-<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs# ]         {\^PART\_PAST}:{<B><C>т}       <>:<part2>   | \
-<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs# ]         {\^PART\_FUT}:{<DI>х}          <>:<part3-c> | \
-<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs# ]         {\^PART\_FUT}:{<DI>}           <>:<part3-v> | \
-<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> <aux-c>]         {\^CONV\_COND}:{<D1><O>х}      <>:<part4>   | \
-<>:[#verbs-crjnl#               #voices#          <neg>        ]         {\^part5}:{<LO>чч<C>}          <>:<part5>   | \
-<>:[#verbs-v#     <verb-v>                                     ]         {\^part5}:{чч<C>}              <>:<part5>
+<>:[#verbs-crjnl# #d-verbs-jrc# #voices#                <aux-c>       ]  {\^PART\_PRES}:{<O>р}          <>:<part1>   | \
+<>:[#verbs-v#     <verb-v>               #aspect#                     ]  {\^PART\_PRES}:{<LC>р}         <>:<part1>   | \
+<>:[#verbs#       #d-verbs#     #voices# #aspect#       #auxs#        ]  {\^NEG\^PART\_PRES}:{<B><O>т}  <>:<part1-n> | \
+<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs#  <gnd1>]  {\^PART\_PAST}:{<B><C>т}       <>:<part2>   | \
+<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs#        ]  {\^PART\_FUT}:{<DI>х}          <>:<part3-c> | \
+<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> #auxs#        ]  {\^PART\_FUT}:{<DI>}           <>:<part3-v> | \
+<>:[#verbs#       #d-verbs#     #voices# #aspect# <neg> <aux-c>       ]  {\^CONV\_COND}:{<D1><O>х}      <>:<part4>   | \
+<>:[#verbs-crjnl#               #voices#          <neg>               ]  {\^NMLZ}:{<LO>чч<C>}           <>:<part5>   | \
+<>:[#verbs-v#     <verb-v>                                            ]  {\^NMLZ}:{чч<C>}               <>:<part5>
 
 
 % 2.9 Adverbial participles --------------------------------------------------------------------------------------------
@@ -514,10 +517,10 @@ $gndz$ =  \
 <>:[<neg>                                                                  ] {\^CONV3}:{<C>н<O>}         <>:<gnd3>   | \
 <>:[<neg>                                                                  ] {\^CONV3a}:{н<O>}           <>:<gnd3>   | \
 <>:[#verbs#                                                                ] {\^NEG\^CONV4}:{б<O>кк<O>}  <>:<gnd4>   | \
-<>:[#verbs-crjnl# #d-verbs-jrc# #voices#           <neg>                   ] {\^CONV5}:{<LO>р<C>}        <>:<gnd5>   | \
+<>:[#verbs-crjnl# #d-verbs-jrc# #voices#           <neg>            #auxs# ] {\^CONV5}:{<LO>р<C>}        <>:<gnd5>   | \
 <>:[#verbs-v#     <verb-v>                                                 ] {\^CONV5}:{р<C>}            <>:<gnd5>   | \
 <>:[#verbs#       #d-verbs#     #voices#           <neg>                   ] {\^CONV6}:{<LO>т}           <>:<gnd6>   | \
-<>:[<part2>                                                                ] {\^CONV67}:{ч<O>}           <>:<gnd7>
+<>:[<part2>                                                                ] {\^CONV7}:{ч<O>}            <>:<gnd7>
 
 
 
