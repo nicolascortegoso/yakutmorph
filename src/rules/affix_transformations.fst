@@ -32,7 +32,7 @@
 % [03] (сөбүлээ^V^NEG^COND -> сөбүлээбэтэх)
 
 $R-NEG01$ = {<C>м}:<B> ^-> __ <O> <neg><neg> (<D1><O>х <part4> | [#symbols#]+ <past> | <D1><C>н <imp-n>)
-$R-NEG02$ = <O>:<>     ^-> __ <neg><neg> (<C>н<O> <gnd3> | <DI>х <part3-c> | <LO>р<O>й <pot> | <LC> <imp-v> | \
+$R-NEG02$ = <O>:<>     ^-> __ <neg><neg> (<C>?н<O> <gnd3> | <DI>х <part3-c> | <LO>р<O>й <pot> | <LC> <imp-v> | \
                        <DI>х <imp-c> | <LO>р <imp-r>)
 $R-NEG03$ = м:<B>      ^-> __ <O> <neg><neg> (<D1><O>х <part4> | [#symbols#]+ <past> | <D1><C>н <imp-n>)
 
@@ -64,12 +64,15 @@ $R-REFL$ = $R-REFL01$ %|| $R-REFL02$
 $D-PASS01$ = н:<>      ^-> л [#verbs-crjnl# #d-verbs-jrc# <aux-c>]+ л<C>__  <pass><pass>
 $R-PASS01$ = {<C>н}:л ^-> [<tran-j>  #trans-l# <tran-2j> <tran-1j> <aux-c>]+ л __  <pass><pass>
 $R-PASS02$ = {<C>н}:л ^-> [<tran-2r> <tran-1r> <tran-1c> <tran-2c> <tran-c> #voices#] <C>л __ <pass><pass> ( \
-                      <O>р?     <part1>                                                                    | \
-                      <B><O>т   <part1-n>                                                                  | \
-                      <B><C>т   <part2>                                                                    | \
-                      <DI>      <part3-v>                                                                  | \
-                      <DI>х     <part3-c>                                                                  | \
-                      <O>н      <gnd1>                                                                     )
+                      <C>м           <neg>                                                                 | \
+                      <O>р?          <part1>                                                               | \
+                      <B><O>т        <part1-n>                                                             | \
+                      <B><C>т        <part2>                                                               | \
+                      <DI>           <part3-v>                                                             | \
+                      <DI>х          <part3-c>                                                             | \
+                      <LO>чч<C>      <part5>                                                               | \
+                      <O>н           <gnd1>                                                                | \
+                      <LO>р<C>       <gnd5>                                                                )
 $R-PASS03$ = {<C>н}:л ^-> <begin> [#consonants#][#vowels#][#vowels#]?[#consonants#] \
                       (<tran-1c><tran-1c> | <tran-1j><tran-1j>) <C>л __ \
                           <pass><pass> (<D1><O> <past> | <O>р? <part1>)

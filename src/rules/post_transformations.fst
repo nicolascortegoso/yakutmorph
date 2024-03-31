@@ -62,7 +62,8 @@ $D-EMP$ = $D-EMP01$ || $D-EMP02$ || $D-EMP03$
 
 % [01] диэ^V^PART_PRES -> диир
 
-$D-DIP$ = {иэ}:<> ^-> <begin> [#consonants#] __ <tran-1v><tran-1v> [#symbols#]+ <part1>
+$D-DIP$ = {иэ}:<> ^-> <begin> [#consonants#] __ (<tran-1v><tran-1v> | <tran-1-d-v><tran-1-d-v>) \
+                      [#symbols#]+ (<part1> | <gnd2>)
 
 
 % [R-SLT] Exceptions ---------------------------------------------------------------------------------------------------

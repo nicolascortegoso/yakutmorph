@@ -42,6 +42,7 @@
 кулан<adj-2c>
 уран<adj-2c>
 маҥан<adj-2c>
+эҥин<adj-2c>
 туйгун<adj-2c>
 дохсун<adj-2c>
 ньулуун<adj-2c>
@@ -587,6 +588,7 @@
 һуу<intj-d>
 түксү<intj-d>
 һа<intj>
+ооксии<intj>
 һи<intj>
 һаай<intj>
 һууй<intj>
@@ -609,6 +611,7 @@
 иин<intr-1c>
 үн<intr-1c>
 хаамп<intr-1c>
+туп<intr-1c>
 көп<intr-1c>
 ыр<intr-1c>
 аас<intr-1c>
@@ -841,6 +844,7 @@
 сэмсээ<intr-2v>
 өрөө<intr-2v>
 мөлтөө<intr-2v>
+аргыстас<intr-c>
 сундулус<intr-c>
 кулурдат<intr-c>
 айахтат<intr-c>
@@ -992,6 +996,7 @@
 аан<noun-1c>
 хаан<noun-1c>
 сан<noun-1c>
+иин<noun-1c>
 киин<noun-1c>
 мин<noun-1c>
 слон<noun-1c>
@@ -1283,6 +1288,7 @@
 сүрүн<noun-2c>
 күһүн<noun-2c>
 дьүһүн<noun-2c>
+төлөн<noun-2c>
 өтөн<noun-2c>
 ыскаап<noun-2c>
 быраап<noun-2c>
@@ -1318,6 +1324,7 @@
 куйуур<noun-2c>
 чокуур<noun-2c>
 тулуур<noun-2c>
+хомуур<noun-2c>
 хотуур<noun-2c>
 луохтуур<noun-2c>
 самыыр<noun-2c>
@@ -1493,6 +1500,7 @@
 марай<noun-2j>
 сарай<noun-2j>
 хахай<noun-2j>
+уораҕай<noun-2j>
 еврей<noun-2j>
 эдьиий<noun-2j>
 орой<noun-2j>
@@ -2236,6 +2244,7 @@
 виктор<propn-c>
 асср<propn-c>
 петр<propn-c>
+таймылыыр<propn-c>
 сүөдэр<propn-c>
 данияр<propn-c>
 күкүр<propn-c>
@@ -2269,6 +2278,7 @@
 октябрь<propn-c>
 сэргэйгэ<propn-c>
 бугуҥ<propn-c>
+эдьигээҥ<propn-c>
 москва<propn-rv>
 семен<propn-sc>
 иванов<propn-uc>
@@ -2472,6 +2482,7 @@
 туһан<tran-2c>
 кыһан<tran-2c>
 бэтин<tran-2c>
+тэһин<tran-2c>
 хойун<tran-2c>
 умун<tran-2c>
 отун<tran-2c>
@@ -2663,6 +2674,7 @@
 бөлөнүй<tran-j>
 туругур<tran-r>
 маарыннаа<tran-v>
+аалыҥнаа<tran-v>
 убураа<tran-v>
 ураатаа<tran-v>
 атаҕастаа<tran-v>

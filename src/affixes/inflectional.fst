@@ -46,7 +46,7 @@ $plur$ = <>:[#noms# #d-nouns# #d-adj# <poss>                                    
              #voices#                                                               \    % voice markers
              <cond> <cert> <pot> <imp-n>                                            \    % mood markers
              #participles#                                                          \    % participles
-             <gnd3> <gnd4> <gnd5>                                                   \    % converbs
+             <gnd1> <gnd3> <gnd4> <gnd5> <gnd6>                                     \    % converbs
              #parts#                                                                \    % particles
              <plur-s>                                                               \    % special plural
              ]                                                  {\+PL}:{<D2><O>р}                        <>:<plur>   | \
@@ -61,6 +61,8 @@ $plur$ = <>:[#noms# #d-nouns# #d-adj# <poss>                                    
 % - adverbial participles change by person and number [§435].
 % - adverbial participles -ымына can take personal affixes [§451].
 % - adverbial participles -аары can take personal affixes [§457].
+% - ^CONV1 can take predicate affixes [§441].
+
 
 % Notes:
 % - To ease readability, stem types common to the first and second person, both singular and plural, are grouped
@@ -73,6 +75,7 @@ $plur$ = <>:[#noms# #d-nouns# #d-adj# <poss>                                    
            #auxs#                                                      \    % auxiliaries
            <cert> <pot> <cond>                                         \    % mood markers
            #voices#                                                    \    % voice markers
+           <gnd1> <gnd6>                                               \    % converbs
            #noms# <poss>                                               \    % nominals
            <co-v>                                                      \    % pronouns
            #cards# #colls# <ord> <appr>                                \    % numerals (cardinal, ordinal, approximate)
@@ -177,18 +180,18 @@ $past$ = \
 % - та (&all) demonstrative pronouns retain the locative case [§318].
 
 $s-case$ = \
-<>:[#g-com#   #propns#   #participles#                    ]                    {\+COMIT}:{<D2><LC>н}     <>:<case-c> | \
-<>:[#g-par#   #propns#   #participles#                    ]                    {\+PRTV}:{<D1><O>}        <>:<case-v> | \
-<>:[#g-acc-c# #propns-c# #participles-c# <adv-dc> <coll-c>]                    {\+ACC}:<C>               <>:<acc>    | \
-<>:[#g-acc-v# #propns-v# <part3-v>       <adv-dv>         ]                    {\+ACC}:{н<C>}            <>:<case-v> | \
-<>:[#g-dat#   #propns#   #participles#   #d-adv#          ]                    {\+DAT}:{<V><O>}          <>:<dat>    | \
-<>:[#g-abl-c# #propns-c# #participles-c# <adv-dc>         ]                    {\+ABL}:{т<O>н}           <>:<case-c> | \
-<>:[#g-abl-v# #propns-v# <part3-v>       <adv-dv>         ]                    {\+ABL}:{тт<O>н}          <>:<case-c> | \
-<>:[#g-ins-c# #propns-c# #participles-c# <adv-dc>         ]                    {\+INST}:{<C>н<O>н}       <>:<case-c> | \
-<>:[#g-ins-v# #propns-v# <part3-v>       <adv-dv>         ]                    {\+INST}:{н<O>н}          <>:<case-c> | \
+<>:[#g-com#   #propns#   #participles#                     <adj-dv>]           {\+COMIT}:{<D2><LC>н}     <>:<case-c> | \
+<>:[#g-par#   #propns#   #participles#                     <adj-dv>]           {\+PRTV}:{<D1><O>}        <>:<case-v> | \
+<>:[#g-acc-c# #propns-c# #participles-c# <adv-dc> <coll-c>         ]           {\+ACC}:<C>               <>:<acc>    | \
+<>:[#g-acc-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+ACC}:{н<C>}            <>:<case-v> | \
+<>:[#g-dat#   #propns#   #participles#   #d-adv#           <adj-dv>]           {\+DAT}:{<V><O>}          <>:<dat>    | \
+<>:[#g-abl-c# #propns-c# #participles-c# <adv-dc>                  ]           {\+ABL}:{т<O>н}           <>:<case-c> | \
+<>:[#g-abl-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+ABL}:{тт<O>н}          <>:<case-c> | \
+<>:[#g-ins-c# #propns-c# #participles-c# <adv-dc>                  ]           {\+INST}:{<C>н<O>н}       <>:<case-c> | \
+<>:[#g-ins-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+INST}:{н<O>н}          <>:<case-c> | \
 <>:<dem>                                                                       {\+INST}:{<O>н}           <>:<case-c> | \
-<>:[#g-cmp#   #propns#   #participles#                    ]                    {\+COMP}:{<D1><LO>ҕ<O>р}  <>:<case-c> | \
-<>:[<dem> <int-c>                                         ]                    {\+LOC}:{<D1><O>}         <>:<loc>
+<>:[#g-cmp#   #propns#   #participles#                     <adj-dv>]           {\+COMP}:{<D1><LO>ҕ<O>р}  <>:<case-c> | \
+<>:[<dem> <int-c>                                                  ]           {\+LOC}:{<D1><O>}         <>:<loc>
 
 
 % 1.6 Personal possessive affixes --------------------------------------------------------------------------------------
@@ -198,8 +201,8 @@ $s-case$ = \
 #g-verb-pl#   = <part1> <part1-n> <part2> <part3-c> <part4> <part5> #voices#
 
 #g-nom-sg-cj# = #noms-cj# <noun-dc> #d-adj-cj# #propns-c# <card-c> <ord>        <post-c>  <poss> <part-c> <adv-col>
-#g-nom-sg-v# =  #noms-v#  <noun-dv> <adj-dv>   #propns-v# <card-v>       <appr> <post-v>         <part-v>
-#g-nom-pl# =    #noms#    #d-nouns# #d-adj#    #propns#   #cards#  <ord> <appr> #posts#   <poss> #parts#  <adv-col>
+#g-nom-sg-v# =  #noms-v#  <noun-dv> <adj-dv>   #propns-v# <card-v>       <appr> <post-v>         <part-v>           <co-v>
+#g-nom-pl# =    #noms#    #d-nouns# #d-adj#    #propns#   #cards#  <ord> <appr> #posts#   <poss> #parts#  <adv-col> <co-v>
 
 $psor$ = \
 <>:[#g-verb-sg-c# #g-nom-sg-cj# <plur>                       <int-p>]          {\+POSS\.1SG}:{<C>м}      <>:<psor>   | \
