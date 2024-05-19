@@ -32,12 +32,14 @@
 % <DI> diphthong
 
 
+
 % [R-UOV] Unstressed back low rounded vowel (о) ------------------------------------------------------------------------
 
-$R-UOV01$ = <O>:а     ^-> [<noun-uc> <noun-uj> <noun-uv> <propn-uc> <propn-uv>] .* __
+$R-UOV01$ = <O>:а     ^-> [<noun-uc> <noun-2uc> <noun-uj> <noun-uv> <propn-uc> <propn-uv>] .* __
 $R-UOV02$ = <LO>:{аа} ^-> [<noun-uc> <noun-uj> <noun-uv> <propn-uc> <propn-uv>] .* __
 
 $R-UOV$ = $R-UOV01$ || $R-UOV02$
+
 
 
 % [R-SOV] Stressed back low rounded vowel (о) --------------------------------------------------------------------------
@@ -52,6 +54,7 @@ $R-SOV04$ = <LC>:уу    ^-> [<noun-sc> <noun-sj> <noun-sv> <adj-sc> <adj-sj> <a
 $R-SOV$ = $R-SOV01$ || $R-SOV02$ || $R-SOV03$ || $R-SOV04$
 
 
+
 % [R-ROV] Open vowels --------------------------------------------------------------------------------------------------
 
 $R-ROV01$ = <O>:а         ^-> (е .* о .* | у .* е .* ) __
@@ -60,6 +63,7 @@ $R-ROV03$ = <LO>:{аа}     ^-> (е .* о .* | у .* е .* ) __
 $R-ROV04$ = <LO>:{ээ}     ^-> а .* е .* __
 
 $R-ROV$ = $R-ROV01$ || $R-ROV02$ || $R-ROV03$ || $R-ROV04$
+
 
 
 % [R-RCV] Closed vowels ------------------------------------------------------------------------------------------------
@@ -74,10 +78,11 @@ $R-RCV06$ = <LC>:{ии}     ^-> е .*  __
 $R-RSV$ = $R-RCV01$ || $R-RCV02$ || $R-RCV03$ || $R-RCV04$ || $R-RCV05$ || $R-RCV06$
 
 
+
 % [R-RSC] Special combinations -----------------------------------------------------------------------------------------
 
-$R-RSC01$ = <C>:ы         ^-> (о .* и .* | и .* о .*) __
-$R-RSC02$ = <LC>:{ыы}     ^-> (о .* и .* | и .* о .*) __
+$R-RSC01$ = <C>:ы         ^-> ([уо] .* и .* | и .* [уо] .*) __
+$R-RSC02$ = <LC>:{ыы}     ^-> ([уо] .* и .* | и .* [уо] .*) __
 
 $R-RSC$ = $R-RSC01$ || $R-RSC02$
 
@@ -89,4 +94,4 @@ $R-RSC$ = $R-RSC01$ || $R-RSC02$
 % More specific rules are applied first to prevent early matching with more general ones.
 
 % || $R-RSV$
-$special-vowel-harmony$ = $R-UOV$ || $R-SOV$ || $R-ROV$ || $R-RSC$
+$special-vowel-harmony$ = $R-UOV$ %%|| $R-SOV$ || $R-ROV$ || $R-RSC$

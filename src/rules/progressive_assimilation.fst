@@ -48,6 +48,7 @@ $R-PAT06$ = <D1>:н ^-> [#nasals#] [#stem-types#]+ __
 $R-PAT$ = $R-PAT01$ || $R-PAT02$ || $R-PAT03$ || $R-PAT04$ || $R-PAT05$ || $R-PAT06$
 
 
+
 % [R-PAL] Front consonants (context 2) ---------------------------------------------------------------------------------
 
 % Occurs at the beginning of affixes that start with л [§114]:
@@ -66,6 +67,7 @@ $R-PAL05$ = <D2>:н ^-> [#nasals#] [#stem-types#]+ __
 $R-PAL$ = $R-PAL01$ || $R-PAL02$ || $R-PAL03$ || $R-PAL04$ || $R-PAL05$
 
 
+
 % [R-PAB] Bilabials ----------------------------------------------------------------------------------------------------
 
 % Occurs mainly in affixes -м/-ма (&all), -бын (&all) и -быт (&all) [§113].
@@ -75,6 +77,7 @@ $R-PAB02$ = <B>:п ^-> [#unvoiced-stops# сх з] [#stem-types#]+ __
 $R-PAB03$ = <B>:м ^-> [#nasals#] [#stem-types#]+ __
 
 $R-PAB$ = $R-PAB01$ || $R-PAB02$ || $R-PAB03$
+
 
 
 % [R-PAH] Middle consonants --------------------------------------------------------------------------------------------
@@ -90,6 +93,7 @@ $R-PAH05$ = <H>:{нь} ^-> [#nasals#] [#stem-types#]+ __
 $R-PAH$ = $R-PAH01$ || $R-PAH02$ || $R-PAH03$ || $R-PAH04$ || $R-PAH05$
 
 
+
 % [R-PAG] Posterior and uvular consonants (narrow context) -------------------------------------------------------------
 
 $R-PAK01$ = <K>:ҕ ^-> [#open-vowels#] [#stem-types#]+ __
@@ -97,6 +101,7 @@ $R-PAK02$ = <K>:г ^-> [#closed-vowels#] [#stem-types#]+ __
 $R-PAK03$ = <K>:к ^-> [#nasals#] [#stem-types#]+ __
 
 $R-PAK$ = $R-PAK01$ || $R-PAK02$ || $R-PAK03$
+
 
 
 % [R-PAG] Posterior and uvular consonants (broad context) --------------------------------------------------------------
@@ -113,6 +118,7 @@ $R-PAG04$ = <V>:к ^-> [#stops# сжзв] [#stem-types#]+ __
 $R-PAG05$ = <V>:ҥ ^-> [#nasals#] [#stem-types#]+ __
 
 $R-PAG$ = $R-PAG01$ || $R-PAG02$ || $R-PAG03$ || $R-PAG04$ || $R-PAG05$
+
 
 
 % [R-PAS] --------------------------------------------------------------------------------------------------------------
