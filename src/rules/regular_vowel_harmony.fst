@@ -32,18 +32,20 @@
 % <DI> diphthong
 
 
+
 % [R-VHOC] Low (open) vowels -------------------------------------------------------------------------------------------
 
-$R-VHO01$ = <O>:а ^-> ([#back-unrounded-vowels#] .*) | (у .* ) | (о .* [<LC><C><DI>] .* ) __
+$R-VHO01$ = <O>:а ^-> ([#back-unrounded-vowels#] .*) | ([уюя] .* ) | (о .* [<LC><C><DI>] .* ) __
 $R-VHO02$ = <O>:э ^-> ([#front-unrounded-vowels#] .*) | (ө .* [<LC><C><DI>] .*) | (ү .*) __
 $R-VHO03$ = <O>:о ^-> [#back-rounded-vowels#] .* __
 $R-VHO04$ = <O>:ө ^-> [#front-rounded-vowels#] .*  __
-$R-VHO05$ = <LO>:{аа} ^-> ([#back-unrounded-vowels#] .*) | (у .* ) | (о .* [<LC><C><DI>] .*)  __
+$R-VHO05$ = <LO>:{аа} ^-> ([#back-unrounded-vowels#] .*) | ([уюя] .* ) | (о .* [<LC><C><DI>] .*)  __
 $R-VHO06$ = <LO>:{ээ} ^-> ([#front-unrounded-vowels#] .*) | (ө .* [<LC><C><DI>] .*) | (ү .*) __
 $R-VHO07$ = <LO>:{оо} ^-> [#back-rounded-vowels#] .* __
 $R-VHO08$ = <LO>:{өө} ^-> [#front-rounded-vowels#] .*  __
 
 $R-VHO$ = $R-VHO01$ || $R-VHO02$ || $R-VHO03$ || $R-VHO04$ || $R-VHO05$ || $R-VHO06$ || $R-VHO07$ || $R-VHO08$
+
 
 
 % [R-VHC] High (closed) vowels -----------------------------------------------------------------------------------------
@@ -58,6 +60,7 @@ $R-VHC07$ = <LC>:{уу} ^-> ([#back-rounded-vowels#] .* | а .* о .*) __
 $R-VHC08$ = <LC>:{үү} ^-> [#front-rounded-vowels#] .* __
 
 $R-VHC$ = $R-VHC01$ || $R-VHC02$ || $R-VHC03$ || $R-VHC04$ || $R-VHC05$ || $R-VHC06$ || $R-VHC07$ || $R-VHC08$
+
 
 
 % [R-VHD] Diphthongs ---------------------------------------------------------------------------------------------------

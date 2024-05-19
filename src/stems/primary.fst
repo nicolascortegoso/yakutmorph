@@ -53,6 +53,7 @@
 #adjs-c#  = <adj-c> <adj-2c> <adj-1c> <adj-uc> <adj-sc>
 
 
+
 % [adv] Primary adverbial stems ----------------------------------------------------------------------------------------
 
 #advs-v#  = <adv-v> <adv-2v> <adv-1v>
@@ -60,9 +61,11 @@
 #advs-c#  = <adv-c> <adv-2c> <adv-1c>
 
 
+
 % [intj] Interjections -------------------------------------------------------------------------------------------------
 
 #intj# = <intj> <intj-d>
+
 
 
 % [aux] Auxiliary stems ------------------------------------------------------------------------------------------------
@@ -70,11 +73,13 @@
 #auxs# = <aux-c> <aux-v>
 
 
+
 % [noun] Primary nouns stems -------------------------------------------------------------------------------------------
 
 #nouns-v#  = <noun-v> <noun-2v> <noun-1v> <noun-uv> <noun-sv>
 #nouns-j#  = <noun-j> <noun-2j> <noun-1j> <noun-uj> <noun-sj>
-#nouns-c#  = <noun-c> <noun-2c> <noun-1c> <noun-uc> <noun-sc>
+#nouns-c#  = <noun-c> <noun-2c> <noun-1c> <noun-uc> <noun-2uc> <noun-sc>
+
 
 
 % [card] Primary numeral stems -----------------------------------------------------------------------------------------
@@ -82,11 +87,13 @@
 #cards# = <card-c> <card-v>
 
 
+
 % [imit] Primary imitative stems ---------------------------------------------------------------------------------------
 
 % Imitative stems can form verbs by affixation or analytically.
 
-#imis# = <imi-v> <imi-c> <imi-r>
+#imis# = <imi-v> <imi-ov> <imi-cv> <imi-c> <imi-k> <imi-p> <imi-2r> <imi-l> <imi-x> <imi-n> <imi-r> <imi>
+
 
 
 % [part] Particle stems ------------------------------------------------------------------------------------------------
@@ -95,9 +102,11 @@
 #modals# = <mod>
 
 
+
 % [post] Primary postposition stems ------------------------------------------------------------------------------------
 
 #posts# = <post-c> <post-v>
+
 
 
 % [pron] Primary prononimal stems --------------------------------------------------------------------------------------
@@ -110,8 +119,6 @@
 #int# = <int> <int-c> <int-v> <int-p> <int-a> <int-s>
 #prons# = <prs> <dem> <dem-n> <dt1> <dt2> <ind> <ps> #int# #cos#
 
-% DEVELOPMENT NOTES:
-% - ханнык is listed as a pron, although it is a хан+нык [§332].
 
 
 % [propn] Proper nouns stem endings ------------------------------------------------------------------------------------
@@ -119,6 +126,7 @@
 #propns-v# = <propn-v> <propn-uv> <propn-sv>
 #propns-c# = <propn-c> <propn-uc> <propn-sc>
 #propns#   = #propns-v# #propns-c#
+
 
 
 % [intr] Primary intransitive verbal stems -----------------------------------------------------------------------------
@@ -130,6 +138,7 @@
 #intrs-v#  = <intr-v> <intr-2v> <intr-1v>
 
 
+
 % [tran] Primary transitive verbal stems -------------------------------------------------------------------------------
 
 % - <tran-1-d-v> does not reduce diphthong when forming the causative voice.
@@ -139,6 +148,12 @@
 #trans-r# = <tran-r> <tran-2r> <tran-1r>
 #trans-l# = <tran-l> <tran-2l> <tran-1l>
 #trans-v# = <tran-v> <tran-2v> <tran-1v> <tran-1-d-v>
+
+
+
+% [fig] Figurative verbal stems ----------------------------------------------------------------------------------------
+
+#fig# = <fig-j> <fig-r> <fig>
 
 
 
@@ -166,24 +181,31 @@
 #noms#        = #noms-v# #noms-cj#
 
 
+
 % Aggregated verbal stems ----------------------------------------------------------------------------------------------
 
-#intrs-cjrnl# = #intrs-c# #intrs-j# #intrs-r# #intrs-nl#
+#intrs-crnl#  = #intrs-c# #intrs-r# #intrs-nl#
+#intrs-cjrnl# = #intrs-j# #intrs-crnl#
 #intrs#       = #intrs-cjrnl# #intrs-v#
 
-#trans-cjrl#  = #trans-c# #trans-j# #trans-r# #trans-l#
+#trans-crl#   = #trans-c# #trans-r# #trans-l#
+#trans-cjrl#  = #trans-j# #trans-crl#
 #trans#       = #trans-cjrl# #trans-v#
 
 #verbs-c#     = #intrs-c# #trans-c#
 #verbs-r#     = #intrs-r# #trans-r#
 #verbs-j#     = #intrs-j# #trans-j#
 #verbs-v#     = #intrs-v# #trans-v#
+#verbs-crnl#  = #intrs-crnl# #trans-crl#
 #verbs-crjnl# = #intrs-cjrnl# #trans-cjrl#
-#verbs#       = #verbs-v# #verbs-crjnl# <fig-j>
+#verbs#       = #verbs-v# #verbs-crjnl# #fig#
+
 
 
 % All primary stems ----------------------------------------------------------------------------------------------------
 
+% The stem <comp> refers to lexical units that always appear in combination with others, never standing by itself.
+
 #primary-stems# = #verbs# #advs# #adjs# #nouns# #propns# \
                   #prons# #cards# #parts# #imis# #intj# \
-                  <conj> #posts# #auxs# #modals#
+                  <conj> <comp> #posts# #auxs# #modals#

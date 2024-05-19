@@ -36,29 +36,51 @@ $R-RAV01$ = п:б ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
 $R-RAV02$ = к:г ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
 $R-RAV03$ = х:ҕ ^-> [#vowels#] ([#stem-types#] [#stem-types#])? __ [#stem-types#]+ [#vowels#]
 $R-RAV04$ = с:һ ^-> [#vowels#] ([#stem-types#] [#stem-types#])? __ [#stem-types#]+ [#vowels#]
-$R-RAV05$ = т:д ^-> [лр] ([#stem-types#] [#stem-types#])? __ [#stem-types#]+ [#vowels#]+
+$R-RAV05$ = т:{дь} ^-> л __ [#stem-types#]+ [#vowels#]+
+$R-RAV06$ = т:д ^-> [лр] ([#stem-types#] [#stem-types#])? __ [#stem-types#]+ [#vowels#]+
 
-$R-RAV$ = $R-RAV01$ || $R-RAV02$ || $R-RAV03$ || $R-RAV04$ || $R-RAV05$
+$R-RAV$ = $R-RAV01$ || $R-RAV02$ || $R-RAV03$ || $R-RAV04$ || $R-RAV05$ || $R-RAV06$
 
 % DEVELOPMENT NOTES:
 % [05] PROBLEM: балыс^N+POSS.1SG -> балтым
 
 
+
 % [R-RA] ---------------------------------------------------------------------------------------------------------------
 
-$RA06$ = н:м ^-> [#vowels#] [#stem-types#]* __ [#stem-types#]+ м
-$RA07$ = ҥ:м ^-> [#consonants#] [#vowels#] __ [#stem-types#]+ м
-$RA08$ = н:ҥ ^-> [#vowels#] ([#stem-types#] [#stem-types#])?  __ [#stem-types#]+ ҥ
-$RA09$ = т:п ^-> [#vowels# <neg> #verbs-v# <verb-v>] __ [#stem-types#]+ п
-$RA10$ = т:к ^-> [#vowels# <neg>] __ [#stem-types#]+ к
-$RA11$ = ҕ:г ^-> р __ [#stem-types#]+ [#vowels#]
-$RA12$ = т:ч ^-> [#vowels#] __ [#stem-types#]+ ч
+$RA06$ = н:м ^-> [#vowels#] [#stem-types#]* __ [#stem-types#] [#stem-types#] м
+$RA07$ = н:ҥ ^-> [#vowels#] ([#stem-types#] [#stem-types#])?  __ [#stem-types#]+ ҥ
+$RA08$ = т:п ^-> [#vowels#] ([#stem-types#] [#stem-types#])? __ [#stem-types#] [#stem-types#] п
+$RA09$ = т:к ^-> [#vowels# <neg>] __ [#stem-types#] [#stem-types#] к
+$RA10$ = ҕ:г ^-> р __ [#stem-types#]+ [#vowels#]
+
+$RA2$ = $RA06$ || $RA07$ || $RA08$ || $RA09$ || $RA10$
 
 
-% [RB ] Russian load words ---------------------------------------------------------------------------------------------
+
+% [R-IMI] --------------------------------------------------------------------------------------------------------------
+
+% [01] Applies to monosyllabic imitatives ending in лк (балк^IMIT^VRBLZ#12 -> баллыгыраа) [§561]
+% [02-03] [§563]
+
+$R-IMI01$ = {пт}:{бдь} ^-> __ <imi-c><imi-c> <C>
+$R-IMI02$ = п:{бдь}    ^-> __ <imi-c><imi-c> <C>
+$R-IMI03$ = {ьт}:{дь}  ^-> л __ <imi-c><imi-c> <C>
+$R-IMI04$ = к:{дь}     ^-> л __ <imi-c><imi-c> <C>
+$R-IMI05$ = к:л        ^-> __ <imi-c><imi-c> <C>
+$R-IMI06$ = п:б        ^-> __ <imi-p><imi-p> <C>
+
+$R-IMI$ = $R-IMI01$ || $R-IMI02$ || $R-IMI03$ || $R-IMI04$ || $R-IMI05$ || $R-IMI06$
+
+
+
+% [RB] Russian load words ----------------------------------------------------------------------------------------------
 
 $RB01$ = ч:һ ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
 $RB02$ = з:һ ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
+$RB03$ = п:б ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
+
+$RB1$ = $RB01$ || $RB02$ || $RB03$
 
 
 
@@ -66,6 +88,4 @@ $RB02$ = з:һ ^-> [#vowels#] __ [#stem-types#]+ [#vowels#]
 % 2. RULES APPLICATION ORDER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-$RA2$ = $RA06$ || $RA07$ || $RA08$ || $RA09$ || $RA10$ || $RA11$ || $RA12$
-$RB1$ = $RB01$ || $RB02$
-$regressive-assimilation$ = $R-RAV$ || $RA2$ || $RB1$
+$regressive-assimilation$ = $R-RAV$ || $RA2$ || $R-IMI$ || $RB1$

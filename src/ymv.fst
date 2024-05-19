@@ -204,7 +204,7 @@ $morph$ = <>:<begin> $wordforms$ <>:<end>
 % 6. PHONOTACTICS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This section describes the application of phonological rules to both stems and affixes.
-% Most of the rules are extracted directly from Ubryatova et al, but other where observed empirically.
+% Most of the rules are extracted directly from Ubryatova et al, and other where observed empirically.
 % All rules have the following form: 'x' is always implemented as 'y' in context 'z'
 
 % Rules are first formulated in a narrow context, and then generalized to a broader one when possible.
@@ -243,8 +243,10 @@ $primary-stems$          = $specific-root-transformations$ || $general-root-tran
 $derived-stems$          = $affix-transformations$         || $special-insertions$
 $base-transformations$   = $primary-stems$                 || $derived-stems$
 
+% $special-vowel-harmony$         ||
+
 $consonant-assimilation$ = $progressive-assimilation$      || $regressive-assimilation$
-$vowel-harmony$          = $regular-vowel-harmony$
+$vowel-harmony$          = $special-vowel-harmony$         || $regular-vowel-harmony$
 
 $phonological-rules$ = $base-transformations$ || $consonant-assimilation$ || $vowel-harmony$ || $post-transformations$
 

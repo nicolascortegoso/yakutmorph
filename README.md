@@ -57,7 +57,7 @@ Alphabet definition encompasses:
 * the set of Yakut back vowels: {a, o, э, ө, ы, и, у, ү} (classified by backeness and roundness);
 * the set of Yakut consonants: {п, б, м, т, д, с, н, л, р, й, к, г, х, ҕ, ҥ, һ, ч} (classified by articulation);
 * the set of consonants and vowels specific to Russian loan words: {в, ж, з, ф, ц, ш, щ, ъ, я, е, ё};
-* a set of special symbols that aids in encoding the various realization of an affix in different contexts.
+* a set of metasymbols that stands for a set of graphemes and aids in encoding the various realization of an affix in different contexts.
 
 For instance, the affix corresponding to the plural can have up to 16 different forms: {лар,лэр, лор, лөр, тар, тэр, тор, төр, дар, дэр, дор, дөр, нар, нэр, нор, нөр}. All these forms can be represented with the assistance of special placeholders, such as &lt;D2>&lt;O>р, where &lt;D2> denotes dental-alveolar, covering {л, т, д, н}, and &lt;O> signifies short open vowel, representing {а, э, о, ө}.
 
@@ -114,6 +114,7 @@ The stem definitions determine which affix concatenations are permissible, filte
 
 ### 6. Phonotactics
 
+The transducer implements the cascade-rule formalism to map between surface and lexical forms. 
 Phonetic rules apply to both lexical roots and affixes, involving three fundamental processes: insertion, deletion, and symbol replacement. These rules adhere to the following structure and are applied in cascade:
 
 'x' is always realized as 'y' in context 'z.'
