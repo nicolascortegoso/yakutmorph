@@ -9,7 +9,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="yakutmorph",
-    version="0.0.1",
+    version="0.0.3",
     author="Nicolas Cortegoso Vissio",
     author_email="nicolascortegoso@hotmail.com",
     description="A morphological analyzer for Yakut language",
@@ -22,8 +22,7 @@ setup(
     },
     install_requires=[
         'sfst-transduce>=1.0.2',
-        'torch==1.10.0+cpu',
-        'torchvision==0.11.1+cpu',
+        'torch>=1.10.0',
         'PyYAML>=6.0.1'
     ],
     keywords=['python', 'morphology', 'analyzer', 'Yakut', 'Sakha', 'NLP'],
