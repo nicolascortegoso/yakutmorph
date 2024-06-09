@@ -44,11 +44,11 @@
 % -каан (&all) diminutive form from nouns. Not very used [§158].
 
 $nomzn$ = \
-<>:[#noms# <part3-c> <gnd2> <noun-dv> <noun-dc>]                     {\^NMLZ\#1}:{<H><C>т}             <>:<noun-dc>  | \
-<>:[#noms#]                                                          {\^NMLZ\#1a}:{ч<C>т}              <>:<noun-dc>  | \
-<>:[#noms#]                                                          {\^DIM\#1}:{ч<C>к}                <>:<noun-dc>  | \
-<>:[#noms#]                                                          {\^DIM\#2}:{к<LO>н}               <>:<noun-dc>  | \
-<>:[#noms#]                                                          {\^DIM\#2}:{ч<LO>н}               <>:<noun-dc>
+<>:[#noms# <part3-c> <gnd2> <noun-dv> <noun-dc>]                     {\+NMLZ\#1}:{<H><C>т}             <>:<noun-dc>  | \
+<>:[#noms#]                                                          {\+NMLZ\#1a}:{ч<C>т}              <>:<noun-dc>  | \
+<>:[#noms#]                                                          {\+DIM\#1}:{ч<C>к}                <>:<noun-dc>  | \
+<>:[#noms#]                                                          {\+DIM\#2}:{к<LO>н}               <>:<noun-dc>  | \
+<>:[#noms#]                                                          {\+DIM\#2}:{ч<LO>н}               <>:<noun-dc>
 
 % DEVELOPMENT NOTS:
 % Affixes that convey diminutive forms, referenced in Ubryatova et al. [§156-159], are still not fully implemented.
@@ -105,8 +105,8 @@ $poss$ = \
 % 1.4 Adjectives from other adjectives ---------------------------------------------------------------------------------
 
 $adjza$ = \
-<>:[#adjs# <adj-dc> <adj-dv>]                                                  {\^DIM\#4}:{<D1><C>ҥ<C>}  <>:<adj-dv> | \
-<>:[#adjs# <adj-dc> <adj-dv>]                                                  {\^DIM\#5}:{с<DI>р}       <>:<adj-dc>
+<>:[#adjs# <adj-dc> <adj-dv>]                                                  {\+DIM\#4}:{<D1><C>ҥ<C>}  <>:<adj-dv> | \
+<>:[#adjs# <adj-dc> <adj-dv>]                                                  {\+DIM\#5}:{с<DI>р}       <>:<adj-dc>
 
 
 
@@ -274,13 +274,13 @@ $pron$ = \
 % -ыан (&all) forms the collective from the numeral [§308].
 
 $numz$ = \
-<>:[#cards# <int-s>]                                                           {\^ORD}:{<C>с}            <>:<ord>    | \
-<>:[<card-v>]                                                                  {\^APPR\#1}:{чч<O>}       <>:<appr>   | \
-<>:[<card-c>]                                                                  {\^APPR\#1}:{ч<O>}        <>:<appr>   | \
-<>:[<card-v>]                                                                  {\^APPR\#2}:{чч<O>к<O>}   <>:<appr>   | \
-<>:[<card-c>]                                                                  {\^APPR\#2}:{ч<O>к<O>}    <>:<appr>   | \
-<>:[#cards# <int-s>]                                                           {\^COLL\#1}:<DI>          <>:<coll-v> | \
-<>:[#cards#]                                                                   {\^COLL\#2}:{<DI>й<O>х}   <>:<coll-c>
+<>:[#cards# <int-s>]                                                           {\+ORD}:{<C>с}            <>:<ord>    | \
+<>:[<card-v>]                                                                  {\+APPR\#1}:{чч<O>}       <>:<appr>   | \
+<>:[<card-c>]                                                                  {\+APPR\#1}:{ч<O>}        <>:<appr>   | \
+<>:[<card-v>]                                                                  {\+APPR\#2}:{чч<O>к<O>}   <>:<appr>   | \
+<>:[<card-c>]                                                                  {\+APPR\#2}:{ч<O>к<O>}    <>:<appr>   | \
+<>:[#cards# <int-s>]                                                           {\+COLL\#1}:<DI>          <>:<coll-v> | \
+<>:[#cards#]                                                                   {\+COLL\#2}:{<DI>й<O>х}   <>:<coll-c>
 
 
 

@@ -1,0 +1,19 @@
+# Compiled python modules.
+**/*.pyc
+
+# Setuptools distribution folder.
+/dist/
+/build/
+MANIFEST.in
+
+# Python egg metadata, regenerated from source files by setuptools.
+**/*.egg
+**/*.egg-info
+
+# macOS
+.DS_Store
+
+
+data/
+tools/
+vocabulary/

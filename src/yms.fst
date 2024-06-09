@@ -170,11 +170,8 @@ $polysyllabic-adjs$   = (<>:[#boundaries#] [#alphabet#]+ {\^Adj}:[#polysyllabic-
 $polysyllabic-advs$   = (<>:[#boundaries#] [#alphabet#]+ {\^Adv}:[#polysyllabic-advs#]) || "lexicons/last_syllables.lex"
 $polysyllabic-nouns$  = (<>:[#boundaries#] [#alphabet#]+ {\^N}:[#polysyllabic-nouns#])  || "lexicons/last_syllables.lex"
 $polysyllabic-verbs$  = (<>:[#boundaries#] [#alphabet#]+ {\^V}:[#polysyllabic-verbs#])  || "lexicons/last_syllables.lex"
-$polysyllabic-propns$ = (<>:[#boundaries#] [#alphabet#]+ {\^PN}:[#propns#])             || "lexicons/last_syllables.lex"
 
-$polysyllabics-stems$ = $polysyllabic-adjs$ | $polysyllabic-advs$ | $polysyllabic-nouns$ | $polysyllabic-verbs$ | \
-                        $polysyllabic-propns$
-
+$polysyllabics-stems$ = $polysyllabic-adjs$ | $polysyllabic-advs$ | $polysyllabic-nouns$ | $polysyllabic-verbs$
 
 
 
