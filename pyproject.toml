@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yakutmorph"
+version = "0.0.1"
+authors = [
+  { name="Nicolas Cortegoso Vissio", email="nicolascortegoso@hotmail.com" },
+]
+description = "A morphological analyzer for Yakut language"
+readme = "README.md"
+requires-python = ">=3.8"

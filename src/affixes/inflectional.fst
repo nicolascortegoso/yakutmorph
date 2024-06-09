@@ -537,7 +537,7 @@ $gndz$ =  \
 <>:[#verbs-v#     <verb-v>          #voices#                  <aux-v>]     {\+CONV\#2}:<LC>              <>:<gnd2>   | \
 <>:[<neg>                                                            ]     {\+CONV\#3}:{<C>н<O>}         <>:<gnd3>   | \
 <>:[<neg>                                                            ]     {\+CONV\#3a}:{н<O>}           <>:<gnd3>   | \
-<>:[#verbs#                                                          ]     {\+NEG\^CONV\#4}:{б<O>кк<O>}  <>:<gnd4>   | \
+<>:[#verbs#                                                          ]     {\+NEG\+CONV\#4}:{б<O>кк<O>}  <>:<gnd4>   | \
 <>:[#verbs-crjnl# #d-verbs-jrc#     #voices# <neg>            #auxs# ]     {\+CONV\#5}:{<LO>р<C>}        <>:<gnd5>   | \
 <>:[#verbs-v#     <verb-v>                                           ]     {\+CONV\#5}:{р<C>}            <>:<gnd5>   | \
 <>:[#verbs#       #d-verbs#         #voices# <neg>            #auxs# ]     {\+CONV\#6}:{<LO>т}           <>:<gnd6>   | \
