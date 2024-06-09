@@ -20,8 +20,13 @@ setup(
     package_data={
         'yakutmorph': ['data/*.yaml', 'data/*.pkl', 'data/*.pth'],
     },
-    install_requires=['sfst-transduce', 'torch', 'PyYAML'],
-    keywords=['python', 'morphology', 'analyzer', 'yakut', 'sakha', 'NLP'],
+    install_requires=[
+        'sfst-transduce>=1.0.2',
+        'torch==1.10.0+cpu',
+        'torchvision==0.11.1+cpu',
+        'PyYAML>=6.0.1'
+    ],
+    keywords=['python', 'morphology', 'analyzer', 'Yakut', 'Sakha', 'NLP'],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Intended Audience :: Developers",
