@@ -32,7 +32,7 @@ class CoNLLU(OutputFormat):
     """
     A class to format a Parse object into a CoNLL-U string used in Universal Dependencies' treebanks.
     """
-    def __new__(self, parse: Parse):
+    def __new__(self, parse: Parse, header: List[str] = None):
         def __get_lemma(token: Token) -> str:
             if token.has_morph:
                 return '|'.join(token.lemmas)
@@ -49,6 +49,7 @@ class CoNLLU(OutputFormat):
             return __map_token_type(tag_type)
 
         def __init_zero_affixation(upos: str):
+            """Add default grammemes corresponding to zero affixation."""
             grammemes = dict()
             if upos == 'VERB':
                 grammemes.update({'Mood': 'Imp'})
@@ -69,7 +70,8 @@ class CoNLLU(OutputFormat):
         def __affixes(affix):
             if not affix:
                 return dict()
-            return affix.map('ud')
+            mapped_affix = affix.map('ud')
+            return mapped_affix if mapped_affix else dict()
 
         def __map_grammmemes(token: Token):
             if not token.morph:
@@ -79,6 +81,7 @@ class CoNLLU(OutputFormat):
 
             grammemes = __init_zero_affixation(__map_tag(token, 'UPOS'))
             grammemes.update(__lexical_root(affixes[0].map('ud'), token.morph.root))
+
             for affix in affixes[1:]:
                 grammemes.update(__affixes(affix))
 
@@ -91,7 +94,7 @@ class CoNLLU(OutputFormat):
         def __get_root(token: Token) -> str:
             return ''.join([m.morpheme for m in token.morph.morphemes]) if token.has_morph else '_'
 
-        rows = [[f'text = {parse.sentence}']]
+        rows = [[line] for line in header] if header else [[f'# text = {parse.text}']]
         rows.extend([
             [
                 str(token.pos),
@@ -115,7 +118,7 @@ class YakutAnnotation(OutputFormat):
     """
 
     def __new__(cls, parse: Parse):
-        fields = {"sah": parse.sentence}
+        fields = {"sah": parse.text}
 
         parses = list()
         for token in parse.tokens:

@@ -167,7 +167,7 @@ class Token:
     type, and optional morphological analyses.
 
     Attributes:
-        pos: The position of the token in the sentence.
+        pos: The position of the token in the input text.
         surface: The surface form of the token.
         type: The type of the token.
         has_morph: Indicates whether the token has morphological analyses.
@@ -226,29 +226,28 @@ class Token:
 @dataclass
 class Parse:
     """
-    A class to represent and manipulate a parsed sentence, consisting of tokens
+    A class to represent and manipulate a parsed text, consisting of tokens
     and their respective morphological parses.
 
     Attributes:
-        sentence: The original sentence.
-        tokens: The list of tokens in the sentence.
+        text: The input text.
+        tokens: The list of tokens in the input text.
     """
 
-    sentence: str
+    text: str
     tokens: List[Token]
 
     def __repr__(self):
         """
-        Returns a string representation of the Parse object, displaying the class name
-        and the input string.
+        Returns a string representation of the Parse object.
 
         :return: A string representation of the Parse object.
         """
-        return f'{self.__class__.__name__}({self.sentence})'
+        return f'{self.__class__.__name__}({self.text})'
 
     def is_ambiguous(self) -> bool:
         """
-        Checks if any token in the sentence is morphologically ambiguous, i.e., has
+        Checks if any token in the input text is morphologically ambiguous, i.e., has
         more than one possible morphological analysis.
 
         :return: True if any token is ambiguous, False otherwise.

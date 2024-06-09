@@ -8,7 +8,8 @@ This library provides tools for performing morphological annotations on texts in
 
 ## Basic Usage:
 
-For convenience, all three modules (tokenization, morphological analysis, and disambiguation) are implemented within the `YakutMorph` class, which provides a user-friendly interface. This class follows a non-destructive approach, encapsulating the input string and subsequent processing steps as objects within a main `Parse` object:
+For convenience, all three modules (tokenization, morphological analysis, and disambiguation) are implemented within the `YakutMorph` class, which provides a user-friendly interface.
+This class follows a non-destructive approach, encapsulating the input string and subsequent processing steps as objects within a main `Parse` object:
 
 ```
 >>> from yakutmorph.main import YakutMorph
@@ -18,10 +19,25 @@ For convenience, all three modules (tokenization, morphological analysis, and di
 Parse(мин атым Кэскил.)
 ```
 
-The `Parse` object wraps the input string as a list of `Token` objects.
+### Parse
 
 
-### Token
+The property `text` retrieves the input string: 
+
+```
+>>> parse.text
+мин атым Кэскил.
+```
+
+The property `tokens` returns a list of `Token` objects: 
+
+```
+>>> parse.text
+мин атым Кэскил.
+```
+
+
+### Tokens
 
 Tokens within a `Parse` object can be accessed by their index. For example:
 

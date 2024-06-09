@@ -107,13 +107,14 @@ roots:
     ref: unknown word form
     aper: unk
 derivational:
-  ^NMLZ#1:
+  +NMLZ#1:
     UPOS: NOUN
     XPOS: n
     ref: -һыт (and allomorphs) conveys agency, an occupation, profession, inclination towards an action [§155, Ubryatova et al.].
     aper: unk
     allo: һCт
-  ^NMLZ#1a:
+    ud:
+  +NMLZ#1a:
     UPOS: NOUN
     XPOS: n
     ref: -чыт and -сыт (and allomorphs) conveys agency, an occupation, profession, inclination towards an action. Sometimes occur after vowels in parallel with the regular form -һыт [§123, Ubryatova et al.].
@@ -313,6 +314,8 @@ derivational:
     XPOS: adv
     ref: -тык (and allomorphs) forms adverbs of quality, quantity and manner from primary or derived adjectives and some adverbs [§698, Ubryatova et al.]. It can be formed also from personal pronouns [§316, Ubryatova et al.].
     aper: adv
+    ud:
+      Advlz: Yes
   ^ADVZ#6:
     UPOS: ADV
     XPOS: adv
@@ -409,6 +412,11 @@ derivational:
     ref: -аа (and allomorphs) considered an early form of verb formation. Its productivity in modern language is fading [§385, Ubryatova et al.].
     aper: v
   ^VRBLZ#4:
+    UPOS: VERB
+    XPOS: v
+    ref: -(ы)р/ар (and allomorphs) forms mainly intransitive verbs expressing various processes and states [§386, Ubryatova et al.].
+    aper: v
+  ^VRBLZ#4a:
     UPOS: VERB
     XPOS: v
     ref: -(ы)р/ар (and allomorphs) forms mainly intransitive verbs expressing various processes and states [§386, Ubryatova et al.].
