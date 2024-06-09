@@ -13,7 +13,7 @@ For convenience, all three modules (tokenization, morphological analysis, and di
 ```
 >>> from yakutmorph.main import YakutMorph
 >>> morph = YakutMorph()
->>> parse = morph.parse('мин атым Кэскил')
+>>> parse = morphology.parse('мин атым Кэскил')
 >>> parse
 Parse(мин атым Кэскил.)
 ```
@@ -77,7 +77,7 @@ The transducer that performed the morphological analyses is found under the prop
 Fst(voc)
 ```
 
-The transducer output can be obtained with the property `output`:
+The transducer output can be obtained with the property `output`. This returns a list of `Analysis` objects with possible interpretations:
 
 
 ```
@@ -88,8 +88,7 @@ The transducer output can be obtained with the property `output`:
 
 ### Analysis
 
-Each analysis within the `Analyses` object can be accessed by its respective index:
-
+Each `Analyses` object can be accessed using its respective index:
 
 ```
 >>> output = fst_output[0]
@@ -137,7 +136,7 @@ InflGroup(1)
 
 The `InflGroup` object wraps a series of suffixes represented as `Morph` objects.
 
-The property `pos` returns an integer representing its position in the analysis:
+The property `pos` returns an integer representing the position of the inflectional group in the analysis:
 
 
 ```
@@ -209,7 +208,7 @@ In this pipeline, the next transducer only takes part if the previous one fails 
 ```
 >>> from yakutmorph.main import YakutMorph
 >>> morph = YakutMorph()
->>> parse = morph.parse('Мама Егора учуутал.')
+>>> parse = morphology.parse('Мама Егора учуутал.')
 >>> [token.analyses for token in parse.tokens if token.has_morph]
 [Analyses(Fst(syl)=1), Analyses(Fst(aff)=3), Analyses(Fst(voc)=1)]
 ```
@@ -219,28 +218,25 @@ For more details, please refer to the README.md file inside the `src` folder, wh
 
 ## Morphological Ambiguity
 
-Ambiguous analyses occur when the morphological transducer outputs more than one possible interpretation for a surface form.
+Ambiguous analyses occur when the morphological transducer outputs more than one possible interpretation for a surface form. For example:
+
+```
+>>> token.analyses.output
+[Morph(morphemes=['мин', '^N']), Morph(morphemes=['мин', '^Pron'])]
+```
 
 The disambiguation module employs a neural model to select the most likely analysis for each surface form within the context of the token sequence. This process happens automatically when calling the `parse` method.
 
 The most likely analysis is an `Analysis` object, which can be retrieved through the token's `morph` property:
 
-
 ```
->>> from yakutmorph.main import YakutMorph
->>> morph = YakutMorph()
->>> parse = morph.parse('мин атым Кэскил')
->>> token = parse.tokens[0]
 >>> token.morph
 Analysis([Morph(мин), Morph(^Pron)])
 ```
 
 Under the hood, the disambiguation model sets the `idx_mla` (index most-likely analysis) property inside the `Analyses` object. This property is an integer that points to the index of the output list containing the selected `Analysis` object:
 
-
 ```
->>> token.analyses.output
-[Morph(morphemes=['мин', '^N']), Morph(morphemes=['мин', '^Pron'])]
 >>> token.analyses.idx_mla
 1
 ```
@@ -292,15 +288,10 @@ These modules also expect Python native types as input, so it's essential to ens
 
 ## Analysis Output
 
-The `mappers` module provides classes to convert the parse object to a given format. For example:
+The `mappers` module provides classes to convert the `Parse` object to a given format. For example:
 
 
 ```
->>> from yakutmorph.main import YakutMorph
->>> morph = YakutMorph()
->>> parse = morph.parse('Мин аатым Кэскил.')
->>> parse
-Parse(Мин аатым Кэскил.)
 >>> from yakutmorph.mappers import CoNLLU
 >>> print(CoNLLU(parse))
 text = Мин аатым Кэскил.
@@ -323,7 +314,7 @@ The default `YakutTransducer` (and those in the morphological pipeline) object i
 
 
 ```
->>> from transducers import YakutTransducer
+>>> from yakutmorph.transducers import YakutTransducer
 >>> transducer = YakutTransducer()
 >>> tag_set = transducer.reference.get_tags()
 >>> len(tag_set)
