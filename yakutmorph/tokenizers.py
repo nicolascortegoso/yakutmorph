@@ -60,67 +60,12 @@ class YakutTokenizer(Tokenizer):
     uppercase_lat = re.compile("[A-Z]+")
     lowercase_lat = re.compile("[a-z]+")
 
+    phone = re.compile(r'\+?\d{1,4}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}\b')
+    date = re.compile(r'\b(?:\d{4}[-/. ](?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\d|3[01])|(?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\d|3[01])[-/. ]\d{4}|(?:0?[1-9]|[12]\d|3[01])[-/. ](?:0?[1-9]|1[0-2])[-/. ]\d{4}|(?:0?[1-9]|1[0-2])[-/. ](?:0?[1-9]|[12]\d|3[01])[-/. ]\d{2}|(?:0?[1-9]|[12]\d|3[01])[-/. ](?:0?[1-9]|1[0-2])[-/. ]\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[-. ](?:0?[1-9]|[12]\d|3[01])[-, ]\d{4}|(?:0?[1-9]|1[0-2])[-. ](?:0?[1-9]|[12]\d|3[01])[-, ]\d{4})\b')
     number = re.compile(r'\b[+-]?\d+(\.\d+)?\b')
+    url = re.compile(r'\b(https?://)?([a-zA-Z0-9.-]+)(\.[a-zA-Z]{2,})(/[a-zA-Z0-9_/-]*)?\b')
     email = re.compile(r'\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
-    url = re.compile(
-        r"""
-        (https?://)?               # Optional protocol (http:// or https://)
-        ([a-zA-Z0-9.-]+)           # Domain (may include subdomains)
-        (\.[a-zA-Z]{2,})           # Top-level domain (TLD)
-        (/[a-zA-Z0-9_/-]*)?        # Optional path
-        """,
-        re.VERBOSE
-    )
-    phone = re.compile(
-        r"""
-        ^                    # Start of string
-        (?:\+\d{1,2}\s?)?    # Optional international code with or without space
-        (?:                  # Optional group for area code
-            \(\d{1,4}\)      # Area code in parentheses
-            |                # OR
-            \d{1,4}          # Area code without parentheses
-        )?                   # Area code is optional
-        [-.\s]?              # Optional separator (dash, dot, or space)
-        \d{1,}               # Phone number digits (at least one digit)
-        -?                   # Optional dash
-        \d{1,}               # More phone number digits (at least one digit)
-        -?                   # Optional dash
-        \d{1,}               # More phone number digits (at least one digit)
-        $                    # End of string
-        """,
-        re.VERBOSE
-    )
-    date = re.compile(
-        r"""
-        (
-            (\d{4}[-/]\d{1,2}[-/]\d{1,2})         # YYYY-MM-DD or YYYY/MM/DD
-            |                                     # OR
-            (\d{1,2}[-/]\d{1,2}[-/]\d{4})         # MM-DD-YYYY or MM/DD/YYYY
-            |                                     # OR
-            (\d{1,2}[-/]\d{1,2}[-/]\d{2})         # MM-DD-YY or MM/DD/YY
-            |                                     # OR
-            (\d{4}[-/]\d{1,2}[-/]\d{1,2}          # YYYY-MM-DD
-             \s\d{1,2}:\d{1,2}:\d{1,2})           # HH:MM:SS
-            |                                     # OR
-            (\d{1,2}[-/]\d{1,2}[-/]\d{4}          # MM-DD-YYYY
-             \s\d{1,2}:\d{1,2}:\d{1,2})           # HH:MM:SS
-            |                                     # OR
-            (\d{1,2}/\d{1,2}/\d{4})               # MM/DD/YYYY
-        )
-        """,
-        re.VERBOSE
-    )
-    roman = re.compile(
-        r"""
-        ^                # Start of string
-        M{0,3}           # Thousands - 0 to 3 'M's
-        (CM|CD|D?C{0,3}) # Hundreds - 900 (CM), 400 (CD), 0-300 (0 to 3 'C's), or 500-800 (D, followed by 0 to 3 'C's)
-        (XC|XL|L?X{0,3}) # Tens - 90 (XC), 40 (XL), 0-30 (0 to 3 'X's), or 50-80 (L, followed by 0 to 3 'X's)
-        (IX|IV|V?I{0,3}) # Units - 9 (IX), 4 (IV), 0-3 (0 to 3 'I's), or 5-8 (V, followed by 0 to 3 'I's)
-        $                # End of string
-        """,
-        re.VERBOSE
-    )
+    roman = re.compile(r'(?=\b[MCDXLVI]{1,6}\b)M{0,4}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})')
 
     def __init__(self):
         """
@@ -130,11 +75,11 @@ class YakutTokenizer(Tokenizer):
         """
 
         self.scanner = re.Scanner([
+            (self.phone.pattern, lambda scanner, token: (token, self.token_type.PHONE)),
+            (self.date.pattern, lambda scanner, token: (token, self.token_type.DATE)),
             (self.number.pattern, lambda scanner, token: (token, self.token_type.NUMBER)),
             (self.url.pattern, lambda scanner, token: (token, self.token_type.URI)),
             (self.email.pattern, lambda scanner, token: (token, self.token_type.EMAIL)),
-            (self.phone.pattern, lambda scanner, token: (token, self.token_type.PHONE)),
-            (self.date.pattern, lambda scanner, token: (token, self.token_type.DATE)),
             (self.roman.pattern, lambda scanner, token: (token, self.token_type.ROMAN)),
             (r"[—–]", lambda scanner, token: (token, self.token_type.DASH)),
             (r"-", lambda scanner, token: (token, self.token_type.HYPHEN)),

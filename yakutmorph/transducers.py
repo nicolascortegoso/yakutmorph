@@ -8,13 +8,14 @@ from .interfaces import MorphReference, PostAnalysis, Transducer
 from .utils import get_file_path
 
 
-class YakutReference(MorphReference):
+class YakutMorphReference(MorphReference):
     """
     Represents a reference for a Yakut language transducer, loaded from a YAML file.
     """
 
-    def __init__(self, path_to_file: str):
-        with open(get_file_path(path_to_file), 'r') as f:
+    def __init__(self, path_to_file: str, inside_package: bool = False):
+        path = get_file_path(path_to_file) if inside_package else path_to_file
+        with open(path, 'r') as f:
             reference = yaml.safe_load(f)
         self.tags = {k: v for value in reference.values() for k, v in value.items()}
 
@@ -57,7 +58,9 @@ class YakutTransducer(Transducer):
         )
         self.label = label if label else default_label
         self.morphemes = re.compile(regex if regex else default_regex)
-        self.reference = reference if reference else YakutReference('data/morph_reference.yaml')
+        self.reference = reference if reference else YakutMorphReference(
+            'data/morph_reference.yaml', inside_package=True
+        )
 
     def analyse(self, surface_form: str) -> List[str]:
         """
@@ -91,7 +94,10 @@ class DummyTransducer(Transducer):
     def __init__(self, label: str, unknown_tag: str, reference: MorphReference = None):
         self.label = label
         self.unknown_tag = unknown_tag
-        self.reference = reference if reference else YakutReference('data/morph_reference.yaml')
+        # Loads the default reference if no MorphReference is passed
+        self.reference = reference if reference else YakutMorphReference(
+            'data/morph_reference.yaml', inside_package=True
+        )
 
     def analyse(self, surface_form: str) -> List[str]:
         """
@@ -127,7 +133,7 @@ class YakutTransducerPipeline(Transducer):
     transducers in series.
     """
 
-    def __init__(self, transducers: Dict[str, str] = None):
+    def __init__(self, transducers: Dict[str, str] = None, morph_reference: YakutMorphReference = None):
         """
         Initializes the YakutTransducerPipeline with the specified or default
         transducers.
@@ -141,18 +147,26 @@ class YakutTransducerPipeline(Transducer):
             'aff': 'fsts/yma.a'
         }
 
-        self.pipeline = self.__initialize_pipeline(transducers if transducers else default_transducers)
+        self.pipeline = self.__initialize_pipeline(
+            transducers if transducers else default_transducers,
+            morph_reference
+        )
 
-    def __initialize_pipeline(self, transducers) -> List[Transducer]:
+    def __initialize_pipeline(self, transducers, morph_reference: YakutMorphReference) -> List[Transducer]:
         """
         Initializes the pipeline with the given transducers.
 
         :param transducers: A dictionary mapping transducer labels to their
             corresponding path to the binary file names.
-        :return: A list of functional transducers and a dummy one to retrieve failed analyses.
+        :return: A list of functional transducers and a dummy one.
         """
+        yakut_reference = morph_reference
         pipeline = [
-            YakutTransducer(get_file_path(transducer_file), transducer_label)
+            YakutTransducer(
+                get_file_path(transducer_file),
+                label=transducer_label,
+                reference=yakut_reference
+            )
             for transducer_label, transducer_file in transducers.items()
         ]
         pipeline.append(DummyTransducer('fail', '^UNK'))
@@ -171,6 +185,9 @@ class YakutTransducerPipeline(Transducer):
             if analyses:
                 return self.pipeline[transducer_idx], analyses
             transducer_idx += 1
+
+    def __repr__(self):
+        return f'Pipeline({"|".join([fst for fst in self.pipeline])})'
 
 
 class PostPipeline(PostAnalysis):
