@@ -1,19 +1,27 @@
-# Yakut Morphological Analyzer
+# yakutmorph
 
-This library provides tools for performing morphological annotations on texts in the Yakut (Sakha) language. It includes:
+This Python library provides tools for performing morphological annotations on texts in the Yakut (Sakha) language. It includes:
 
 - A tokenizer to divide a string into tokens.
 - A morphological transducer to map surface and analysis forms.
 - A module to resolve ambiguity in morphological analysis within the context of a given sequence.
 
-## Basic Usage:
+## Installation
+ 
+The library yakutmorph can be installed using the package manager pip (Python's package installer):
+
+```
+pip install yakutmorph
+```
+
+## Basic Usage
 
 For convenience, all three modules (tokenization, morphological analysis, and disambiguation) are implemented within the `YakutMorph` class, which provides a user-friendly interface.
 This class follows a non-destructive approach, encapsulating the input string and subsequent processing steps as objects within a main `Parse` object:
 
 ```
 >>> from yakutmorph.main import YakutMorph
->>> morph = YakutMorph()
+>>> morphology = YakutMorph()
 >>> parse = morphology.parse('мин атым Кэскил')
 >>> parse
 Parse(мин атым Кэскил.)
@@ -318,13 +326,15 @@ text = Мин аатым Кэскил.
 ```
 
 
-## Morphological References
+# Morphological Reference
 
-The transducers were developed following the grammar: Ubryatova Ye.I. (red.) Grammatika sovremennogo yakutskogo literaturnogo yazyka. Tom 1: Fonetika i morfologiya. Moskva: Nauka Print, 1982.
+The transducers were developed following the grammar: Ubryatova Y.I. (red.) Grammatika sovremennogo yakutskogo literaturnogo yazyka. Tom 1: Fonetika i morfologiya. Moskva: Nauka Print, 1982.
 
 The analysis form for affixes attempts to conform to the markup identifiers for grammatical annotation listed on the Turkic Morpheme web portal: Institute of Applied Semiotics, 420111, Kazan, 36A Levo-Bulachnaya st., http://modmorph.turklang.net/en/annotation .
 
 The default YakutTransducer object includes a YakutReference object with references to the implemented tags:
+
+## Default reference
 
 The default `YakutTransducer` (and those in the morphological pipeline) object includes a `YakutReference` object with references to the implemented tags:
 
@@ -344,9 +354,8 @@ The method `get_tag` returns a series of mappings for a tag in the transducer. F
 ```
 >>> mappings = transducer.reference.get_tag('+PL')
 >>> mappings['ref']
-'-лар (and allomorphs) forms the plural affix from various type of stems. The interrogative pronoun ким takes the special form нээх to form the plural, after which a regular plural affix can be used for emphasis [§329, Ubryatova et al.].'
+'-лар (and allomorphs) forms the plural affix from various type of stems. The interrogative pronoun ким takes the special form нээх to form the plural, after which a regular plural affix can be used for emphasis [Ubryatova et al., §329].'
 ```
-
 
 These include alternative tags to map to different formats:
 
@@ -356,8 +365,58 @@ These include alternative tags to map to different formats:
 {'Number': 'Plur'}
 ```
 
+**ATTENTION**: the collaboration of specialists in Yakut language is highly needed to test/improve the current default reference.
+
+
+### Modifying the default reference
+
+The default reference can be manually edited as a normal dictionary object:
+
+```
+>>> mappings.update({'custom': 'plural affix'})
+>>> mappings['custom']
+'plural affix'
+```
+
+The `parse` method from the `YakutMorph` class applies the (edited) reference to the `Morph` object:
+
+
+### Initializing a custom reference
+
+Each transducer implements its own reference. This means, that if we are using a morphological pipeline with many transducers, we will need to edit each reference. This can be avoided by injecting an edited `YakutReference` object when initializing `YakutMorph`:
+
+
+```
+>>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph.transducers import YakutMorphReference
+>>> custom_reference = YakutMorphReference('my_reference.yaml')
+>>> morphology = YakutMorph(reference=custom_reference)
+```
+
+
+### Loading a custom reference
+
+The `YakutReferece` object implements a `yaml` file. The default reference is located in folder `yakutmorph/data/morph_reference.yaml` . It is possible to upload a custom `yaml` file, as long as it implements the following key-value structure:
+
+```
+general_type:
+    affix_1:
+        key_1: value_1
+        key_2: value_2
+    affix_2:
+        key_1: value_1
+        key_2: value_2
+    ...
+```
 
 
 ## Contact
 
 The project is currently under development. If you would like to collaborate in the process, report an issue, or need assistance with using, implementing, or testing the morphology analyzer, please feel free to contact us.
+
+In principle, the project could be modified to work for other from the turkish family.
+
+Special thanks to:
+
+- Helmut Schmid, for developing the SFST toolkit: https://www.cis.uni-muenchen.de/~schmid/tools/SFST/
+- Gregor Middell, for the Python bindings https://pypi.org/project/sfst-transduce/

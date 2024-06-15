@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "yakutmorph"
-version = "0.0.3"
+version = "0.0.5"
 authors = [
   { name="Nicolas Cortegoso Vissio", email="nicolascortegoso@hotmail.com" },
 ]
