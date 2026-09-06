@@ -1,0 +1,2 @@
+greedy beam=5 alpha=1.0 ngram_block=0 limit=None | exact=0.1912 tok_acc=0.4069 root_acc=0.5507 tag_acc=0.4757
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_sepvocab/eval_test_greedy.json

@@ -1,0 +1,2 @@
+beam beam=5 alpha=0.7 ngram_block=3 limit=None | exact=0.1495 tok_acc=0.4867 root_acc=0.5019 tag_acc=0.4468
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_tgtv1000/eval_test_beam5_a0.7_ngram3.json

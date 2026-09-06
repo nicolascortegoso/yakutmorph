@@ -1,0 +1,19 @@
+{
+  "emb_dim": 256,
+  "hid_dim": 512,
+  "n_layers": 2,
+  "dropout": 0.3,
+  "batch_size": 64,
+  "lr": 0.001,
+  "epochs": 30,
+  "teacher_forcing": 0.75,
+  "patience": 5,
+  "device": "auto",
+  "seed": 13,
+  "limit_train": null,
+  "ckpt_dir": "checkpoints_tgtv2000",
+  "src_tokenizer": "spm_src",
+  "tgt_tokenizer": "spm_tgt_v2000",
+  "src_vocab_size": 4000,
+  "tgt_vocab_size": 2000
+}

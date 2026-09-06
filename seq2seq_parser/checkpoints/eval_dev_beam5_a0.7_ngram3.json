@@ -1,0 +1,33 @@
+{
+  "split": "dev",
+  "checkpoint": "/Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints/best.pt",
+  "decode": "beam",
+  "beam_size": 5,
+  "length_alpha": 0.7,
+  "no_repeat_ngram_size": 3,
+  "limit": null,
+  "overall": {
+    "n_sentences": 816,
+    "sentence_exact_match": 0.16544117647058823,
+    "token_accuracy_1_minus_wer": 0.5088257866462012,
+    "root_accuracy": 0.5525547445255474,
+    "tag_chain_accuracy": 0.47639902676399026,
+    "n_gold_word_tokens": 4110
+  },
+  "seen_root_sentences": {
+    "n_sentences": 712,
+    "sentence_exact_match": 0.1896067415730337,
+    "token_accuracy_1_minus_wer": 0.5423122765196663,
+    "root_accuracy": 0.604812030075188,
+    "tag_chain_accuracy": 0.5148872180451127,
+    "n_gold_word_tokens": 3325
+  },
+  "unseen_root_sentences": {
+    "n_sentences": 104,
+    "sentence_exact_match": 0.0,
+    "token_accuracy_1_minus_wer": 0.3706981317600787,
+    "root_accuracy": 0.33121019108280253,
+    "tag_chain_accuracy": 0.31337579617834393,
+    "n_gold_word_tokens": 785
+  }
+}

@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# trained model weights — large binaries, deliberately excluded from git;
+# everything else in checkpoints*/ (config, logs, eval results, predictions)
+# is small and kept for reproducibility.
+*.pt

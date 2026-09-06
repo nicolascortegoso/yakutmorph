@@ -1,0 +1,33 @@
+{
+  "split": "test",
+  "checkpoint": "/Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints/best.pt",
+  "decode": "beam",
+  "beam_size": 5,
+  "length_alpha": 1.0,
+  "overall": {
+    "n_sentences": 816,
+    "sentence_exact_match": 0.16053921568627452,
+    "token_accuracy_1_minus_wer": 0.4098848749503772,
+    "root_accuracy": 0.5494030988061976,
+    "tag_chain_accuracy": 0.47066294132588266,
+    "n_gold_word_tokens": 3937
+  },
+  "seen_root_sentences": {
+    "n_sentences": 708,
+    "sentence_exact_match": 0.18361581920903955,
+    "token_accuracy_1_minus_wer": 0.47650676506765066,
+    "root_accuracy": 0.6067024976288334,
+    "tag_chain_accuracy": 0.5115396775213406,
+    "n_gold_word_tokens": 3163
+  },
+  "unseen_root_sentences": {
+    "n_sentences": 108,
+    "sentence_exact_match": 0.009259259259259259,
+    "token_accuracy_1_minus_wer": 0.13155190133607397,
+    "root_accuracy": 0.3152454780361757,
+    "tag_chain_accuracy": 0.30361757105943155,
+    "n_gold_word_tokens": 774
+  }
+}
+
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints/eval_test_beam5.json

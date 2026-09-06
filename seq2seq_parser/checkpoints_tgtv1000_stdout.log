@@ -1,0 +1,116 @@
+device=mps src_vocab=4000 tgt_vocab=1000 params=14,264,296 train=15645 dev=816
+epoch   1 | train loss 5.0786 acc 0.1375 | dev loss 5.3654 acc 0.1056 | lr 1.00e-03 | 27.0s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: +n+acc+n+n+acc+n+n+acc+n+n+vrblz#1+conv#1+pl .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: бар+v+conv#1 бар+v
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: ол+pron+abl бу+pron+pl+dat
+
+epoch   2 | train loss 4.2062 acc 0.2707 | dev loss 5.7166 acc 0.1006 | lr 1.00e-03 | 25.3s
+epoch   3 | train loss 3.8200 acc 0.3342 | dev loss 5.1007 acc 0.1508 | lr 1.00e-03 | 25.7s
+epoch   4 | train loss 3.5645 acc 0.3741 | dev loss 4.9611 acc 0.1673 | lr 1.00e-03 | 26.2s
+epoch   5 | train loss 3.3814 acc 0.4022 | dev loss 4.7944 acc 0.1905 | lr 1.00e-03 | 26.7s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: килий+n+poss.3sg+n+poss.3sg ...
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: утуй+v+conv#1 кэл+v+pst.3sg
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n+pl э+v+pst.1pl
+
+epoch   6 | train loss 3.2119 acc 0.4311 | dev loss 4.8152 acc 0.2003 | lr 1.00e-03 | 27.0s
+epoch   7 | train loss 3.1101 acc 0.4478 | dev loss 4.7095 acc 0.2133 | lr 1.00e-03 | 27.1s
+epoch   8 | train loss 3.0021 acc 0.4695 | dev loss 4.6686 acc 0.2236 | lr 1.00e-03 | 28.5s
+epoch   9 | train loss 2.9394 acc 0.4787 | dev loss 4.6637 acc 0.2242 | lr 1.00e-03 | 30.2s
+epoch  10 | train loss 2.8665 acc 0.4909 | dev loss 4.5126 acc 0.2483 | lr 1.00e-03 | 30.9s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: самуос+n+poss.3sg+acc кус+n+pl+poss.3sg+acc үгэй+v+conv#1 тай+v+conv#1 тай+v+conv#1 хаал+v+pst.3sg .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: элбээ+v+adjz#16+advz#5 эт+v+conv_cond#2+dat
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n механик+n э+v+pst.1pl
+
+epoch  11 | train loss 2.8301 acc 0.4983 | dev loss 4.4522 acc 0.2547 | lr 1.00e-03 | 31.2s
+epoch  12 | train loss 2.7720 acc 0.5100 | dev loss 4.4098 acc 0.2588 | lr 1.00e-03 | 31.2s
+epoch  13 | train loss 2.7617 acc 0.5120 | dev loss 4.3430 acc 0.2757 | lr 1.00e-03 | 32.0s
+epoch  14 | train loss 2.7200 acc 0.5187 | dev loss 4.3791 acc 0.2723 | lr 1.00e-03 | 32.0s
+epoch  15 | train loss 2.6817 acc 0.5292 | dev loss 4.2880 acc 0.2790 | lr 1.00e-03 | 32.5s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: саммы+n+n+n+poss.3sg+acc түр+v+conv#1 ис+v+pst.3sg .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: тымныы+n+abl эт+v+conv_cond#2+dat
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n+pl э+v+pst.1pl
+
+epoch  16 | train loss 2.6453 acc 0.5359 | dev loss 4.3822 acc 0.2694 | lr 1.00e-03 | 32.4s
+epoch  17 | train loss 2.6153 acc 0.5422 | dev loss 4.3728 acc 0.2758 | lr 1.00e-03 | 828.2s
+epoch  18 | train loss 2.6168 acc 0.5407 | dev loss 4.2489 acc 0.2872 | lr 1.00e-03 | 25.1s
+epoch  19 | train loss 2.5853 acc 0.5471 | dev loss 4.2518 acc 0.2903 | lr 1.00e-03 | 25.0s
+epoch  20 | train loss 2.5657 acc 0.5499 | dev loss 4.3223 acc 0.2849 | lr 1.00e-03 | 26.3s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: самом+n+n кус+n+poss.3sg+acc саптый+v+conv#2+advz#8+v+conv#1 , луп+n+poss.3sg+acc тыт+v+conv#1 кэбис+v+pst.3sg .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: эт+v+part_fut+dat
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n+pl э+v+pst.1pl
+
+epoch  21 | train loss 2.5544 acc 0.5546 | dev loss 4.2467 acc 0.2999 | lr 1.00e-03 | 26.9s
+epoch  22 | train loss 2.5595 acc 0.5515 | dev loss 4.2378 acc 0.2964 | lr 1.00e-03 | 26.4s
+epoch  23 | train loss 2.5492 acc 0.5547 | dev loss 4.2360 acc 0.2942 | lr 1.00e-03 | 26.5s
+epoch  24 | train loss 2.5405 acc 0.5558 | dev loss 4.2474 acc 0.3054 | lr 1.00e-03 | 26.6s
+epoch  25 | train loss 2.5416 acc 0.5593 | dev loss 4.2600 acc 0.2972 | lr 1.00e-03 | 26.9s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: самем+n+n+n+n ... кибирир+n+n+poss.3sg+acc дибирир+n+poss.3sg+acc оргут+v+conv#1+conv#1 лили+n+poss.3sg+acc сор+v+conv#1 .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: эт+v+part_fut+dat эт+v+conv_cond#2+dat
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n+pl э+v+pst.1pl
+
+epoch  26 | train loss 2.5407 acc 0.5580 | dev loss 4.2335 acc 0.2967 | lr 1.00e-03 | 26.8s
+epoch  27 | train loss 2.5193 acc 0.5600 | dev loss 4.2248 acc 0.3012 | lr 1.00e-03 | 28.0s
+epoch  28 | train loss 2.5122 acc 0.5627 | dev loss 4.1751 acc 0.3051 | lr 1.00e-03 | 30.8s
+epoch  29 | train loss 2.5063 acc 0.5667 | dev loss 4.2251 acc 0.3016 | lr 1.00e-03 | 32.7s
+epoch  30 | train loss 2.4961 acc 0.5664 | dev loss 4.2313 acc 0.3063 | lr 1.00e-03 | 32.6s
+  sah:  Самсон Кустуурап... халҕаны сутуругунан тоҥсуйан лиһигирэттэ.
+  gold: самсон+n кустуурап+n ... халҕан+n+acc сутурук+n+inst тоҥ+imit+vrblz#5+conv#1 лис+imit+vrblz#12+cstv+pst.3sg .
+  pred: самус+n кус+n+poss.3sg+dat ...ртун+n+pl+poss.3sg+acc чоп+imit+vrblz#12+recp+pst.3pl .
+
+  sah:  атыннык эттэххэ
+  gold: атын+adj+advz#5 эт+v+conv_cond#2+dat
+  pred: атын+adj эт+v+conv_cond#2+dat
+
+  sah:  биһиги механиктар этибит
+  gold: биһиги+pron механик+n+pl э+v+pst.1pl
+  pred: биһиги+pron механик+n+pl э+v+pst.1pl
+
+done. best dev loss=4.1751. checkpoints in /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_tgtv1000

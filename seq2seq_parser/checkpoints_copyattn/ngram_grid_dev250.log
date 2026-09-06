@@ -1,0 +1,6 @@
+beam beam=5 alpha=0.7 ngram_block=0 limit=250 | exact=0.2400 tok_acc=0.5728 root_acc=0.6672 tag_acc=0.5959
+beam beam=5 alpha=0.7 ngram_block=2 limit=250 | exact=0.2320 tok_acc=0.5951 root_acc=0.6353 tag_acc=0.5504
+beam beam=5 alpha=0.7 ngram_block=3 limit=250 | exact=0.2360 tok_acc=0.6239 root_acc=0.6626 tag_acc=0.5929
+beam beam=5 alpha=0.7 ngram_block=4 limit=250 | exact=0.2360 tok_acc=0.6185 root_acc=0.6694 tag_acc=0.5959
+beam beam=5 alpha=0.7 ngram_block=5 limit=250 | exact=0.2400 tok_acc=0.6197 root_acc=0.6725 tag_acc=0.5997
+beam beam=5 alpha=0.7 ngram_block=6 limit=250 | exact=0.2400 tok_acc=0.6215 root_acc=0.6748 tag_acc=0.6012

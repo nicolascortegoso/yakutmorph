@@ -1,0 +1,6 @@
+beam beam=5 alpha=0.7 ngram_block=3 limit=None | exact=0.2341 tok_acc=0.6161 root_acc=0.6698 tag_acc=0.5881
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_copyattn/eval_dev_beam5_a0.7_ngram3.json
+beam beam=5 alpha=0.7 ngram_block=5 limit=None | exact=0.2328 tok_acc=0.6165 root_acc=0.6764 tag_acc=0.5978
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_copyattn/eval_dev_beam5_a0.7_ngram5.json
+beam beam=5 alpha=0.7 ngram_block=6 limit=None | exact=0.2328 tok_acc=0.6155 root_acc=0.6762 tag_acc=0.5978
+written to /Users/nicolas/yakut-research/yakutmorph/seq2seq_parser/checkpoints_copyattn/eval_dev_beam5_a0.7_ngram6.json
