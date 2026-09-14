@@ -1,146 +1,121 @@
-import pickle
-from typing import List, Tuple, Dict
+"""
+Morphological disambiguation. `YakutReranker`, a dual-encoder-with-attention
+reranker running on ONNX Runtime, is the package's disambiguation model —
+see nir/paper_2027.md in the yakutmorph_dataset research repository for its
+evaluated design.
+"""
+import json
+import re
+from typing import List
 
-import torch
-import torch.nn.functional as F
-from torch import nn
+import numpy as np
+import onnxruntime as ort
+import sentencepiece as spm
 
 from .interfaces import DisambiguationModel
 from .utils import get_file_path
 
 
-class GRUModel(nn.Module):
+class YakutReranker(DisambiguationModel):
     """
-    A GRU-based neural network model for sequence prediction tasks.
+    Dual-encoder-with-attention disambiguator, run via onnxruntime rather
+    than torch (~80MB installed — onnxruntime + numpy — versus torch's
+    ~340MB, for numerically equivalent predictions; verified against the
+    original PyTorch model on real held-out data before switching runtimes,
+    see nir/disambiguation.md). Scores each ambiguous token's own candidate
+    analyses against the full sentence context in one independent forward
+    pass per token, rather than jointly decoding a whole-sentence DAG of
+    coarse signatures the way the legacy model does — see nir/paper_2027.md
+    §5 in the yakutmorph_dataset research repository for the architecture.
     """
-    def __init__(self, vocab_size: int, embed_size: int, hidden_size: int, num_layers: int, padding_idx: int):
-        """
-        Initializes the GRUModel with the given parameters.
 
-        :param vocab_size: The size of the vocabulary.
-        :param embed_size: The size of the embedding vectors.
-        :param hidden_size: The number of features in the hidden state of the GRU.
-        :param num_layers: The number of recurrent layers in the GRU.
-        :param padding_idx:  The index of the padding token in the embeddings.
-        """
-        super(GRUModel, self).__init__()
-        self.hidden_dim = hidden_size
-        self.num_layers = num_layers
-        self.embedding = nn.Embedding(vocab_size, embed_size, padding_idx=padding_idx)
-        self.gru = nn.GRU(embed_size, hidden_size, num_layers, bidirectional=True, batch_first=True)
-        self.fc = nn.Linear(hidden_size * 2, vocab_size)
+    # Punctuation types that attach directly to the preceding/following
+    # token with no space, for reconstructing a natural-looking sentence
+    # string around the target marker — matches
+    # disambiguation_model/scripts/prepare_dataset.py's mark_target.
+    NO_SPACE_BEFORE = {
+        'comma', 'period', 'colon', 'semicolon', 'question', 'exclamation',
+        'ellipsis', 'hyphen',
+    }
+    NO_SPACE_AFTER = {'hyphen'}
 
-    def forward(self, x: torch.Tensor, hidden: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """
-        Defines the forward pass of the model.
+    UNK_TAG_ID = 1
 
-        :param x: Input tensor containing token indices.
-        :param hidden: Initial hidden state for the GRU.
-        :return: A tuple containing a tensor with the predicted token scores and 
-            and another tensor with the hidden states from the GRU.
-        """
-        x = self.embedding(x)
-        out, hidden = self.gru(x, hidden)
-        out = self.fc(out)
-        return out, hidden
+    _morpheme_re = re.compile(r'[а-яёһҕҥөү]+|[\^\+][A-Za-z_#\d\.\/]+')
 
-    def init_hidden(self, batch_size):
-        return torch.zeros(self.num_layers * 2, batch_size, self.hidden_dim)
-
-
-class YakutModel(DisambiguationModel, GRUModel):
-    """
-    A model for disambiguating morphological analyses using a GRU-based neural network.
-    """
     def __init__(self):
-        vocab_size, self.stoi, self.itos = self.load_mappings('data/vocabulary.pkl')
+        self.sp_input = spm.SentencePieceProcessor(model_file=get_file_path('data/spm_input.model'))
+        self.sp_candidate = spm.SentencePieceProcessor(model_file=get_file_path('data/spm_candidate.model'))
+        with open(get_file_path('data/candidate_tag_vocab.json'), encoding='utf-8') as f:
+            self.tag_to_id = json.load(f)
+        self.session = ort.InferenceSession(get_file_path('data/reranker.onnx'))
 
-        embed_size = 32
-        self.hidden_size = 32
-        self.num_layers = 1
-        self.padding_idx = self.stoi['<PAD>']
-        self.unknown_idx = self.stoi['^UNK']
-
-        super(YakutModel, self).__init__(vocab_size, embed_size, self.hidden_size, self.num_layers, self.padding_idx)
-        self.load_state_dict(torch.load(get_file_path('data/gru_weights.pth')))
-        self.eval()
-
-    def load_mappings(self, filename: str) -> Tuple[int, Dict, Dict]:
+    def _mark_target(self, tokens: List, target_pos: int) -> str:
         """
-        Loads vocabulary mappings from a file.
-
-        :param filename: The path to the file containing the vocabulary mappings.
-        :return: A tuple containing the size of the vocabulary, a dictionary mapping
-            strings to indices, and a dictionary mapping indices to strings.
+        Reconstructs a natural-looking sentence string with the token at
+        `target_pos` wrapped in `<TARGET>`/`</TARGET>`, using the same
+        punctuation-attachment rules as training-time data preparation
+        rather than naive space-joining.
         """
-        with open(get_file_path(filename), 'rb') as f:
-            mappings = pickle.load(f)
-        return len(mappings['stoi']), mappings['stoi'], mappings['itos']
+        pieces = []
+        for i, token in enumerate(tokens):
+            text = f'<TARGET>{token.surface}</TARGET>' if i == target_pos else token.surface
+            if pieces and token.type not in self.NO_SPACE_BEFORE and tokens[i - 1].type not in self.NO_SPACE_AFTER:
+                pieces.append(' ')
+            pieces.append(text)
+        return ''.join(pieces)
 
-    def beam_search(self, dag: List[List[str]], beam_width: int = 5, apply_softmax: bool = True) -> List[int]:
+    def _encode_candidate(self, candidate: str) -> List[int]:
         """
-        Performs beam search to find the most probable sequence of morphological analyses.
-
-        :param dag: A directed acyclic graph representing possible analyses.
-        :param beam_width: The width of the beam search. Defaults to 5.
-        :param apply_softmax: Apply softmax to the model's output. Defaults to True.
-        :return: A list with the indices with the most probable analysis.
+        Root subwords (via the candidate tokenizer) followed by hardcoded
+        tag ids, in one combined id space — see disambiguation_model's
+        dataset.py, whose encoding scheme this mirrors exactly so the
+        shipped model weights and vocabularies stay meaningful.
         """
-        start_token = dag.pop(0)[0]
-        start_token_idx = self.stoi.get(start_token)
+        morphs = self._morpheme_re.findall(candidate)
+        root_ids = self.sp_candidate.encode(morphs[0], out_type=int)
+        offset = self.sp_candidate.vocab_size()
+        tag_ids = [offset + self.tag_to_id.get(t, self.UNK_TAG_ID) for t in morphs[1:]]
+        return root_ids + tag_ids
 
-        branches = [
-            [(1.0, [start_token_idx], self.init_hidden(1))]
-        ]  # Initialize with model's hidden state
-
-        for analyses in dag:
-            new_branches = list()
-            for score, seq, hidden in branches[-1]:
-
-                input_seq = torch.tensor([seq[-1]], dtype=torch.long).unsqueeze(0)
-
-                with torch.no_grad():
-                    output, hidden = self(input_seq, hidden)
-
-                # Convert to probabilities
-                next_ig_idxs = [self.stoi.get(analysis, self.stoi['^UNK']) for analysis in analyses]
-                logs = output[..., next_ig_idxs]
-
-                if apply_softmax:
-                    probabilities = F.softmax(logs, dim=2)
-
-                for i, analysis in enumerate(analyses):
-                    updated_seq = seq + [next_ig_idxs[i]]
-                    if apply_softmax:
-                        updated_score = score * probabilities[0, 0, i].item()
-                    else:
-                        updated_score = score + logs[0, 0, i].item()
-
-                    new_branch = (updated_score, updated_seq, hidden)
-                    if new_branch not in new_branches:
-                        new_branches.append(new_branch)
-
-            new_branches = sorted(new_branches, key=lambda tup: tup[0], reverse=True)[:beam_width]
-
-            branches.append(new_branches)
-
-        most_likely_sequence = [self.itos[idx] for idx in branches[-1][0][1]]
-        return most_likely_sequence
-
-    def disambiguate(self, dag: List[List[str]]) -> List[int]:
+    def disambiguate(self, tokens: List) -> List[int]:
         """
-        Disambiguates the morphological analyses in a directed acyclic graph (DAG).
+        Scores each ambiguous token's candidates independently, conditioned
+        on the full sentence with that token marked as the target.
 
-        :param dag: A directed acyclic graph representing possible analyses.
-        :return: The indices of the selected analyses in the DAG.
+        :param tokens: The list of Token objects for the sentence.
+        :return: One index per ambiguous token, in order, selecting that
+            token's most likely candidate analysis.
         """
-        most_probable_sequence = self.beam_search(dag)
-        most_probable_sequence = most_probable_sequence[1:]
+        indexes = []
+        for pos, token in enumerate(tokens):
+            if not token.has_morph or not token.is_ambiguous():
+                continue
 
-        indexes = [0] * len(most_probable_sequence)
+            candidates = [
+                ''.join(m.morpheme for m in analysis.morphemes)
+                for analysis in token.analyses.output
+            ]
 
-        for i, token in enumerate(dag):
-            for e, analysis in enumerate(token):
-                if analysis == most_probable_sequence[i]:
-                    indexes[i] = e
-        return indexes[:-1]
+            sentence_text = self._mark_target(tokens, pos)
+            sentence_ids = np.array([self.sp_input.encode(sentence_text, out_type=int)], dtype=np.int64)
+            sentence_mask = np.ones_like(sentence_ids, dtype=np.float32)
+
+            candidate_id_lists = [self._encode_candidate(c) for c in candidates]
+            max_len = max(len(c) for c in candidate_id_lists)
+            candidate_ids = np.zeros((1, len(candidates), max_len), dtype=np.int64)
+            candidate_token_mask = np.zeros((1, len(candidates), max_len), dtype=np.float32)
+            for j, ids in enumerate(candidate_id_lists):
+                candidate_ids[0, j, :len(ids)] = ids
+                candidate_token_mask[0, j, :len(ids)] = 1
+            candidate_mask = np.ones((1, len(candidates)), dtype=np.float32)
+
+            scores = self.session.run(['scores'], {
+                'sentence_ids': sentence_ids,
+                'sentence_mask': sentence_mask,
+                'candidate_ids': candidate_ids,
+                'candidate_token_mask': candidate_token_mask,
+                'candidate_mask': candidate_mask,
+            })[0]
+            indexes.append(int(scores.argmax(axis=-1)[0]))
+        return indexes

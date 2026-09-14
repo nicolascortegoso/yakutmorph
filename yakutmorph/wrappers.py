@@ -64,13 +64,26 @@ class Analysis:
     Represents the analysis of morphemes within a given context.
 
     Attributes:
-        root: The lexical root of the analysis.
-        infl_groups: A list of inflectional groups.
+        root: The lexical root of the analysis, combined with its own
+            category tag (e.g. "мин+N", not just "мин") — matching how
+            "root" is used everywhere else this analyzer's output feeds
+            into (the gold dataset schema, the disambiguation model's
+            candidate strings): a root's own category is inseparable from
+            it, not a first affix among others.
+        root_text: Just the bare lexical root string (e.g. "мин"), without
+            its category tag — needed internally wherever a reference
+            lookup is keyed by the literal root (e.g. per-pronoun 'ud'
+            mappings in morph_reference.yaml), which `root.morpheme` no
+            longer directly is.
+        infl_groups: A list of inflectional groups covering everything
+            beyond the root's own category — empty if the analysis has no
+            further derivation or inflection at all.
     """
 
     def __init__(self, morphemes: List[str], reference: MorphReference):
 
-        self.root = Morph(morphemes[0], 'root', {})
+        self.root_text = morphemes[0]
+        self.root = Morph(morphemes[0] + morphemes[1], 'root', reference.get_tag(morphemes[1]))
         self.infl_groups = [
             InflGroup(i, igs)
             for i, igs in enumerate(self.__set_infl_groups(morphemes, reference), start=1)
@@ -78,7 +91,9 @@ class Analysis:
 
     def __set_infl_groups(self, morphemes: List[str], reference: MorphReference) -> List[InflGroup]:
         """
-        Private method to set inflection groups from morphemes.
+        Private method to set inflection groups from morphemes, excluding
+        the root and its own category tag (morphemes[0], morphemes[1]),
+        which `__init__` already folded into `root`.
 
         :param morphemes: A list of morphemes.
         :param reference: A reference to the morphology implemented by the transducer.
@@ -87,10 +102,10 @@ class Analysis:
         infl_groups = list()
         curr_infl_group = list()
         last_idx = len(morphemes) - 1
-        while last_idx > 0:
+        while last_idx > 1:
             ig = Morph(
                 morphemes[last_idx],
-                'db' if morphemes[last_idx].startswith('^') else 'fl',
+                'db' if reference.is_boundary(morphemes[last_idx]) else 'fl',
                 reference.get_tag(morphemes[last_idx])
             )
 
@@ -99,6 +114,11 @@ class Analysis:
                 infl_groups.insert(0, curr_infl_group)
                 curr_infl_group = list()
             last_idx -= 1
+        # Whatever's left accumulated since the last (or only) boundary —
+        # e.g. pure inflection directly on the root's own category, with no
+        # further derivational boundary of its own — still needs its group.
+        if curr_infl_group:
+            infl_groups.insert(0, curr_infl_group)
         return infl_groups
 
     @property
@@ -110,19 +130,48 @@ class Analysis:
         """
         return [self.root] + [ig for group in self.infl_groups for ig in group.affixes]
 
-    def remove_inflections(self):
+    def split_at_last_derivation(self):
         """
-        Removes inflection morphemes from the last inflectional group.
+        Splits the analysis at its last derivational boundary: walks
+        `morphemes` backward from the end, treating each inflectional
+        ('fl') morph as part of the word's inflection, until either a
+        derivational ('db') morph is found or only the root is left (an
+        analysis with no derivation beyond the root's own category).
 
-        :return: A list of 'Morph' objects.
+        This is the single place that answers "where does the lemma end
+        and the inflection begin" — both lemma lookup (`remove_inflections`)
+        and grammatical-feature extraction (e.g. `CoNLLU`'s mapper) are
+        expressed in terms of it, rather than each re-deriving the split
+        point its own way.
+
+        :return: A tuple (kept, inflections):
+            - kept: `morphemes`, truncated right after the last
+              derivational boundary (or just the root, if there is none).
+              `kept[-1]` is the morph carrying the analysis's current
+              lexical category — either that derivational affix, or the
+              root itself. Joining `kept`'s morpheme strings and handing
+              the result to the transducer's `generate` produces the
+              lemma.
+            - inflections: the Morph objects after that point — every
+              affix that inflects the word without changing its lemma
+              or category.
         """
         morphemes = self.morphemes
         last_idx = len(morphemes) - 1
-        while last_idx > 0:
-            if morphemes[last_idx].type == 'db':
-                break
+        while last_idx > 0 and morphemes[last_idx].type != 'db':
             last_idx -= 1
-        return morphemes[:last_idx + 1]
+        return morphemes[:last_idx + 1], morphemes[last_idx + 1:]
+
+    def remove_inflections(self):
+        """
+        Removes inflection morphemes from the end of the analysis, keeping
+        everything up to and including the last derivational boundary (or
+        just the root, if there is none).
+
+        :return: A list of 'Morph' objects.
+        """
+        kept, _ = self.split_at_last_derivation()
+        return kept
 
     def __repr__(self):
         """
@@ -172,6 +221,12 @@ class Token:
         type: The type of the token.
         has_morph: Indicates whether the token has morphological analyses.
         analyses: The morphological analyses of the token.
+        compound: Whether the token is part of a hyphen-joined construction
+            (reduplication, intensifying augmentation, or compounding; see
+            `yakutmorph.intensifiers`). The specific kind isn't tracked on
+            the token: it's recoverable from the flagged pair itself
+            (matching surface forms -> reduplication; a root ending in
+            +INTENS -> intensifier; otherwise -> compound).
     """
 
     pos: int
@@ -179,6 +234,7 @@ class Token:
     type: str
     has_morph: bool
     analyses: Optional[Analyses] = None
+    compound: bool = False
 
     def __repr__(self):
         """
@@ -253,29 +309,3 @@ class Parse:
         :return: True if any token is ambiguous, False otherwise.
         """
         return any([token for token in self.tokens if token.is_ambiguous()])
-
-    def get_dag(self, mapper) -> List[List[str]]:
-        """
-        Generates a directed acyclic graph (DAG) representation of the morphological
-        parses for the input sequence. Each node in the DAG represents a morphological
-        analysis of a token.
-
-        :param mapper: An object that provides methods for processing morphological
-            groups and mapping token types.
-        :return: A DAG where each sublist contains the nodes (morphological analyses)
-            for a token.
-        """
-        dag = [['<BOS>']]
-        for token in self.tokens:
-            nodes = []
-            if token.analyses:
-                for analysis in token.analyses.output:
-                    last_ig_affixes = [affix.morpheme for affix in analysis.infl_groups[-1].affixes]
-                    node = ''.join(mapper.process_morphs(last_ig_affixes))
-                    nodes.append(node)
-            else:
-                node = mapper.map_token_type(token.type)
-                nodes.append(node)
-            dag.append(nodes)
-        dag.append(['<EOS>'])
-        return dag

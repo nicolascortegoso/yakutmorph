@@ -1,32 +1,7 @@
 from typing import List, Dict
 
-import yaml
-
-from .interfaces import Mapper, OutputFormat
-from .utils import get_file_path
+from .interfaces import OutputFormat
 from .wrappers import Morph, Parse, Token
-
-
-class YakutMapper(Mapper):
-    def __init__(self, path_to_file: str, inside_package: bool = False):
-        path = get_file_path(path_to_file) if inside_package else path_to_file
-        with open(path, 'r') as f:
-            self.mappings = yaml.safe_load(f)
-
-    def reduce_morph(self, morphs: List[str]) -> List[str]:
-        return [morph.split('#')[0] for morph in morphs]
-
-    def filter_morph(self, morphs: List[str]) -> List[str]:
-        return [morph for morph in morphs if morph in self.mappings['feature_morphs']]
-
-    def map_morph(self, morph: str) -> str:
-        return self.mappings['morph_mapping'].get(morph, morph)
-
-    def process_morphs(self, morphs: List[str]) -> List[str]:
-        return [self.map_morph(morph) for morph in self.filter_morph(self.reduce_morph(morphs))]
-
-    def map_token_type(self, token_type: str) -> str:
-        return self.mappings['token_type_mapping'].get(token_type, token_type)
 
 
 class CoNLLU(OutputFormat):
@@ -52,11 +27,20 @@ class CoNLLU(OutputFormat):
                 return 'SYM' if tag_type == 'UPOS' else 'sym'
             return 'PUNCT' if tag_type == 'UPOS' else 'punct'
 
+        def __category_morph(token: Token) -> Morph:
+            """
+            The morph carrying the analysis's current lexical category:
+            the last derivational affix (e.g. +ADJZ#16 in "хараа+V+ADJZ#16"),
+            or the root itself (which already folds in its own category
+            tag) when there is no further derivation — the common case for
+            underived words, possibly still inflected.
+            """
+            kept, _ = token.morph.split_at_last_derivation()
+            return kept[-1]
+
         def __map_tag(token: Token, tag_type: str) -> str:
             if token.has_morph:
-                last_ig = token.morph.infl_groups[-1]
-                morpheme = last_ig.affixes[0]
-                return morpheme.map(tag_type)
+                return __category_morph(token).map(tag_type)
             return __map_token_type(token, tag_type)
 
         def __init_zero_affixation(upos: str):
@@ -76,10 +60,10 @@ class CoNLLU(OutputFormat):
 
             return grammemes
 
-        def __lexical_root(affix: Morph, root: Morph):
-            if not affix:
+        def __lexical_root(ud_map: Dict, root_text: str):
+            if not ud_map:
                 return dict()
-            return affix.get(root.morpheme, dict())
+            return ud_map.get(root_text, dict())
 
         def __affixes(affix):
             if not affix:
@@ -120,12 +104,18 @@ class CoNLLU(OutputFormat):
             if not token.morph:
                 return '_'
 
-            affixes = token.morph.infl_groups[-1].affixes
+            # Split the analysis at its last derivational boundary: the
+            # category-bearing morph (root, or the last derivational
+            # affix) supplies the base grammemes and any per-root 'ud'
+            # exceptions (e.g. pronoun-specific mappings); every morph
+            # after it is purely inflectional and feeds in on top.
+            category_morph = __category_morph(token)
+            _, inflections = token.morph.split_at_last_derivation()
 
-            grammemes = __init_zero_affixation(__map_tag(token, 'UPOS'))
-            grammemes.update(__lexical_root(affixes[0].map('ud'), token.morph.root))
+            grammemes = __init_zero_affixation(category_morph.map('UPOS'))
+            grammemes.update(__lexical_root(category_morph.map('ud'), token.morph.root_text))
 
-            for affix in affixes[1:]:
+            for affix in inflections:
                 grammemes.update(__affixes(affix))
 
             __combine_grammemes(grammemes)

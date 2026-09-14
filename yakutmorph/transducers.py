@@ -17,7 +17,20 @@ class YakutMorphReference(MorphReference):
         path = get_file_path(path_to_file) if inside_package else path_to_file
         with open(path, 'r') as f:
             reference = yaml.safe_load(f)
-        self.tags = {k: v for value in reference.values() for k, v in value.items()}
+        # Keyed by each tag's core name (its yaml key with the leading
+        # '^'/'+' symbol stripped), so a live morpheme resolves regardless
+        # of which symbol it happens to carry on the surface — the FST no
+        # longer distinguishes root/derivational from inflectional tags by
+        # symbol; '^' as a boundary marker has been deprecated.
+        self.tags = {k[1:]: v for value in reference.values() for k, v in value.items()}
+        # Maps the same core name to the section it belongs to. Used by
+        # `is_boundary` to tell root/derivational (category-defining) tags
+        # apart from inflectional ones.
+        self.sections = {
+            key[1:]: section
+            for section, tags in reference.items()
+            for key in tags
+        }
 
     def get_tags(self) -> List[str]:
         """
@@ -27,7 +40,20 @@ class YakutMorphReference(MorphReference):
 
     def get_tag(self, tag: str) -> Dict:
 
-        return self.tags.get(tag, dict())
+        return self.tags.get(tag[1:], dict())
+
+    def is_boundary(self, tag: str) -> bool:
+        """
+        Checks whether a morpheme tag marks a derivational group boundary,
+        i.e. whether it names a root category or a category-changing
+        derivational affix, as opposed to a purely inflectional one.
+
+        :param tag: A morpheme tag, e.g. '+Adj' or '+ADJZ#16' or '+PL'.
+        :return: True if the tag belongs to the 'roots' or 'derivational'
+            sections of the reference; False otherwise (including for
+            unrecognised tags).
+        """
+        return self.sections.get(tag[1:]) in ('roots', 'derivational')
 
 
 class YakutTransducer(Transducer):
@@ -169,7 +195,7 @@ class YakutTransducerPipeline(Transducer):
             )
             for transducer_label, transducer_file in transducers.items()
         ]
-        pipeline.append(DummyTransducer('fail', '^UNK'))
+        pipeline.append(DummyTransducer('fail', '+UNK'))
         return pipeline
 
     def analyse(self, surface_form: str) -> Tuple[Transducer, List[str]]:
@@ -208,6 +234,6 @@ class PostPipeline(PostAnalysis):
         """
         if len(morphemes) < 2:
             return morphemes
-        if token_pos > 1 and surface_form[0].isupper() and morphemes[1] == '^N':
-            morphemes[1] = '^PN'
+        if token_pos > 1 and surface_form[0].isupper() and morphemes[1] == '+N':
+            morphemes[1] = '+PN'
         return morphemes

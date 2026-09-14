@@ -74,12 +74,16 @@ class DisambiguationModel(ABC):
     """
 
     @abstractmethod
-    def disambiguate(self, graph: List[List[str]]) -> List[str]:
+    def disambiguate(self, tokens: List) -> List[int]:
         """
-        Select the most probable interpretation from a graph of analyses.
+        Selects the most probable analysis for each ambiguous token in a
+        sequence, given the full token list for sentence context.
 
-        :param graph: A graph representing multiple possible analyses.
-        :return: The most probable interpretation selected from the graph.
+        :param tokens: The list of Token objects for the sentence (some with
+            more than one candidate analysis, some with only one).
+        :return: One index per *ambiguous* token (tokens with a single
+            candidate are not included), in the same order they appear in
+            `tokens`, each selecting that token's most likely candidate.
         """
         ...
 
@@ -103,54 +107,6 @@ class PostAnalysis(ABC):
         :return: The list of morphemes after post-processing.
         """
         return morphemes
-
-
-class Mapper(ABC):
-    """
-    Abstract base class for mapping and transforming morphological elements
-    and token types in text processing. This class provides default
-    implementations that can be overridden by subclasses if needed.
-    """
-
-    def reduce_morph(self, morphs: List[str]) -> List[str]:
-        """
-        Reduces a list of morphological elements. The default implementation
-        returns the input list unchanged.
-
-        :param morphs: A list of morphological elements.
-        :return: The reduced list of morphological elements.
-        """
-        return morphs
-
-    def filter_morph(self, morphs: List[str]) -> List[str]:
-        """
-        Filters a list of morphological elements. The default implementation
-        returns the input list unchanged.
-
-        :param morphs: A list of morphological elements.
-        :return: The filtered list of morphological elements.
-        """
-        return morphs
-
-    def map_morph(self, morph: str) -> str:
-        """
-        Maps a single morphological element to another form. The default
-        implementation returns the input element unchanged.
-
-        :param morph: A single morphological element.
-        :return: The mapped morphological element.
-        """
-        return morph
-
-    def map_token_type(self, token_type: str) -> str:
-        """
-        Maps a token type to another form. The default implementation returns
-        the input token type unchanged.
-
-        :param token_type: The type of the token.
-        :return: The mapped token type.
-        """
-        return token_type
 
 
 class OutputFormat(ABC):

@@ -1,8 +1,8 @@
 from typing import List
 
-from .disambiguation import YakutModel
-from .interfaces import Tokenizer, Transducer, DisambiguationModel, PostAnalysis, Mapper
-from .mappers import YakutMapper
+from .disambiguation import YakutReranker
+from .intensifiers import classify, construction_type
+from .interfaces import Tokenizer, Transducer, DisambiguationModel, PostAnalysis
 from .tokenizers import YakutTokenizer
 from .transducers import YakutTransducerPipeline, PostPipeline, YakutMorphReference
 from .wrappers import Parse, Token, Analyses, Analysis
@@ -16,22 +16,19 @@ class YakutMorph:
     ----------
     tokenizer : The tokenizer to split input text into tokens. Default is YakutTokenizer.
     transducer : The transducer to perform morphological analysis. Default is YakutTransducerPipeline.
-    disambiguation_model : The model used to disambiguate morphological analyses. Default is YakutModel.
-    mapper : The mapper used for parsing DAGs. Default is YakutMapper with 'data/mappings.yaml'.
+    disambiguation_model : The model used to disambiguate morphological analyses. Default is YakutReranker.
     reference: A reference to map the implemented morphology.
     """
     def __init__(self,
                  tokenizer: Tokenizer = None,
                  transducer: Transducer = None,
                  disambiguation_model: DisambiguationModel = None,
-                 mapper: Mapper = None,
                  reference: YakutMorphReference = None
                  ):
 
         self.tokenizer = tokenizer if tokenizer else YakutTokenizer()
         self.transducer = transducer if transducer else YakutTransducerPipeline(morph_reference=reference)
-        self.disambiguation_model = disambiguation_model if disambiguation_model else YakutModel()
-        self.mapper = mapper if mapper else YakutMapper('data/mappings.yaml', inside_package=True)
+        self.disambiguation_model = disambiguation_model if disambiguation_model else YakutReranker()
 
     def __tokenize(self, input_text: str) -> List[Token]:
         """
@@ -69,14 +66,45 @@ class YakutMorph:
                 )
         return tokens
 
-    def __disambiguate(self, dag: List[List[str]]) -> List[int]:
+    def __detect_constructions(self, tokens: List[Token]) -> List[Token]:
+        """
+        Scans the token sequence for hyphen-joined constructions (reduplication,
+        intensifying augmentation, or compounding; see `yakutmorph.intensifiers`)
+        and flags the tokens on either side of the hyphen with `compound = True`.
+
+        The transducer has no notion of these constructions, so an intensifying
+        augment (e.g. "хап" in "хап-хара") is otherwise left with whatever
+        unrelated free-standing readings it happens to also have (e.g. as an
+        imitative or a verb root). When one is recognised, its analyses are
+        replaced with a single synthetic reading instead.
+
+        :param tokens: The list of Token objects, already morphologically analysed.
+        :return: The same list of Tokens, with `compound` set on the tokens
+            flanking each recognised hyphenated construction.
+        """
+        hyphen = YakutTokenizer.token_type.HYPHEN
+        for left, separator, right in zip(tokens, tokens[1:], tokens[2:]):
+            if not (left.has_morph and right.has_morph and separator.type == hyphen):
+                continue
+            construction = classify(left.surface, right.surface)
+            left.compound = right.compound = True
+            if construction == construction_type.INTENSIFIER:
+                reference = left.analyses.fst.reference
+                left.analyses.output = [
+                    Analysis(morphemes=[left.surface.lower(), '+INTENS'], reference=reference)
+                ]
+                left.analyses.set_mla(0)
+        return tokens
+
+    def __disambiguate(self, tokens: List[Token]) -> List[int]:
         """
         Disambiguates the morphological analyses using the disambiguation model.
 
-        :param dag: The directed acyclic graph representing possible analyses.
-        :return: The list of indexes representing the chosen analyses.
+        :param tokens: The list of Token objects for the sentence.
+        :return: One index per ambiguous token, in order, selecting that
+            token's most likely candidate analysis.
         """
-        return self.disambiguation_model.disambiguate(dag)
+        return self.disambiguation_model.disambiguate(tokens)
 
     def parse(self, input_text: str, post_analysis: PostAnalysis = PostPipeline):
         """
@@ -88,13 +116,17 @@ class YakutMorph:
         :return: A Parse object representing the analyzed input text.
         """
         tokens = self.__tokenize(input_text)
-        parse = Parse(input_text, self.__analyse(tokens, post_analysis))
+        tokens = self.__analyse(tokens, post_analysis)
+        tokens = self.__detect_constructions(tokens)
+        parse = Parse(input_text, tokens)
 
-        if parse.is_ambiguous():
-            dag = parse.get_dag(self.mapper)
-            indexes = self.__disambiguate(dag)
-            [token.analyses.set_mla(idx) for token, idx in zip(parse.tokens, indexes) if token.has_morph]
-        else:
-            [token.analyses.set_mla(0) for token in parse.tokens if token.has_morph]
+        ambiguous_tokens = [token for token in parse.tokens if token.is_ambiguous()]
+        if ambiguous_tokens:
+            indexes = self.__disambiguate(parse.tokens)
+            for token, idx in zip(ambiguous_tokens, indexes):
+                token.analyses.set_mla(idx)
+        for token in parse.tokens:
+            if token.has_morph and token.analyses.idx_mla is None:
+                token.analyses.set_mla(0)
 
         return parse

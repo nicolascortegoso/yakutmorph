@@ -1,70 +1,75 @@
 roots:
-  ^Adv:
+  +Adv:
     ref: adverb root
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^Adj:
+  +Adj:
     ref: Non-derivative adjective. Adjectives include words that denote a characteristic of objects and phenomena. They, like all attributive words, do not take declensions, except in cases of their substantivization. They have their own system of word-forming affixes and a special intensifying form [Ubryatova et al. §247].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^IMIT:
+  +IMIT:
     UPOS: IMIT
     XPOS: imit
     ref: imitative
     aper: unk
-  ^INJ:
+  +INTENS:
+    ref: Intensifying augment. A reduced, hyphen-joined copy of an adjective's own first syllable plus a fixed increment, expressing an intensified degree of the quality it precedes, e.g. "хап-хара" ('pitch-black', from "хара" 'black') [Ubryatova et al. §250].
+    UPOS: X
+    XPOS: intens
+    aper: unk
+  +INJ:
     UPOS: INTJ
     XPOS: intj
     ref: interjection
     aper: ij
-  ^N:
+  +N:
     ref: Non-derivative or primary nominal stem that cannot be decomposed into individual morphemes. It represents an independent word denoting an object or a subject. From the base of the noun, all grammatical forms of the noun (form of number, case, etc.) are formed (by attaching affixes to it) [Ubryatova at al., §149-150].
     UPOS: NOUN
     XPOS: n
     aper: n
-  ^PN:
+  +PN:
     ref: Proper noun. Proper names do not have a special grammatical form of expression (they can only have diminutive forms and are designated in writing with a capital letter) [Ubryatova et al., §147].
     UPOS: PROPN
     XPOS: propn
     aper: pn
-  ^V:
+  +V:
     ref: Non-derivative verb form, which expresses the general meaning of the action. The initial form of the verb is correspond to the 2 person singular of the imperative mood [Ubryatova et al., §375].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^aux:
+  +aux:
     UPOS: AUX
     XPOS: aux
     ref: auxiliary
     aper: aux
-  ^Num:
+  +Num:
     ref: Numeral (cardinal number). A numeral is the name of a number, understood either as a quantitative attribute of an object, or as a separate, independent concept. In terms of their structure and meaning, cardinal numerals in the Yakut language are the initial basis from which the forms of all other categories of the numeral name are formed [Ubryatova at al., §281-283].
     UPOS: NUM
     XPOS: num
     aper: num
-  ^CONJ:
+  +CONJ:
     UPOS: CCONJ
     XPOS: cconj
     ref: conjunction
     aper: cnjcoo
-  ^MOD:
+  +MOD:
     UPOS: MOD
     XPOS: mod
     ref: Modal words are those words that, having frozen in a certain morphological form, finally dropped out of the vocabulary of other parts of speech. They are now used only as typical modal words [Ubryatova, §927].
     aper: mod
-  ^Part:
+  +Part:
     UPOS: PART
     XPOS: part
     ref: Particles are auxiliary words that grammatically provide logical-semantic and modal nuances to the preceding word [§852-855]. According to their morphological characteristics, particles are do not take inflections, however, in the predicate they often take affixes of the preceding word like personal, plural and interrogative affixes, and sometimes even case affixes, when they refer to the subordinate clause [Ubryatova, §864].
     aper: unk
-  ^POST:
+  +POST:
     UPOS: ADP
     XPOS: adp
     ref: postposition
     aper: post
-  ^Pron:
+  +Pron:
     ref: Pronoun. Pronouns express the meaning of some nominal part of speech, as well as partly an adverb, and is contrasted with other significant parts of speech that denote an object or its characteristics. The semantic and functional specificity of pronouns lies in the fact that they are used in speech as substitutes for name words [Ubryatova et al., §311].
     UPOS: PRON
     XPOS: pron
@@ -127,7 +132,7 @@ roots:
         PronType: Tot
       сорох:
         PronType: Ind
-  ^UNK:
+  +UNK:
     ref: Unknown word form that the transducer(s) failed to analyse.
     UPOS: UNK
     XPOS: unk
@@ -147,365 +152,365 @@ derivational:
     XPOS: n
     aper: unk
     allo: һCт
-  ^NMLZ#2:
+  +NMLZ#2:
     ref: -ыы (and allomorphs) forms nouns from verbal stems ending in consonant. It refers mostly to the name of an action [Ubryatova et al., §174].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: LC
-  ^NMLZ#3:
+  +NMLZ#3:
     ref: -ааһын (and allomorphs) forms nouns mainly from verbal stems ending in long vowels or diphthong. Similar in meaning to -ыы [Ubryatova et al., §175].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: LOһCн
-  ^NMLZ#4:
+  +NMLZ#4:
     ref: -был (and allomorphs) forms nouns from verbal stems ending in long vowel or й to denote the name of an action [Ubryatova et al., §177].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: бCл
-  ^NMLZ#5:
+  +NMLZ#5:
     ref: -ык (and allomorphs) forms nouns that denote the name of the action from verbal stems ending in consonant [Ubryatova et al., §178].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: (C)к
-  ^NMLZ#6:
+  +NMLZ#6:
     ref: -(а)х (and allomorphs) forms nouns that indicate the instrument or the result of the action from verbal stems [Ubryatova et al., §179].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: (L)х
-  ^NMLZ#7:
+  +NMLZ#7:
     ref: -лаҥ (and allomorphs) forms nouns that convey the name of the action. Has a short variant ҥ [Ubryatova et al., §180].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: лLҥ
-  ^NMLZ#8:
+  +NMLZ#8:
     ref: -лта (and allomorphs) forms nouns from verbs to denote the name of the action [Ubryatova et al., §181].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: лтL
-  ^NMLZ#9:
+  +NMLZ#9:
     ref: -ааччы (and allomorphs) can be attached to any verbal stem. It has a meaning close to the active participle in Russian [Ubryatova et al., §176]. Kharitonov L.N. and other specialists considered -ааччы to be a verbal noun or the name of an actor, as it forms nouns denoting the actor's name. Ubryatova E.I. interprets this affix as a participle capable of taking predicate affixes and denoting an action that is usually performed [Korkina E.I. Nakloneniya glagola v yakutskom yazyke. Nauka, 1970, p. 221].
     UPOS: NOUN
     XPOS: n
     aper: gpr
     allo: LOччC
-  ^DIM#1:
+  +DIM#1:
     ref: -чык (and allomorphs) diminutive form from nouns [Ubryatova et al., §156].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: чCк
-  ^DIM#2:
+  +DIM#2:
     ref: -чаан (and allomorphs) diminutive form from nouns. Not very used [Ubryatova et al., §158].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: чLOн
-  ^DIM#3:
+  +DIM#3:
     ref: -каан (and allomorphs) diminutive form from nouns. Not very used [Ubryatova et al., §158].
     UPOS: NOUN
     XPOS: n
     aper: unk
     allo: кLOн
-  ^ADJZ:
+  +ADJZ:
     ref: -лаах (and allomorphs) forms adjectives from several types of nominal and verbal stems [Ubryatova et al., §262].
     UPOS: ADJ
     XPOS: adj
     aper: adj
     allo: лLOх
-  ^ADJZ#1:
+  +ADJZ#1:
     ref: -(ы)мсах (and allomorphs) forms adjectives that denote special inclination from nominal stems. Very productive [Ubryatova et al., §259].
     UPOS: ADJ
     XPOS: adj
     aper: adj
     allo: (C)мсLх
-  ^ADJZ#1a:
+  +ADJZ#1a:
     ref: -мсык (and allomorphs) forms adjectives from personal pronouns [Ubryatova et al., §316].
     UPOS: ADJ
     XPOS: adj
     aper: adj
     allo: мсCк
-  ^ADJZ#2:
+  +ADJZ#2:
     ref: -тааҕы (and allomorphs) forms adjectives that denote location from noun stems, adverbs of place and other adjectives indicating time [Ubryatova et al., §260].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#3:
+  +ADJZ#3:
     ref: -гы (and allomorphs) forms adjectives of place and time [Ubryatova et al., §261].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#4:
+  +ADJZ#4:
     ref: -(ы)гас (and allomorphs) forms adjectives that denote a inclination to an action from base and reflexive verbs [Ubryatova et al., §263].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#5:
+  +ADJZ#5:
     ref: -аҕас (and allomorphs) forms adjectives that result of an action or a characteristic of people. Not very productive [Ubryatova et al., §264].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#6:
+  +ADJZ#6:
     ref: -(ы)ган (and allomorphs) forms adjectives that express the capability of carrying out an action or its result from stems ending in consonant [Ubryatova et al., §265].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#7:
+  +ADJZ#7:
     ref: -ҕар (and allomorphs) forms adjectives from verbs stems ending in -ай. Quite productive [Ubryatova et al., §266].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#8:
+  +ADJZ#8:
     ref: -хай/кэй (and allomorphs) forms primary adjectives denoting shades of colour [Ubryatova et al., §266a].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#9:
+  +ADJZ#9:
     ref: -ҕай/гэй (and allomorphs) forms adjectives that express the result of an action from verbs ending in -й. Not productive [Ubryatova et al., §267].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#10:
+  +ADJZ#10:
     ref: -(ы)мтаҕай (and allomorphs) forms adjectives that indicate the tendency towards an action or state [Ubryatova et al., §268].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#11:
+  +ADJZ#11:
     ref: -(ы)мтыа (and allomorphs) forms adjectives that denote the tendency towards or capability to perform an action. Quite productive [Ubryatova et al., §269].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#12:
+  +ADJZ#12:
     ref: -ыык (and allomorphs) forms adjectives that indicate the tendency towards an action from verb stems ending in consonant. Quite productive [Ubryatova et al., §270].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#13:
+  +ADJZ#13:
     ref: -с form adjectives from imitatives and some figurative verbs. Quite productive [Ubryatova et al., §271].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#14:
+  +ADJZ#14:
     ref: -нньаҥ (and allomorphs) forms adjectives that express the capability to perform an action from base and reflexive verbal stems. Productive [Ubryatova et al., §272].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#15:
+  +ADJZ#15:
     ref: -(ы)к (and allomorphs) forms adjectives from verbal stems ending in й. Not very productive [Ubryatova et al., §273].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^ADJZ#16:
+  +ADJZ#16:
     ref: -р (and allomorphs) forms adjectives from verbal stems. Not very productive [Ubryatova et al., §274].
     UPOS: ADJ
     XPOS: adj
     aper: adj
-  ^DIM#4:
+  +DIM#4:
     ref: -тыҥы (and allomorphs) forms the diminutive of adjectives.
     UPOS: ADJ
     XPOS: adj
     aper: unk
-  ^DIM#5:
+  +DIM#5:
     ref: -сыар (and allomorphs) forms the diminutive of adjectives.
     UPOS: ADJ
     XPOS: adj
     aper: unk
-  ^ADVZ#1:
+  +ADVZ#1:
     ref: -ы (and allomorphs) forms adverbs of manner from some causative verbs. This affix is found also in lexicalized forms [Ubryatova et al., §692].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#2:
+  +ADVZ#2:
     ref: -чы (and allomorphs) forms adverbs of manner from figurative, imitatives, and some other verbs (mostly poetic writing) [Ubryatova et al., §693].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#3:
+  +ADVZ#3:
     ref: -дыы (and allomorphs) forms adverbs of manner from nominals, participles and negative forms [Ubryatova et al., §694].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#4:
+  +ADVZ#4:
     ref: -ча (and allomorphs) after -ыах and -быт forms adverbs that serve as a basis or motive for performing another action [Ubryatova et al., §695].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#5:
+  +ADVZ#5:
     ref: -тык (and allomorphs) forms adverbs of quality, quantity and manner from primary or derived adjectives and some adverbs [§698, Ubryatova et al.]. It can be formed also from personal pronouns [Ubryatova et al., §316].
     UPOS: ADV
     XPOS: adv
     aper: adv
     ud:
       Advlz: Yes
-  ^ADVZ#6:
+  +ADVZ#6:
     ref: -лыы (and allomorphs) forms adverbs from several different nominals, including verbal nouns [Ubryatova et al., §699].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#7:
+  +ADVZ#7:
     ref: -лары (and allomorphs) forms adverbs from some nominal stems that act in the meaning of an adverb of time or place, and some adverbs [Ubryatova et al., §700].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#8:
+  +ADVZ#8:
     ref: -та (and allomorphs) forms adverbs with the meaning of 'x times' from numerals, and some other adjectives and adverbs [Ubryatova et al., §701].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#9:
+  +ADVZ#9:
     ref: -ыа(н) (and allomorphs) forms adverbs from cardinals. It is ofter considered as the collective from numerals [Ubryatova et al., §702].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#10:
+  +ADVZ#10:
     ref: -ын (and allomorphs) forms adverbs from ordinals and diminutive collectives [Ubryatova et al., §298-§702].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#11:
+  +ADVZ#11:
     ref: -ыары/лык (and allomorphs) forms not productive adverbs of time, more rarely, place [Ubryatova et al., §707].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^ADVZ#12:
+  +ADVZ#12:
     ref: -ры in combination with -та forms рыта (and allomorphs) conveys repetition from adverbial participles and adverbs from verbal origin [Ubryatova et al., §705].
     UPOS: ADV
     XPOS: adv
     aper: adv
-  ^DEF:
+  +DEF:
     ref: -нык (and allomorphs) forms determinative pronouns from primary demonstratives or their emphatic variant -кa(й) [Ubryatova et al., §324].
     UPOS: DET
     XPOS: det
     aper: det qnt
-  ^DEF#1:
+  +DEF#1:
     ref: -кa(й) (and allomorphs) attaches to demonstratives pronouns to add emphasis [Ubryatova et al., §322].
     UPOS: DET
     XPOS: det
     aper: det qnt
-  ^DEF#2:
+  +DEF#2:
     ref: -чча (and allomorphs) forms determinative pronouns from primary demonstratives or their emphatic variant -кa(й) [Ubryatova et al., §325].
     UPOS: DET
     XPOS: det
     aper: det qnt
-  ^POSS:
+  +POSS:
     ref: -он (and allomorphs) added to personal and some interrogatives pronouns to form the possessive form [Ubryatova et al., §364].
     UPOS: DET
     XPOS: det
     aper: unk
-  ^ORD:
+  +ORD:
     ref: -(ы)с (and allomorphs) forms ordinals from cardinal numbers [Ubryatova et al., §294].
     UPOS: NUM
     XPOS: num
     aper: ord
     ud:
       NumType: Ord
-  ^APPR:
+  +APPR:
     ref: -ча (and allomorphs) forms approximate numerals from cardinal numbers [Ubryatova et al., §299].
     UPOS: ADV
     XPOS: adv
     aper: subst
-  ^APPR#1:
+  +APPR#1:
     ref: (ч)чака (and allomorphs) a variant of affix -ча that forms approximate numerals from cardinal numbers [Ubryatova et al., §299].
     UPOS: ADV
     XPOS: adv
     aper: subst
-  ^COLL:
+  +COLL:
     ref: -ыан (and allomorphs) forms the collective from the numeral [Ubryatova et al., §308].
     UPOS: ADV
     XPOS: adv
     aper: coll
-  ^COLL#1:
+  +COLL#1:
     ref: -ыа (and allomorphs) forms the collective from the numeral [Ubryatova et al., §308].
     UPOS: ADV
     XPOS: adv
     aper: coll
-  ^VRBLZ#1:
+  +VRBLZ#1:
     ref: -лаа (and allomorphs) form verbals from various types of stems. Very productive [Ubryatova et al., §379].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#2:
+  +VRBLZ#2:
     ref: -(ы)й (and allomorphs) form verbals from nouns and adjectives, much less often from other types of stems [Ubryatova et al., §384].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#3:
+  +VRBLZ#3:
     ref: -аа (and allomorphs) considered an early form of verb formation. Its productivity in modern language is fading [Ubryatova et al., §385].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#4:
+  +VRBLZ#4:
     ref: -(ы)р/ар (and allomorphs) forms mainly intransitive verbs expressing various processes and states [Ubryatova et al., §386].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#4a:
+  +VRBLZ#4a:
     ref: -(ы)р/ар (and allomorphs) forms mainly intransitive verbs expressing various processes and states [Ubryatova et al., §386].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#5:
+  +VRBLZ#5:
     ref: -тый/-сый (and allomorphs) forms verbals primarly from adjectives, but also from other type of stems [Ubryatova et al., §387].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#6:
+  +VRBLZ#6:
     ref: -(ы)мсый (and allomorphs) forms intransitive verbs from adjectives and nouns [Ubryatova et al., §388].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#7:
+  +VRBLZ#7:
     ref: -(ы)рҕаа (and allomorphs) forms intransitive verbs that express actions or states from nouns and adjectives [§389, Ubryatova et al.]. It also forms verbs from imitatives that expresses a short repetition of a fractional sound [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#8:
+  +VRBLZ#8:
     ref: -рый (and allomorphs) not very productive in contemporary Yakut [Ubryatova et al., §390].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#9:
+  +VRBLZ#9:
     ref: -ҕынаа (and allomorphs) form a verbal stems from a long sound that acts as a characteristic feature of an object or other action [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#10:
+  +VRBLZ#10:
     ref: -дьыгынаа/чыгынаа (and allomorphs) form a verbal stems that denote the special energy of the underlying sound (rattling, murmur, rumbling, etc.) [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#11:
+  +VRBLZ#11:
     ref: -кыраа (and allomorphs) forms intransitive action, expressing a long, energetic and often vibrating sound [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#12:
+  +VRBLZ#12:
     ref: -(ы)гыраа (and allomorphs) a quick and uniform alternation of the same sound [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#13:
+  +VRBLZ#13:
     ref: -дьыгыраа (and allomorphs) expresses the rapid and uniform alternation of the same sound [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#14:
+  +VRBLZ#14:
     ref: -ҕаа (and allomorphs) repetition, multiplicity of sound reproduced by a monosyllabic root [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#15:
+  +VRBLZ#15:
     ref: -(ыр)даа (and allomorphs) repetition, multiplicity of sound reproduced by a monosyllabic root [Ubryatova et al., §391].
     UPOS: VERB
     XPOS: v
     aper: v
-  ^VRBLZ#16:
+  +VRBLZ#16:
     ref: (ы)гыра и (ы)гыно (and allomorphs) forms verbal stems from imitatives ending in р [Ubryatova et al., §565].
     UPOS: VERB
     XPOS: v
