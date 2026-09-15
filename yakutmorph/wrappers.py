@@ -221,12 +221,23 @@ class Token:
         type: The type of the token.
         has_morph: Indicates whether the token has morphological analyses.
         analyses: The morphological analyses of the token.
-        compound: Whether the token is part of a hyphen-joined construction
-            (reduplication, intensifying augmentation, or compounding; see
-            `yakutmorph.intensifiers`). The specific kind isn't tracked on
-            the token: it's recoverable from the flagged pair itself
-            (matching surface forms -> reduplication; a root ending in
-            +INTENS -> intensifier; otherwise -> compound).
+        compound: The label of the multi-token construction this token is
+            part of, if any — `None` otherwise. Covers two distinct
+            detection mechanisms sharing one flag:
+              - hyphen-joined constructions (reduplication, intensifying
+                augmentation, compounding; see `yakutmorph.intensifiers`),
+                where the label is one of `intensifiers.construction_type`'s
+                values;
+              - whitespace-separated multi-word constructions matched
+                against a pattern lexicon (fixed idioms like "ол да
+                буоллар", or open-ended category runs like a sequence of
+                proper nouns; see `yakutmorph.constructions`), where the
+                label is that pattern's own name from the lexicon.
+            Tokens sharing the same (non-`None`) label and adjacent
+            positions belong to the same matched construction; unlike the
+            hyphen case, a multi-word match never replaces the member
+            tokens' own analyses — each keeps whatever it was disambiguated
+            to.
     """
 
     pos: int
@@ -234,7 +245,7 @@ class Token:
     type: str
     has_morph: bool
     analyses: Optional[Analyses] = None
-    compound: bool = False
+    compound: Optional[str] = None
 
     def __repr__(self):
         """

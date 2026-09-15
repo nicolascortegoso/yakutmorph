@@ -4,7 +4,7 @@ This Python library provides tools for performing morphological annotations on t
 
 - A tokenizer to divide a string into tokens.
 - A morphological transducer to map surface and analysis forms.
-- A module to resolve ambiguity in morphological analysis within the context of a given sequence.
+- A neural disambiguation module to resolve ambiguity in morphological analysis within the context of a given sequence.
 
 ## Installation
  
@@ -14,6 +14,8 @@ The library yakutmorph can be installed using the package manager pip (Python's 
 pip install yakutmorph
 ```
 
+The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. This was verified to produce numerically equivalent predictions (see `nir/disambiguation.md`) before switching the default runtime.
+
 ## Basic Usage
 
 For convenience, all three modules (tokenization, morphological analysis, and disambiguation) are implemented within the `YakutMorph` class, which provides a user-friendly interface.
@@ -22,7 +24,7 @@ This class follows a non-destructive approach, encapsulating the input string an
 ```
 >>> from yakutmorph.main import YakutMorph
 >>> morphology = YakutMorph()
->>> parse = morphology.parse('мин атым Кэскил')
+>>> parse = morphology.parse('мин атым Кэскил.')
 >>> parse
 Parse(мин атым Кэскил.)
 ```
@@ -34,14 +36,14 @@ The property `text` retrieves the input string:
 
 ```
 >>> parse.text
-мин атым Кэскил.
+'мин атым Кэскил.'
 ```
 
 The property `tokens` returns a list of `Token` objects: 
 
 ```
->>> parse.text
-мин атым Кэскил.
+>>> parse.tokens
+[Token(мин), Token(атым), Token(Кэскил), Token(.)]
 ```
 
 
@@ -107,7 +109,7 @@ The transducer output can be obtained with the property `output`. This returns a
 ```
 >>> fst_output = analyses.output
 >>> fst_output
-[Analysis([Morph(мин), Morph(^N)]), Analysis([Morph(мин), Morph(^Pron)])]
+[Analysis([Morph(мин+N)]), Analysis([Morph(мин+Pron)])]
 ```
 
 ### Analysis
@@ -117,30 +119,42 @@ Each `Analyses` object can be accessed using its respective index:
 ```
 >>> output = fst_output[0]
 >>> output
-Analysis([Morph(мин), Morph(^N)])
+Analysis([Morph(мин+N)])
 ```
 
-The property `morphemes` returns a list of `Morph` objects representing the lexical root and the concatenated affixes:
+The property `morphemes` returns a list of `Morph` objects: the lexical root — combined with its own category tag, e.g. `+N`, since a root's category is inseparable from it rather than a first affix among others — followed by any further affixation:
 
 
 ```
 >>> output.morphemes
-[Morph(мин), Morph(^N)]
+[Morph(мин+N)]
 ```
 
 
-The property `root` returns just the Morph object that contains the lexical root:
+The property `root` returns just the Morph object for the lexical root:
 
 
 ```
 >>> output.root
-Morph(мин)
+Morph(мин+N)
 ```
 
-The property `infl_groups` retrieves a list of `InflGroup` objects:
+`мин+N` has no affixation beyond its own category, so `infl_groups` is empty here:
 
 
 ```
+>>> output.infl_groups
+[]
+```
+
+To see a non-empty inflectional group, consider `parse.tokens[1]` (`атым`) instead: its one analysis adds a possessive suffix on top of the root's category:
+
+```
+>>> output = parse.tokens[1].analyses.output[0]
+>>> output
+Analysis([Morph(ат+N), Morph(+POSS.1SG)])
+>>> output.root
+Morph(ат+N)
 >>> output.infl_groups
 [InflGroup(1)]
 ```
@@ -173,7 +187,7 @@ The property `affixes` is used to retrieve the list of `Morph` objects grouped w
 
 ```
 >>> ig.affixes
-[Morph(^N)]
+[Morph(+POSS.1SG)]
 ```
 
 ### Morphemes
@@ -184,17 +198,17 @@ The `Morph` objects are accessed by index:
 ```
 >>> morph = ig.affixes[0]
 >>> morph
-Morph(^N)
+Morph(+POSS.1SG)
 ```
 
-A `Morph` object contains either a lexical root (root), a derivational (db), or an inflectional affix (fl).
+A `Morph` object contains either a lexical root (`root`) — which, since it also carries its own category tag, is where that category-level information lives — a derivational affix (`db`, one that changes the word's category, e.g. `+ADJZ#16` deriving an adjective from a verb, starting a new inflectional group of its own) or an inflectional affix (`fl`), like `+POSS.1SG` here, which stays within its group.
 
 The property `morpheme` gets the tag representation of the morpheme:
 
 
 ```
 >>> morph.morpheme
-'^N'
+'+POSS.1SG'
 ```
 
 
@@ -203,7 +217,7 @@ The property `type` returns the morpheme type:
 
 ```
 >>> morph.type
-'db'
+'fl'
 ```
 
 The property `reference` returns a dictionary with mappings for the morpheme:
@@ -211,7 +225,14 @@ The property `reference` returns a dictionary with mappings for the morpheme:
 
 ```
 >>> morph.reference
-{'UPOS': 'NOUN', 'XPOS': 'n', 'ref': 'noun', 'aper': 'n'}
+{'ref': '-(ы)м first person singular possessive.', 'ud': {'Number[psor]': 'Sing', 'Person[psor]': 1}, 'aper': 'px1sg'}
+```
+
+The root itself carries a `reference` too, populated from its own category tag:
+
+```
+>>> output.root.reference['ref']
+'Non-derivative or primary nominal stem that cannot be decomposed into individual morphemes. It represents an independent word denoting an object or a subject. From the base of the noun, all grammatical forms of the noun (form of number, case, etc.) are formed (by attaching affixes to it) [Ubryatova at al., §149-150].'
 ```
 
 
@@ -231,10 +252,10 @@ In this pipeline, the next transducer only takes part if the previous one fails 
 
 ```
 >>> from yakutmorph.main import YakutMorph
->>> morph = YakutMorph()
+>>> morphology = YakutMorph()
 >>> parse = morphology.parse('Мама Егора учуутал.')
 >>> [token.analyses for token in parse.tokens if token.has_morph]
-[Analyses(Fst(syl)=1), Analyses(Fst(aff)=3), Analyses(Fst(voc)=1)]
+[Analyses(Fst(voc)=1), Analyses(Fst(aff)=1), Analyses(Fst(voc)=1)]
 ```
 
 For more details, please refer to the README.md file inside the `src` folder, which contains the source code for the morphological transducers.
@@ -246,16 +267,16 @@ Ambiguous analyses occur when the morphological transducer outputs more than one
 
 ```
 >>> token.analyses.output
-[Morph(morphemes=['мин', '^N']), Morph(morphemes=['мин', '^Pron'])]
+[Analysis([Morph(мин+N)]), Analysis([Morph(мин+Pron)])]
 ```
 
-The disambiguation module employs a neural model to select the most likely analysis for each surface form within the context of the token sequence. This process happens automatically when calling the `parse` method.
+The disambiguation module employs a dual-encoder neural network with attention to select the most likely analysis for each surface form within the context of the token sequence: one encoder represents the sentence, a second represents each candidate analysis, and an attention mechanism lets each candidate query the sentence's contextual representation before scoring. This process happens automatically when calling the `parse` method.
 
 The most likely analysis is an `Analysis` object, which can be retrieved through the token's `morph` property:
 
 ```
 >>> token.morph
-Analysis([Morph(мин), Morph(^Pron)])
+Analysis([Morph(мин+Pron)])
 ```
 
 Under the hood, the disambiguation model sets the `idx_mla` (index most-likely analysis) property inside the `Analyses` object. This property is an integer that points to the index of the output list containing the selected `Analysis` object:
@@ -271,7 +292,7 @@ This index can be set manually if needed. It is used internally to retrieve the 
 ```
 >>> token.analyses.idx_mla = 0
 >>> token.morph
-Analysis([Morph)(мин), Morph)(^N)])
+Analysis([Morph(мин+N)])
 ```
 
 
@@ -294,21 +315,25 @@ They output Python native types instead of wrapping the results in the objects d
 >>> from yakutmorph.transducers import YakutTransducer
 >>> transducer = YakutTransducer()
 >>> transducer.analyse('аатым')
-['аат^N+POSS.1SG']
->>> transducer.generate('аат^N+POSS.1SG')
+['аат+N+POSS.1SG']
+>>> transducer.generate('аат+N+POSS.1SG')
 ['аатым']
 ```
 
-These modules also expect Python native types as input, so it's essential to ensure the correct types are provided. For example, the disambiguation model expects a list of analyses and returns another list containing the indices corresponding to the selected analyses (excluding the sequence's start and end symbols):
+The disambiguation model is different: unlike the tokenizer and transducer, it needs the full sentence context (to encode) and each ambiguous token's own candidate analyses (to score), so it operates on the `Token` objects `YakutMorph` already built rather than on a bare list of strings. A typical standalone use re-runs disambiguation on tokens obtained from a `Parse`:
 
 
 ```
->>> from yakutmorph.disambiguation import YakutModel
->>> model = YakutModel()
->>> tags = [['<BOS>'], ['^N', '^Pron'], ['^N+POSS.1SG'], ['^N', '^PN'], ['<EOS>']]
->>> model.disambiguate(tags)
-[1, 0, 1]
+>>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph.disambiguation import YakutReranker
+>>> morphology = YakutMorph()
+>>> parse = morphology.parse('мин атым Кэскил.')
+>>> model = YakutReranker()
+>>> model.disambiguate(parse.tokens)
+[1]
 ```
+
+The returned list has one index per *ambiguous* token in the sentence, in order — here just `мин` (`атым` and `Кэскил` each only had one candidate analysis to begin with, so they are not included).
 
 ## Analysis Output
 
@@ -318,12 +343,14 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 ```
 >>> from yakutmorph.mappers import CoNLLU
 >>> print(CoNLLU(parse))
-text = Мин аатым Кэскил.
-1       Мин     мин     PRON    pron    Case=Nom|Number=Sing|Person=1|PronType=Prs      _       _       мин^Pron
-2       аатым   аат     NOUN    n       Case=Nom|Number=Sing|Number[psor]=Sing|Person[psor]=1   _       _       аат^N+POSS.1SG
-3       Кэскил  кэскил  PROPN   propn   Case=Nom        _       _       кэскил^PN
-4       .       .       PUNCT   punct   _       _       _       _
+# text = Мин аатым Кэскил.
+1	Мин	мин	PRON	pron	Case=Nom|Number=Sing|Person=1|PronType=Prs	_	_	мин+Pron
+2	аатым	аат	NOUN	n	Case=Nom|Number=Sing|Number[psor]=Sing|Person[psor]=1	_	_	аат+N+POSS.1SG
+3	Кэскил		PROPN	propn	Case=Nom	_	_	кэскил+PN
+4	.	.	PUNCT	punct	_	_	_	_
 ```
+
+(The lemma column is empty for `Кэскил`: capitalized common-noun readings are promoted to proper nouns as a post-processing step, §`PostPipeline`, and the transducer was not itself trained to *generate* surface forms for that promoted tag — a known limitation of that heuristic, not of lemma lookup generally.)
 
 
 # Morphological Reference
@@ -344,7 +371,7 @@ The default `YakutTransducer` (and those in the morphological pipeline) object i
 >>> transducer = YakutTransducer()
 >>> tag_set = transducer.reference.get_tags()
 >>> len(tag_set)
-142
+144
 ```
 
 
@@ -356,6 +383,7 @@ The method `get_tag` returns a series of mappings for a tag in the transducer. F
 >>> mappings['ref']
 '-лар (and allomorphs) forms the plural affix from various type of stems. The interrogative pronoun ким takes the special form нээх to form the plural, after which a regular plural affix can be used for emphasis [Ubryatova et al., §329].'
 ```
+
 
 These include alternative tags to map to different formats:
 
@@ -410,9 +438,13 @@ general_type:
 ```
 
 
+## License
+
+GNU General Public License v3 (GPLv3) — see the `LICENSE` file.
+
 ## Contact
 
-The project is currently under development. If you would like to collaborate in the process, report an issue, or need assistance with using, implementing, or testing the morphology analyzer, please feel free to contact us.
+The project is currently under development. If you would like to collaborate in the process, report an issue, or need assistance with using, implementing, or testing the morphology analyzer, please get in touch via the project's repository: https://github.com/nicolascortegoso/yakutmorph
 
 In principle, the project could be modified to work for other from the turkish family.
 
