@@ -513,7 +513,7 @@ The package includes a snapshot of [yakutmorph_dataset](https://github.com/nicol
 {'text': 'дьиэтин', 'analysis': 'дьиэ+N+POSS.3SG.ACC'}
 ```
 
-Each example has the sentence, its translation (`translation_ru` and/or `translation_en`), `source`, `page`, `authors` (authors, editors or translator) and the analysis of every word. Examples that the corpus marks as deliberately wrong (e.g. starred forms quoted in a grammar) carry `"ungrammatical": true`.
+`limit` sets how many examples to return (3 if not given; fewer if fewer sentences match) and `offset` skips that many, to page through the results. Each example has the sentence, its translation (`translation_ru` and/or `translation_en`), `source`, `page`, `authors` (authors, editors or translator) and the analysis of every word. Examples that the corpus marks as deliberately wrong (e.g. starred forms quoted in a grammar) carry `"ungrammatical": true`.
 
 `corpus.origin` tells which corpus commit the snapshot was built from. To search a local checkout of the corpus instead, set `YAKUTMORPH_CORPUS=/path/to/yakutmorph_dataset`. Before a release, rebuild the snapshot from the corpus's `main`:
 

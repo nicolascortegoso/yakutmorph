@@ -59,6 +59,12 @@ class TestCorpus(unittest.TestCase):
         flagged = [r for r in self.corpus.records if r.get('ungrammatical')]
         self.assertGreater(len(flagged), 0)
 
+    def test_number_of_examples(self):
+        self.assertEqual(len(self.corpus.find(tag='REFL/PASS')['examples']), 3)  # default
+        self.assertEqual(len(self.corpus.find(tag='REFL/PASS', limit=7)['examples']), 7)
+        few = self.corpus.find(word='дьиэтин', limit=1000)
+        self.assertEqual(len(few['examples']), few['total'])  # fewer when fewer match
+
     def test_needs_a_criterion(self):
         with self.assertRaises(ValueError):
             self.corpus.find()

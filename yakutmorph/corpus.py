@@ -114,7 +114,7 @@ class Corpus:
                 self.origin = json.load(f)
 
     def find(self, word: Optional[str] = None, root: Optional[str] = None,
-             tag: Optional[str] = None, limit: int = 5, offset: int = 0) -> Dict:
+             tag: Optional[str] = None, limit: int = 3, offset: int = 0) -> Dict:
         """
         Finds sentences containing a word that matches every given
         criterion, shortest sentences first.
@@ -122,7 +122,7 @@ class Corpus:
         :param word: A word form, matched case-insensitively (e.g. 'дьиэтин').
         :param root: A root (e.g. 'дьиэ'), matched against the start of the analysis.
         :param tag: A tag with or without '+' (e.g. 'POSS.3SG.ACC').
-        :param limit: How many sentences to return.
+        :param limit: How many sentences to return (default 3; fewer if fewer match).
         :param offset: How many matching sentences to skip (for paging).
         :return: {'total': number of matching sentences, 'examples': [...]},
             each example with the matching word, its analysis and the whole

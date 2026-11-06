@@ -86,6 +86,12 @@ class TestMCPServer(unittest.TestCase):
         self.assertEqual(example['match']['analysis'].split('+')[0], 'дьиэ')
         self.assertIsInstance(example['page'], str)
 
+    def test_find_examples_returns_three_by_default(self):
+        result = structured(call(server, 'find_examples', {'tag': 'REFL/PASS'}))
+        self.assertEqual(len(result['examples']), 3)
+        result = structured(call(server, 'find_examples', {'tag': 'REFL/PASS', 'limit': 5}))
+        self.assertEqual(len(result['examples']), 5)
+
     def test_find_examples_without_criteria_is_an_error(self):
         self.assertTrue(call(server, 'find_examples', {}).is_error)
 

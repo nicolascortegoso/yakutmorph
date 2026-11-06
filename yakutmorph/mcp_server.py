@@ -307,7 +307,7 @@ def generate_word_form(analysis: str) -> GenerationResult:
 
 @server.tool(annotations=READ_ONLY)
 def find_examples(word: Optional[str] = None, root: Optional[str] = None, tag: Optional[str] = None,
-                  limit: int = 5, offset: int = 0) -> ExamplesResult:
+                  limit: int = 3, offset: int = 0) -> ExamplesResult:
     """Find manually annotated example sentences in the yakutmorph_dataset
     corpus that contain a word matching every given criterion (give at least
     one). Each example has the sentence, its Russian and/or English
@@ -318,7 +318,7 @@ def find_examples(word: Optional[str] = None, root: Optional[str] = None, tag: O
         word: An exact word form, case-insensitive, e.g. "дьиэтин".
         root: A root, e.g. "дьиэ" (any form of it).
         tag: A tag, with or without "+", e.g. "POSS.3SG.ACC" or "REFL/PASS".
-        limit: How many examples to return (at most 20).
+        limit: How many examples to return: 3 if not given, at most 20; fewer if fewer match.
         offset: How many matching examples to skip, to page through results.
     """
     result = _corpus().find(word=word, root=root, tag=tag, limit=max(1, min(limit, 20)), offset=max(0, offset))
