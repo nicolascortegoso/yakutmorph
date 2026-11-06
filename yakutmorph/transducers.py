@@ -77,7 +77,7 @@ class YakutTransducer(Transducer):
             If not provided, the default transducer binary is used.
         """
         default_label = 'ymv'
-        default_regex = r'[а-яёһҕҥөү]+|[\^\+][A-Za-z_#\d\.]+'
+        default_regex = r'[а-яёһҕҥөү]+|[\^\+][A-Za-z_#\d\.\/]+'  # '/' for syncretic tags such as +REFL/PASS
 
         self.transducer = sfst_transduce.Transducer(
             path_to_transducer if path_to_transducer else get_file_path('fsts/ymv.a')
