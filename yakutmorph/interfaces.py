@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import List, Any
+from typing import Any, List, Optional
 
 
 class Tokenizer(ABC):
@@ -96,7 +96,8 @@ class PostAnalysis(ABC):
     """
 
     @staticmethod
-    def apply(morphemes: List[str], surface_form: str, token_pos: int) -> List[str]:
+    def apply(morphemes: List[str], surface_form: str, token_pos: int,
+              sentence_initial: Optional[bool] = None) -> List[str]:
         """
         Applies post-processing analysis to a list of morphemes. The default
         implementation returns the input list of morphemes unchanged.
@@ -104,6 +105,9 @@ class PostAnalysis(ABC):
         :param morphemes: A list of morphemes.
         :param surface_form: The surface form of the token.
         :param token_pos: The position of the token in the sequence.
+        :param sentence_initial: Whether the token starts a sentence (the
+            first token, or one right after sentence-ending punctuation).
+            None means unknown: implementations then use `token_pos == 1`.
         :return: The list of morphemes after post-processing.
         """
         return morphemes

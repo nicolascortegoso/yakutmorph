@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import sfst_transduce
 import yaml
@@ -304,7 +304,8 @@ class PostPipeline(PostAnalysis):
     PROPER_NAMES = _load_proper_names('data/proper_names.txt', inside_package=True)
 
     @staticmethod
-    def apply(morphemes: List[str], surface_form: str, token_pos: int) -> List[str]:
+    def apply(morphemes: List[str], surface_form: str, token_pos: int,
+              sentence_initial: Optional[bool] = None) -> List[str]:
         """
         Applies post-processing rules to the given morphemes list,
         including an ordered chain of proper-noun promotion heuristics,
@@ -316,8 +317,12 @@ class PostPipeline(PostAnalysis):
            sentence the token happens to sit.
         2. Position + capitalization (fallback, used only when (1) doesn't
            apply — e.g. for a real name not yet in the list): the token
-           isn't the first in the sentence, so its capitalization can't be
-           explained by ordinary sentence-initial capitalization alone.
+           doesn't start a sentence, so its capitalization can't be
+           explained by ordinary sentence-initial capitalization alone. A
+           token starts a sentence when it is the first one or follows
+           sentence-ending punctuation (. ... ? ! — :), e.g. "Суох" in
+           "— Суох." is not promoted. A capitalized word after a quotation
+           mark (e.g. «Победа») does count as a name.
 
         Both require the surface form to be capitalized, and both only
         ever apply to a root the transducer already analysed as `+N` (a
@@ -327,10 +332,14 @@ class PostPipeline(PostAnalysis):
         :param morphemes: A list of morphemes representing the morphological analysis of a token.
         :param surface_form: The original surface form of the token.
         :param token_pos: The position of the token in the sequence.
+        :param sentence_initial: Whether the token starts a sentence; when
+            None, only the first token does.
         :return: The modified list of morphemes after applying the post-processing rules.
         """
         if len(morphemes) < 2 or morphemes[1] != '+N' or not surface_form[0].isupper():
             return morphemes
-        if morphemes[0] in PostPipeline.PROPER_NAMES or token_pos > 1:
+        if sentence_initial is None:
+            sentence_initial = token_pos == 1
+        if morphemes[0] in PostPipeline.PROPER_NAMES or not sentence_initial:
             morphemes[1] = '+PN'
         return morphemes

@@ -15,6 +15,10 @@
   (`from yakutmorph.main import YakutMorph` still works). Added
   `yakutmorph.__version__`.
 - Updated transducers and lexicons.
+- A capitalized word right after sentence-ending punctuation (. ... ? ! — :)
+  counts as sentence-initial, so it is tagged `+PN` only if it is a listed
+  name (e.g. "Суох" in "— Суох." stays `+N`). `PostAnalysis.apply` takes an
+  optional `sentence_initial` argument for this.
 
 ### Fixed
 - `import yakutmorph` failed on environments without `setuptools` (the default

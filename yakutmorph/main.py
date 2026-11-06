@@ -9,6 +9,19 @@ from .transducers import YakutTransducerPipeline, PostPipeline, YakutMorphRefere
 from .wrappers import Parse, Token, Analyses, Analysis
 
 
+# Token types after which the next word starts a new sentence (or, after a
+# dash, a new line of dialogue), so its capitalization is not evidence of
+# a proper name.
+SENTENCE_BOUNDARIES = {
+    YakutTokenizer.token_type.STOP,
+    YakutTokenizer.token_type.ELLIPSIS,
+    YakutTokenizer.token_type.QUESTION,
+    YakutTokenizer.token_type.EXCLAMATION,
+    YakutTokenizer.token_type.DASH,
+    YakutTokenizer.token_type.COLON,
+}
+
+
 class YakutMorph:
     """
     A class used to perform morphological analysis on Yakut language texts.
@@ -57,14 +70,16 @@ class YakutMorph:
         :param post_analysis: A PostAnalysis object to post-process the analyses.
         :return: The list of Tokens with their morphology analyzed.
         """
-        for token in tokens:
+        for i, token in enumerate(tokens):
             if token.has_morph:
+                sentence_initial = i == 0 or tokens[i - 1].type in SENTENCE_BOUNDARIES
                 fst, analyses = self.transducer.analyse(token.surface)
                 token.analyses = Analyses(fst=fst, output=[
                     Analysis(
                         morphemes=
                         post_analysis.apply(
-                            fst.get_morphemes(analysis), token.surface, token.pos
+                            fst.get_morphemes(analysis), token.surface, token.pos,
+                            sentence_initial=sentence_initial
                         ),
                         reference=fst.reference
                     )
