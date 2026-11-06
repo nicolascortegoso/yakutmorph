@@ -8,10 +8,17 @@ This Python library provides tools for performing morphological annotations on t
 
 ## Installation
  
-The library yakutmorph can be installed using the package manager pip (Python's package installer):
+The library yakutmorph requires Python 3.10 or newer and can be installed using the package manager pip (Python's package installer):
 
 ```
 pip install yakutmorph
+```
+
+To work on the library itself, clone the repository and use [uv](https://docs.astral.sh/uv/):
+
+```
+uv run --group dev pytest      # run the tests
+uv build                       # build the wheel and source distribution into dist/
 ```
 
 The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. This was verified to produce numerically equivalent predictions (see `nir/disambiguation.md`) before switching the default runtime.
@@ -22,7 +29,7 @@ For convenience, all three modules (tokenization, morphological analysis, and di
 This class follows a non-destructive approach, encapsulating the input string and subsequent processing steps as objects within a main `Parse` object:
 
 ```
->>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph import YakutMorph
 >>> morphology = YakutMorph()
 >>> parse = morphology.parse('мин атым Кэскил.')
 >>> parse
@@ -251,7 +258,7 @@ To expand the capability of processing surface forms with minimal ambiguity, the
 In this pipeline, the next transducer only takes part if the previous one fails to process a given surface form. In the example below, the surface forms have been automatically processed by different morphological transducers:
 
 ```
->>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph import YakutMorph
 >>> morphology = YakutMorph()
 >>> parse = morphology.parse('Мама Егора учуутал.')
 >>> [token.analyses for token in parse.tokens if token.has_morph]
@@ -324,7 +331,7 @@ The disambiguation model is different: unlike the tokenizer and transducer, it n
 
 
 ```
->>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph import YakutMorph
 >>> from yakutmorph.disambiguation import YakutReranker
 >>> morphology = YakutMorph()
 >>> parse = morphology.parse('мин атым Кэскил.')
@@ -417,7 +424,7 @@ Each transducer implements its own reference. This means, that if we are using a
 
 
 ```
->>> from yakutmorph.main import YakutMorph
+>>> from yakutmorph import YakutMorph
 >>> from yakutmorph.transducers import YakutMorphReference
 >>> custom_reference = YakutMorphReference('my_reference.yaml')
 >>> morphology = YakutMorph(reference=custom_reference)

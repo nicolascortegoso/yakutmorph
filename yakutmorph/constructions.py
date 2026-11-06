@@ -61,7 +61,7 @@ def load_patterns(path_to_file: str, inside_package: bool = False) -> List[Tuple
         more general ones that could also match the same tokens.
     """
     path = get_file_path(path_to_file) if inside_package else path_to_file
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         entries = yaml.safe_load(f) or []
     return [(entry['label'], entry['pattern']) for entry in entries]
 

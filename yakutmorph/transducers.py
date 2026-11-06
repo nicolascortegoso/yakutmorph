@@ -15,7 +15,7 @@ class YakutMorphReference(MorphReference):
 
     def __init__(self, path_to_file: str, inside_package: bool = False):
         path = get_file_path(path_to_file) if inside_package else path_to_file
-        with open(path, 'r') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             reference = yaml.safe_load(f)
         # Keyed by each tag's core name (its yaml key with the leading
         # '^'/'+' symbol stripped), so a live morpheme resolves regardless
@@ -238,7 +238,7 @@ class YakutTransducerPipeline(Transducer):
 
 def _load_proper_names(path_to_file: str, inside_package: bool = False) -> set:
     path = get_file_path(path_to_file) if inside_package else path_to_file
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         return {line.strip() for line in f if line.strip()}
 
 
