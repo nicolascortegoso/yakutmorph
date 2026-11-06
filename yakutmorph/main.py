@@ -132,6 +132,16 @@ class YakutMorph:
                 left.analyses.set_mla(0)
         return tokens
 
+    def __probabilities(self, tokens: List[Token]) -> List[List[float]]:
+        """
+        The disambiguation model's probabilities for the candidates of each
+        ambiguous token.
+
+        :param tokens: The list of Token objects for the sentence.
+        :return: One list of probabilities per ambiguous token, in order.
+        """
+        return self.disambiguation_model.probabilities(tokens)
+
     def __disambiguate(self, tokens: List[Token]) -> List[int]:
         """
         Disambiguates the morphological analyses using the disambiguation model.
@@ -158,9 +168,9 @@ class YakutMorph:
 
         ambiguous_tokens = [token for token in parse.tokens if token.is_ambiguous()]
         if ambiguous_tokens:
-            indexes = self.__disambiguate(parse.tokens)
-            for token, idx in zip(ambiguous_tokens, indexes):
-                token.analyses.set_mla(idx)
+            for token, probabilities in zip(ambiguous_tokens, self.__probabilities(parse.tokens)):
+                token.analyses.probabilities = probabilities
+                token.analyses.set_mla(max(range(len(probabilities)), key=probabilities.__getitem__))
         for token in parse.tokens:
             if token.has_morph and token.analyses.idx_mla is None:
                 token.analyses.set_mla(0)

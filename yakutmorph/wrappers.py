@@ -195,9 +195,25 @@ class Analyses:
     fst: Transducer
     output: List[Analysis] = field(default_factory=list)
     idx_mla: int = None
+    # The disambiguation model's probability for each analysis in `output`
+    # (same order); None when the token was not disambiguated by the model.
+    probabilities: Optional[List[float]] = None
 
     def set_mla(self, idx: int) -> None:
         self.idx_mla = idx
+
+    @property
+    def confidence(self) -> Optional[float]:
+        """
+        The probability of the chosen analysis: 1.0 when there is only one
+        analysis, the model's probability when it chose among several, and
+        None when the choice was not made by the model (e.g. set by hand).
+        """
+        if len(self.output) == 1:
+            return 1.0
+        if self.probabilities is None or self.idx_mla is None:
+            return None
+        return self.probabilities[self.idx_mla]
 
     def __repr__(self):
         """

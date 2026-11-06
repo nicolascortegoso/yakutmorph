@@ -3,6 +3,10 @@
 ## Unreleased
 
 ### Added
+- Confidence of the disambiguation: `token.analyses.probabilities` (the model's
+  probability for each candidate) and `token.analyses.confidence` (that of the
+  chosen analysis). The MCP tool `analyze_text` reports both.
+  `DisambiguationModel` gains an optional `probabilities` method.
 - `yakutmorph.corpus`: search a bundled snapshot of yakutmorph_dataset (18,873
   annotated sentences, corpus commit 393ebe9) by word form, root and/or tag,
   and the MCP tool `find_examples`, which uses it.

@@ -87,7 +87,18 @@ class YakutReranker(DisambiguationModel):
         :return: One index per ambiguous token, in order, selecting that
             token's most likely candidate analysis.
         """
-        indexes = []
+        return [int(np.argmax(p)) for p in self.probabilities(tokens)]
+
+    def probabilities(self, tokens: List) -> List[List[float]]:
+        """
+        The model's probability for each candidate analysis of each
+        ambiguous token (a softmax over the candidates' scores).
+
+        :param tokens: The list of Token objects for the sentence.
+        :return: One list per ambiguous token, in order, with one
+            probability per candidate.
+        """
+        result = []
         for pos, token in enumerate(tokens):
             if not token.has_morph or not token.is_ambiguous():
                 continue
@@ -116,6 +127,7 @@ class YakutReranker(DisambiguationModel):
                 'candidate_ids': candidate_ids,
                 'candidate_token_mask': candidate_token_mask,
                 'candidate_mask': candidate_mask,
-            })[0]
-            indexes.append(int(scores.argmax(axis=-1)[0]))
-        return indexes
+            })[0][0].astype(np.float64)
+            exp = np.exp(scores - scores.max())
+            result.append((exp / exp.sum()).tolist())
+        return result

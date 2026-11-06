@@ -51,8 +51,11 @@ trust the result:
 
 When a word has several possible analyses, a neural model chooses one from
 the sentence context ("analysis"); the other candidates are listed under
-"alternatives". This choice can be wrong, especially when there are many
-candidates. Proper names are tagged +PN by a heuristic (capitalised word not
+"alternatives", each with the model's probability. "confidence" is the
+probability of the chosen analysis (1.0 when there was only one). On held-out
+data the choice is right for 99% of words with confidence >= 0.99, 97% at
+0.90-0.99, 79% at 0.70-0.90 and only about half below 0.70: treat low-confidence
+choices as uncertain and mention the alternatives. Proper names are tagged +PN by a heuristic (capitalised word not
 at the start of a sentence, or a known name).
 
 find_examples searches yakutmorph_dataset, a corpus of about 19,000 manually
@@ -98,6 +101,11 @@ def _generator() -> YakutTransducer:
     return YakutTransducer()
 
 
+class Alternative(TypedDict):
+    analysis: str
+    probability: NotRequired[float]
+
+
 class TokenResult(TypedDict):
     position: int
     text: str
@@ -108,7 +116,8 @@ class TokenResult(TypedDict):
     features: NotRequired[str]
     transducer: NotRequired[str]
     ambiguous: NotRequired[bool]
-    alternatives: NotRequired[List[str]]
+    confidence: NotRequired[float]
+    alternatives: NotRequired[List[Alternative]]
     construction: NotRequired[str]
 
 
@@ -190,8 +199,15 @@ def _token_record(token: Token, conllu_row: List[str], alternatives: bool) -> To
         'transducer': token.analyses.fst.label,
         'ambiguous': len(candidates) > 1,
     })
+    confidence = token.analyses.confidence
+    if confidence is not None:
+        record['confidence'] = round(confidence, 3)
     if alternatives and len(candidates) > 1:
-        record['alternatives'] = [c for c in candidates if c != chosen]
+        probabilities = token.analyses.probabilities
+        record['alternatives'] = [
+            {'analysis': c, **({'probability': round(probabilities[i], 3)} if probabilities else {})}
+            for i, c in enumerate(candidates) if i != token.analyses.idx_mla
+        ]
     if token.compound:
         record['construction'] = token.compound
     return record

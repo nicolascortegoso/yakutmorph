@@ -56,7 +56,10 @@ class TestMCPServer(unittest.TestCase):
     def test_ambiguous_word_lists_alternatives(self):
         tokens = structured(call(server, 'analyze_text', {'text': 'мин аатым Кэскил.'}))['tokens']
         self.assertTrue(tokens[0]['ambiguous'])
-        self.assertNotIn(tokens[0]['analysis'], tokens[0]['alternatives'])
+        self.assertNotIn(tokens[0]['analysis'], [a['analysis'] for a in tokens[0]['alternatives']])
+        total = tokens[0]['confidence'] + sum(a['probability'] for a in tokens[0]['alternatives'])
+        self.assertAlmostEqual(total, 1.0, places=2)
+        self.assertEqual(tokens[1]['confidence'], 1.0)  # a single analysis
 
     def test_analyze_word(self):
         result = structured(call(server, 'analyze_word', {'word': 'дьиэтин'}))

@@ -133,6 +133,18 @@ class TestTokenAndParse(unittest.TestCase):
         parse = self.morphology.parse('холобурдаабыт киһи.')
         self.assertEqual(parse.tokens[0].lemmas, ['холобурдаа'])
 
+    def test_confidence_of_the_chosen_analysis(self):
+        token = self.morphology.parse('мин аатым Кэскил.').tokens[0]  # мин: +N or +Pron
+        probabilities = token.analyses.probabilities
+        self.assertEqual(len(probabilities), len(token.analyses.output))
+        self.assertAlmostEqual(sum(probabilities), 1.0, places=5)
+        self.assertEqual(token.analyses.confidence, max(probabilities))
+        self.assertEqual(token.analyses.idx_mla, probabilities.index(max(probabilities)))
+
+    def test_confidence_of_a_single_analysis(self):
+        token = self.morphology.parse('мин аатым Кэскил.').tokens[1]
+        self.assertEqual(token.analyses.confidence, 1.0)
+
     def test_parse_is_ambiguous_reflects_any_ambiguous_token(self):
         parse = self.morphology.parse('мин аатым Кэскил.')
         self.assertTrue(parse.is_ambiguous())

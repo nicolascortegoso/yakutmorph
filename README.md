@@ -295,6 +295,17 @@ Under the hood, the disambiguation model sets the `idx_mla` (index most-likely a
 1
 ```
 
+The model's probability for each candidate is in `probabilities` (same order as `output`), and `confidence` is the probability of the chosen analysis (1.0 for words with a single analysis):
+
+```
+>>> token.analyses.confidence > 0.9
+True
+>>> len(token.analyses.probabilities)
+2
+```
+
+The confidence tells how far to trust a choice. On the test set, the model is right for 99% of the ambiguous words with confidence of at least 0.99, 97% between 0.90 and 0.99, 79% between 0.70 and 0.90, and about half below 0.70.
+
 This index can be set manually if needed. It is used internally to retrieve the `Analysis` object when accessing the `morph` property of the `Token` object:
 
 

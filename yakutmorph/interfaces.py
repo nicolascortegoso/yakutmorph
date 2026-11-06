@@ -87,6 +87,23 @@ class DisambiguationModel(ABC):
         """
         ...
 
+    def probabilities(self, tokens: List) -> List[List[float]]:
+        """
+        The probability of each candidate analysis of each ambiguous token.
+        Models that compute probabilities override this; the default gives
+        probability 1 to the candidate chosen by `disambiguate`.
+
+        :param tokens: The list of Token objects for the sentence.
+        :return: One list per *ambiguous* token, in order, with one
+            probability per candidate (in the order of `analyses.output`).
+        """
+        return [
+            [1.0 if i == chosen else 0.0 for i in range(len(token.analyses.output))]
+            for token, chosen in zip(
+                [t for t in tokens if t.has_morph and t.is_ambiguous()], self.disambiguate(tokens)
+            )
+        ]
+
 
 class PostAnalysis(ABC):
     """
