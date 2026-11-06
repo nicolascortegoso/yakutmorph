@@ -496,8 +496,30 @@ The server offers these tools (all read-only):
 | `explain_tags` | tags, e.g. `["POSS.3SG.ACC", "PN"]` | what each tag marks, with its Universal Dependencies features |
 | `list_tags` | optionally `roots`, `derivational` or `inflectional` | the tag inventory |
 | `generate_word_form` | an analysis, e.g. `дьиэ+N+POSS.1SG.DAT` | the word form(s): `дьиэбэр` |
+| `find_examples` | a word form, a root and/or a tag, e.g. root `дьиэ` and tag `POSS.3SG.ACC` | manually annotated sentences from [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset), with translation, source, page, authors or translator, and the analysis of every word |
 
 The model is loaded once, on the first call.
+
+
+## Example sentences from the annotated corpus
+
+The package includes a snapshot of [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset) (about 19,000 manually annotated sentences, Apache-2.0), searchable by word form, root and/or tag:
+
+```
+>>> from yakutmorph.corpus import Corpus
+>>> corpus = Corpus()
+>>> result = corpus.find(root='дьиэ', tag='POSS.3SG.ACC', limit=1)
+>>> result['examples'][0]['match']
+{'text': 'дьиэтин', 'analysis': 'дьиэ+N+POSS.3SG.ACC'}
+```
+
+Each example has the sentence, its translation (`translation_ru` and/or `translation_en`), `source`, `page`, `authors` (authors, editors or translator) and the analysis of every word. Examples that the corpus marks as deliberately wrong (e.g. starred forms quoted in a grammar) carry `"ungrammatical": true`.
+
+`corpus.origin` tells which corpus commit the snapshot was built from. To search a local checkout of the corpus instead, set `YAKUTMORPH_CORPUS=/path/to/yakutmorph_dataset`. Before a release, rebuild the snapshot from the corpus's `main`:
+
+```
+uv run python scripts/build_corpus_snapshot.py yakutmorph_dataset
+```
 
 
 ## Retraining the disambiguation model

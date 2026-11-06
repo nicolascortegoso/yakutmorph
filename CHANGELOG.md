@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `yakutmorph.corpus`: search a bundled snapshot of yakutmorph_dataset (18,873
+  annotated sentences, corpus commit 393ebe9) by word form, root and/or tag,
+  and the MCP tool `find_examples`, which uses it.
+
 ## 0.1.1 (2026-11-06)
 
 ### Fixed

@@ -28,6 +28,7 @@ except ImportError as error:  # pragma: no cover - depends on the environment
     ) from error
 
 from . import __version__
+from .corpus import Corpus
 from .main import YakutMorph
 from .mappers import CoNLLU
 from .transducers import YakutTransducer
@@ -52,7 +53,14 @@ When a word has several possible analyses, a neural model chooses one from
 the sentence context ("analysis"); the other candidates are listed under
 "alternatives". This choice can be wrong, especially when there are many
 candidates. Proper names are tagged +PN by a heuristic (capitalised word not
-at the start of the input, or a known name).
+at the start of a sentence, or a known name).
+
+find_examples searches yakutmorph_dataset, a corpus of about 19,000 manually
+annotated Yakut sentences (mostly examples from grammars and literary texts),
+by word form, root and/or tag. Use it to show real usage, or to check an
+analysis against manually annotated examples. Examples flagged "ungrammatical"
+are deliberately wrong forms quoted in the source; never present them as
+correct Yakut.
 """
 
 TRANSDUCER_LABELS = {
@@ -76,6 +84,12 @@ READ_ONLY = ToolAnnotations(read_only_hint=True, idempotent_hint=True, open_worl
 def _morphology() -> YakutMorph:
     """The analyser is loaded once, on first use (about a second)."""
     return YakutMorph()
+
+
+@lru_cache(maxsize=1)
+def _corpus() -> Corpus:
+    """The annotated corpus, loaded once, on first use."""
+    return Corpus()
 
 
 @lru_cache(maxsize=1)
@@ -124,6 +138,29 @@ class TagList(TypedDict):
     roots: NotRequired[List[str]]
     derivational: NotRequired[List[str]]
     inflectional: NotRequired[List[str]]
+
+
+class ExampleWord(TypedDict):
+    text: str
+    analysis: Optional[str]
+
+
+class Example(TypedDict):
+    id: str
+    sentence: str
+    translation_ru: NotRequired[str]
+    translation_en: NotRequired[str]
+    source: NotRequired[str]
+    page: NotRequired[str]
+    authors: NotRequired[str]
+    ungrammatical: NotRequired[bool]
+    match: ExampleWord
+    words: List[ExampleWord]
+
+
+class ExamplesResult(TypedDict):
+    total: int
+    examples: List[Example]
 
 
 class GenerationResult(TypedDict):
@@ -266,6 +303,29 @@ def generate_word_form(analysis: str) -> GenerationResult:
         analysis: root+TAG+TAG..., e.g. "кинигэ+N+PL+ACC".
     """
     return {'analysis': analysis, 'forms': _generator().generate(analysis)}
+
+
+@server.tool(annotations=READ_ONLY)
+def find_examples(word: Optional[str] = None, root: Optional[str] = None, tag: Optional[str] = None,
+                  limit: int = 5, offset: int = 0) -> ExamplesResult:
+    """Find manually annotated example sentences in the yakutmorph_dataset
+    corpus that contain a word matching every given criterion (give at least
+    one). Each example has the sentence, its Russian and/or English
+    translation, source, page, authors or translator, and the annotated
+    analysis of every word. Shortest sentences come first.
+
+    Args:
+        word: An exact word form, case-insensitive, e.g. "дьиэтин".
+        root: A root, e.g. "дьиэ" (any form of it).
+        tag: A tag, with or without "+", e.g. "POSS.3SG.ACC" or "REFL/PASS".
+        limit: How many examples to return (at most 20).
+        offset: How many matching examples to skip, to page through results.
+    """
+    result = _corpus().find(word=word, root=root, tag=tag, limit=max(1, min(limit, 20)), offset=max(0, offset))
+    for example in result['examples']:
+        if 'page' in example:
+            example['page'] = str(example['page'])
+    return result
 
 
 def main() -> None:

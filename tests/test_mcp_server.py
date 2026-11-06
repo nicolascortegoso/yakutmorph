@@ -37,7 +37,8 @@ class TestMCPServer(unittest.TestCase):
                 return (await client.list_tools()).tools
         tools = {tool.name: tool for tool in anyio.run(run)}
         self.assertEqual(set(tools), {
-            'analyze_text', 'analyze_word', 'to_conllu', 'explain_tags', 'list_tags', 'generate_word_form'
+            'analyze_text', 'analyze_word', 'to_conllu', 'explain_tags', 'list_tags', 'generate_word_form',
+            'find_examples',
         })
         for tool in tools.values():
             self.assertTrue(tool.annotations.read_only_hint, tool.name)
@@ -76,6 +77,17 @@ class TestMCPServer(unittest.TestCase):
     def test_generate_word_form(self):
         result = structured(call(server, 'generate_word_form', {'analysis': 'дьиэ+N+POSS.1SG.DAT'}))
         self.assertEqual(result['forms'], ['дьиэбэр'])
+
+    def test_find_examples(self):
+        result = structured(call(server, 'find_examples', {'root': 'дьиэ', 'tag': 'POSS.3SG.ACC', 'limit': 2}))
+        self.assertGreater(result['total'], 0)
+        self.assertLessEqual(len(result['examples']), 2)
+        example = result['examples'][0]
+        self.assertEqual(example['match']['analysis'].split('+')[0], 'дьиэ')
+        self.assertIsInstance(example['page'], str)
+
+    def test_find_examples_without_criteria_is_an_error(self):
+        self.assertTrue(call(server, 'find_examples', {}).is_error)
 
     @unittest.skipUnless(shutil.which('yakutmorph-mcp') or sys.executable, 'no Python executable')
     def test_runs_over_stdio(self):
