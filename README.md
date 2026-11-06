@@ -21,7 +21,7 @@ uv run --group dev pytest      # run the tests
 uv build                       # build the wheel and source distribution into dist/
 ```
 
-The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. This was verified to produce numerically equivalent predictions (see `nir/disambiguation.md`) before switching the default runtime.
+The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. The exported model gives the same predictions as the PyTorch model it was trained as (see [Retraining the disambiguation model](#retraining-the-disambiguation-model)).
 
 ## Basic Usage
 
@@ -279,6 +279,8 @@ Ambiguous analyses occur when the morphological transducer outputs more than one
 
 The disambiguation module employs a dual-encoder neural network with attention to select the most likely analysis for each surface form within the context of the token sequence: one encoder represents the sentence, a second represents each candidate analysis, and an attention mechanism lets each candidate query the sentence's contextual representation before scoring. This process happens automatically when calling the `parse` method.
 
+The model is trained on the manually disambiguated sentences of [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset). On its held-out test set it chooses the correct analysis for 92.2% of the ambiguous words (1,691 of 1,835), against 85.3% for always choosing the analysis most often correct in the training data. Words with only one analysis are, of course, always correct.
+
 The most likely analysis is an `Analysis` object, which can be retrieved through the token's `morph` property:
 
 ```
@@ -301,6 +303,18 @@ This index can be set manually if needed. It is used internally to retrieve the 
 >>> token.morph
 Analysis([Morph(мин+N)])
 ```
+
+
+## Proper names
+
+The transducer analyses names as common nouns (`+N`). After the analysis, a capitalized word with a `+N` reading is tagged as a proper noun (`+PN`) when:
+
+1. its root is listed in `yakutmorph/data/proper_names.txt`, wherever it appears; or
+2. it does not start a sentence, so its capital letter is not explained by its position.
+
+A word starts a sentence when it is the first word, when it follows `.` `...` `?` `!` `—` or `:`, or when it follows a quotation mark that itself starts a sentence (direct speech). For example, `Суох` in `— Суох.` stays `суох+N`, while `Победа` in `Биһиги «Победа» теплоходунан бардыбыт.` becomes `победа+PN`.
+
+Names that are also common words (listed in `yakutmorph/data/name_homonyms.txt`, e.g. `харах` 'eye') are tagged `+PN` only by rule 2, so that `Хараҕыттан уу таҕыста.` keeps `харах+N`.
 
 
 ## Independent Modules
@@ -349,6 +363,7 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 
 ```
 >>> from yakutmorph.mappers import CoNLLU
+>>> parse = morphology.parse('Мин аатым Кэскил.')
 >>> print(CoNLLU(parse))
 # text = Мин аатым Кэскил.
 1	Мин	мин	PRON	pron	Case=Nom|Number=Sing|Person=1|PronType=Prs	_	_	_	Analysis=мин+Pron
@@ -357,7 +372,7 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 4	.	.	PUNCT	punct	_	_	_	_	_
 ```
 
-(The lemma column is empty for `Кэскил`: capitalized common-noun readings are promoted to proper nouns as a post-processing step, §`PostPipeline`, and the transducer was not itself trained to *generate* surface forms for that promoted tag — a known limitation of that heuristic, not of lemma lookup generally.)
+(The lemma column is empty for `Кэскил`: capitalized common-noun readings are promoted to proper nouns as a post-processing step (see [Proper names](#proper-names)), and the transducer was not itself trained to *generate* surface forms for that promoted tag — a known limitation of that heuristic, not of lemma lookup generally.)
 
 The last column (MISC) carries the full underlying FST analysis as an `Analysis=` entry — this is treebank-specific annotation in the sense the [CoNLL-U spec](https://universaldependencies.org/format.html) describes for that column ("any additional information that does not fit into any of the other fields, such as language-specific annotation"), not a universal UD field.
 
@@ -380,7 +395,7 @@ The default `YakutTransducer` (and those in the morphological pipeline) object i
 >>> transducer = YakutTransducer()
 >>> tag_set = transducer.reference.get_tags()
 >>> len(tag_set)
-144
+145
 ```
 
 
@@ -483,6 +498,21 @@ The server offers these tools (all read-only):
 | `generate_word_form` | an analysis, e.g. `дьиэ+N+POSS.1SG.DAT` | the word form(s): `дьиэбэр` |
 
 The model is loaded once, on the first call.
+
+
+## Retraining the disambiguation model
+
+The training code is in `disambiguation_model/scripts/`. It expects the corpus ([yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset)) checked out in `yakutmorph_dataset/` and the train/dev/test split produced by `seq2seq_parser/scripts/prepare_dataset.py`. With the `train` dependency group (PyTorch):
+
+```
+uv run --group train python disambiguation_model/scripts/prepare_dataset.py    # candidates for every word, via the library itself
+uv run --group train python disambiguation_model/scripts/train_tokenizer.py    # SentencePiece tokenizers
+uv run --group train python disambiguation_model/scripts/train.py --seed 1     # train; reports dev and test accuracy
+uv run --group train python disambiguation_model/scripts/export_onnx.py --install   # export to ONNX into yakutmorph/data/
+uv run python disambiguation_model/scripts/evaluate_library.py test            # accuracy of the installed library
+```
+
+`prepare_dataset.py` writes `fst_issues.md`, the words whose annotated analysis the transducer does not produce. `evaluate_library.py` fails if the library's candidate analyses no longer match the training data, which means the transducer or the post-processing has changed since the model was trained and it should be retrained.
 
 
 ## License
