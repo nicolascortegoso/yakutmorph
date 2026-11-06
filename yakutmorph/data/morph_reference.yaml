@@ -637,7 +637,7 @@ inflectional:
       Voice: Rfl
     aper: unk
   +REFL/PASS:
-    ref: -н after vowel stems, where the reflexive (-(ы)н) and the passive (-н) affixes coincide and the transducer does not choose between them [Ubryatova et al., §493, §505].
+    ref: -н fused reflexive-passive voice. Some transitive verbal roots form a single reflexive-passive voice instead of separate reflexive (+REFL) and passive (+PASS) ones.
     aper: unk
   +PASS:
     ref: -н, -(ы)лын forms the passive voice from verbal stems [Ubryatova et al., §505].

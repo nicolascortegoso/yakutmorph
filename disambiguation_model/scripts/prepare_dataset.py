@@ -152,6 +152,12 @@ POSS_CASE = re.compile(rf"\+POSS\.(\d(?:SG|PL))\+({CASES})\b")   # +POSS.3SG+ACC
 CASE_POSS = re.compile(rf"\+({CASES})\+POSS\.(\d(?:SG|PL))\b")   # +INST+POSS.3SG -> +POSS.3SG.INST
 GOLD_RULES = [
     ("poss_case_fused", lambda g: CASE_POSS.sub(r"+POSS.\2.\1", POSS_CASE.sub(r"+POSS.\1.\2", g))),
+    # +REFL, +PASS and +REFL/PASS are different labels: some transitive
+    # roots have separate reflexive and passive voices, others a single
+    # fused reflexive-passive one (+REFL/PASS). Where the annotators wrote
+    # +REFL or +PASS but the transducer offers only the +REFL/PASS
+    # analysis for that word, the annotation is corrected to +REFL/PASS
+    # (decision of the corpus author, 2026-11-06).
     ("refl_pass", lambda g: re.sub(r"\+(REFL|PASS)\b(?!/)", "+REFL/PASS", g)),
     # Names are tagged as common nouns in the corpus ('маша+N'); the
     # library promotes them to '+PN' (yakutmorph.transducers.PostPipeline).
@@ -351,7 +357,7 @@ Output: `disambiguation_model/data/{{train,dev,test}}.jsonl`
 
 - Gold analyses rewritten into the transducer's current notation (listed in `gold_conversions.tsv`): {len(gold_conversions)}
   - possessive + case written as one tag (`+POSS.3SG+ACC` -> `+POSS.3SG.ACC`): {stats['gold_rule_poss_case_fused']}
-  - `+REFL` / `+PASS` -> `+REFL/PASS`: {stats['gold_rule_refl_pass']}
+  - `+REFL` / `+PASS` -> `+REFL/PASS`, where the transducer offers only the fused voice: {stats['gold_rule_refl_pass']}
   - proper names `+N` -> `+PN`: {stats['gold_rule_proper_name']}
 
 ## Kept data

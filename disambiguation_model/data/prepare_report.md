@@ -20,7 +20,7 @@ Output: `disambiguation_model/data/{train,dev,test}.jsonl`
 
 - Gold analyses rewritten into the transducer's current notation (listed in `gold_conversions.tsv`): 2788
   - possessive + case written as one tag (`+POSS.3SG+ACC` -> `+POSS.3SG.ACC`): 1771
-  - `+REFL` / `+PASS` -> `+REFL/PASS`: 149
+  - `+REFL` / `+PASS` -> `+REFL/PASS`, where the transducer offers only the fused voice: 149
   - proper names `+N` -> `+PN`: 884
 
 ## Kept data

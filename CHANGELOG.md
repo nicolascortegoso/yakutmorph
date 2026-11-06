@@ -20,7 +20,7 @@
 - `import yakutmorph` failed on environments without `setuptools` (the default
   for new virtual environments on Python 3.12+), because package data was
   located with the deprecated `pkg_resources`. It now uses `importlib.resources`.
-- Syncretic tags such as `+REFL/PASS` were cut to `+REFL`.
+- Tags containing a slash, such as `+REFL/PASS`, were cut short (`+REFL/PASS` came out as `+REFL`, a different analysis).
 - Possessive + case tags (`+POSS.3SG.ACC`) had no reference entry, so CoNLL-U
   output lost their case and possessor features.
 - Data files are read as UTF-8 on every platform (previously the system

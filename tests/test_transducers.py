@@ -17,14 +17,14 @@ class TestYakutTransducer(unittest.TestCase):
         surface_form = ['дьоннор']
         self.assertEqual(self.transducer.generate(analysis_form), surface_form)
 
-    def test_get_morphemes_keeps_syncretic_tags(self):
-        """'+REFL/PASS' is one tag, not '+REFL' followed by stray text."""
+    def test_get_morphemes_keeps_slash_tags(self):
+        """'+REFL/PASS' is one tag and must not be read as '+REFL'."""
         analysis = 'сатаа+V+REFL/PASS+NEG+PART_PRES'
         self.assertEqual(
             self.transducer.get_morphemes(analysis),
             ['сатаа', '+V', '+REFL/PASS', '+NEG', '+PART_PRES']
         )
-        # Classified like the two voices it stands for.
+        # A voice affix, like +REFL.
         self.assertEqual(
             self.transducer.reference.is_boundary('+REFL/PASS'),
             self.transducer.reference.is_boundary('+REFL')
