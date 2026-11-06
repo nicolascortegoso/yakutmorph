@@ -36,6 +36,17 @@ class TestCoNLLU(unittest.TestCase):
         self.assertIn('Person[psor]=1', grammemes)
         self.assertEqual(misc, 'Analysis=аат+N+POSS.1SG')
 
+    def test_possessive_case_portmanteau_row(self):
+        """'+POSS.3SG.ACC' is one tag; its features are those of
+        '+POSS.3SG' and '+ACC' together."""
+        _, rows = self._rows('мин кини дьиэтин көрдүм.')
+        _, form, lemma, upos, _, feats, *_, misc = rows[2]
+        self.assertEqual((form, lemma, upos), ('дьиэтин', 'дьиэ', 'NOUN'))
+        self.assertEqual(misc, 'Analysis=дьиэ+N+POSS.3SG.ACC')
+        grammemes = feats.split('|')
+        for grammeme in ('Case=Acc', 'Number[psor]=Sing', 'Person[psor]=3'):
+            self.assertIn(grammeme, grammemes)
+
     def test_derivational_grammemes_come_from_outermost_category(self):
         """For 'хараарар' (хара+Adj -> +VRBLZ#4a (db) -> +PART_PRES (fl)),
         UPOS/grammemes must come from the derived VERB category, not the

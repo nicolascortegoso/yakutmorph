@@ -39,8 +39,43 @@ class YakutMorphReference(MorphReference):
         return list(self.tags.keys())
 
     def get_tag(self, tag: str) -> Dict:
+        """
+        Returns the reference entry of a tag, e.g. '+ACC'.
 
-        return self.tags.get(tag[1:], dict())
+        Portmanteau tags that the transducer writes as one tag joined with
+        '.' (the possessive + case affixes, e.g. '+POSS.3SG.ACC') are not
+        listed separately: they resolve to the combination of their two
+        parts ('+POSS.3SG' and '+ACC').
+
+        :param tag: A morpheme tag, with its leading '+' or '^'.
+        :return: The entry (keys such as 'ref', 'ud', 'aper'), or an empty
+            dict for an unknown tag.
+        """
+        core = tag[1:]
+        if core in self.tags:
+            return self.tags[core]
+        parts = self._split_portmanteau(core)
+        return self._combine(*parts) if parts else dict()
+
+    def _split_portmanteau(self, core: str):
+        """
+        Splits e.g. 'POSS.3SG.ACC' into ('POSS.3SG', 'ACC') when both parts
+        are known tags; returns None otherwise.
+        """
+        head, dot, last = core.rpartition('.')
+        if dot and head in self.tags and last in self.tags:
+            return head, last
+        return None
+
+    def _combine(self, first: str, second: str) -> Dict:
+        a, b = self.tags[first], self.tags[second]
+        combined = {'ref': f"{a.get('ref', first)} + {b.get('ref', second)}"}
+        ud = {**a.get('ud', dict()), **b.get('ud', dict())}
+        if ud:
+            combined['ud'] = ud
+        if 'aper' in a and 'aper' in b:
+            combined['aper'] = f"{a['aper']}+{b['aper']}"
+        return combined
 
     def is_boundary(self, tag: str) -> bool:
         """
@@ -53,7 +88,11 @@ class YakutMorphReference(MorphReference):
             sections of the reference; False otherwise (including for
             unrecognised tags).
         """
-        return self.sections.get(tag[1:]) in ('roots', 'derivational')
+        core = tag[1:]
+        parts = None if core in self.sections else self._split_portmanteau(core)
+        if parts:
+            core = parts[-1]
+        return self.sections.get(core) in ('roots', 'derivational')
 
 
 class YakutTransducer(Transducer):
