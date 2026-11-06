@@ -62,6 +62,19 @@ class YakutMorph:
             for i, token in enumerate(self.tokenizer.tokenize(input_text))
         ]
 
+    @staticmethod
+    def __starts_sentence(tokens: List[Token], i: int) -> bool:
+        """
+        Whether tokens[i] starts a sentence: it is the first token, follows
+        sentence-ending punctuation, or follows a quotation mark that itself
+        starts a sentence (direct speech: «Суох, ...» — диэтэ).
+        """
+        if i == 0 or tokens[i - 1].type in SENTENCE_BOUNDARIES:
+            return True
+        if tokens[i - 1].type == YakutTokenizer.token_type.QUOTATION:
+            return i == 1 or tokens[i - 2].type in SENTENCE_BOUNDARIES
+        return False
+
     def __analyse(self, tokens: List[Token], post_analysis: PostAnalysis):
         """
         Analyzes the morphology of the given tokens.
@@ -72,7 +85,7 @@ class YakutMorph:
         """
         for i, token in enumerate(tokens):
             if token.has_morph:
-                sentence_initial = i == 0 or tokens[i - 1].type in SENTENCE_BOUNDARIES
+                sentence_initial = self.__starts_sentence(tokens, i)
                 fst, analyses = self.transducer.analyse(token.surface)
                 token.analyses = Analyses(fst=fst, output=[
                     Analysis(

@@ -303,6 +303,12 @@ class PostPipeline(PostAnalysis):
     # list over time.
     PROPER_NAMES = _load_proper_names('data/proper_names.txt', inside_package=True)
 
+    # Listed names that are also common words (e.g. "харах" 'eye',
+    # "кэскил" 'future'). A capitalized one is only promoted when it does
+    # not start a sentence, since at the start of a sentence it is as
+    # likely to be the common word.
+    NAME_HOMONYMS = _load_proper_names('data/name_homonyms.txt', inside_package=True)
+
     @staticmethod
     def apply(morphemes: List[str], surface_form: str, token_pos: int,
               sentence_initial: Optional[bool] = None) -> List[str]:
@@ -311,18 +317,20 @@ class PostPipeline(PostAnalysis):
         including an ordered chain of proper-noun promotion heuristics,
         from most to least reliable:
 
-        1. Known-name lookup: the root is in `PROPER_NAMES`. Doesn't
-           require `token_pos > 1` the way (2) does, since list membership
-           is positive evidence of properness independent of where in the
-           sentence the token happens to sit.
+        1. Known-name lookup: the root is in `PROPER_NAMES` and not in
+           `NAME_HOMONYMS`. Applies anywhere, including at the start of a
+           sentence, since list membership is positive evidence of
+           properness independent of where the token sits.
         2. Position + capitalization (fallback, used only when (1) doesn't
            apply — e.g. for a real name not yet in the list): the token
            doesn't start a sentence, so its capitalization can't be
            explained by ordinary sentence-initial capitalization alone. A
            token starts a sentence when it is the first one or follows
            sentence-ending punctuation (. ... ? ! — :), e.g. "Суох" in
-           "— Суох." is not promoted. A capitalized word after a quotation
-           mark (e.g. «Победа») does count as a name.
+           "— Суох." is not promoted. So does a word after a quotation mark
+           that opens a sentence («Суох, ...» — диэтэ), while a capitalized
+           word after a quotation mark in mid-sentence (e.g. «Победа»
+           теплоход) counts as a name.
 
         Both require the surface form to be capitalized, and both only
         ever apply to a root the transducer already analysed as `+N` (a
@@ -340,6 +348,7 @@ class PostPipeline(PostAnalysis):
             return morphemes
         if sentence_initial is None:
             sentence_initial = token_pos == 1
-        if morphemes[0] in PostPipeline.PROPER_NAMES or not sentence_initial:
+        listed = morphemes[0] in PostPipeline.PROPER_NAMES and morphemes[0] not in PostPipeline.NAME_HOMONYMS
+        if listed or not sentence_initial:
             morphemes[1] = '+PN'
         return morphemes

@@ -29,8 +29,17 @@ class TestProperNamePromotion(unittest.TestCase):
         text = 'Мин Микиитэни көрдүм. Микиитэ кэллэ.'
         self.assertEqual(self.analysis(text, 'Микиитэ'), 'микиитэ+PN')
 
-    def test_capitalized_after_quotation_mark_is_a_name(self):
-        self.assertEqual(self.analysis('«Победа» теплоходунан бардыбыт.', 'Победа'), 'победа+PN')
+    def test_capitalized_after_quotation_mark_in_mid_sentence_is_a_name(self):
+        self.assertEqual(self.analysis('Биһиги «Победа» теплоходунан бардыбыт.', 'Победа'), 'победа+PN')
+
+    def test_capitalized_after_quotation_mark_opening_direct_speech_is_not_a_name(self):
+        self.assertEqual(self.analysis('«Суох, суох», — диэтэ.', 'Суох'), 'суох+N')
+
+    def test_listed_name_that_is_also_a_common_word(self):
+        """'харах' ('eye') is listed as a name and as a homonym: promoted in
+        mid-sentence only."""
+        self.assertEqual(self.analysis('Хараҕыттан уу таҕыста.', 'Хараҕыттан'), 'харах+N+POSS.3SG.ABL')
+        self.assertEqual(self.analysis('Мин Хараҕы көрдүм.', 'Хараҕы'), 'харах+PN+ACC')
 
 
 if __name__ == '__main__':

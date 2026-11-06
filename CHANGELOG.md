@@ -17,8 +17,11 @@
 - Updated transducers and lexicons.
 - A capitalized word right after sentence-ending punctuation (. ... ? ! — :)
   counts as sentence-initial, so it is tagged `+PN` only if it is a listed
-  name (e.g. "Суох" in "— Суох." stays `+N`). `PostAnalysis.apply` takes an
-  optional `sentence_initial` argument for this.
+  name (e.g. "Суох" in "— Суох." stays `+N`); so does a word after a
+  quotation mark that opens a sentence (direct speech). `PostAnalysis.apply`
+  takes an optional `sentence_initial` argument for this.
+- Listed names that are also common words (`data/name_homonyms.txt`, e.g.
+  "харах" 'eye') are tagged `+PN` only in mid-sentence.
 
 ### Fixed
 - `import yakutmorph` failed on environments without `setuptools` (the default
