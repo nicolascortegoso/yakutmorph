@@ -1,0 +1,13 @@
+# Analysis Mode Accuracy
+
+
+Tests if the transducer outputs the expected analysis for a given surface form in the testing sets.
+
+The testing sets are compiled from different sources and aggregated by topic.
+
+
+The table below shows the list of testing sets and the achieved accuracy in them:
+
+{TABLE}
+
+The [file](./results/failed_analyses.csv) contains a list with faulty analysis from the testing sets.
