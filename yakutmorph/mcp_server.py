@@ -31,6 +31,7 @@ from . import __version__
 from .corpus import Corpus
 from .main import YakutMorph
 from .mappers import CoNLLU, conllu_document
+from .glossing import gloss_words, interlinear
 from .paradigms import paradigm
 from .transducers import YakutTransducer
 from .wrappers import Analysis, Token
@@ -196,6 +197,22 @@ class ParadigmResult(TypedDict):
     tables: List[ParadigmTable]
 
 
+class GlossedWord(TypedDict):
+    text: str
+    segmented: str
+    gloss: str
+
+
+class GlossedSentence(TypedDict):
+    text: str
+    interlinear: str
+    words: List[GlossedWord]
+
+
+class GlossResult(TypedDict):
+    sentences: List[GlossedSentence]
+
+
 class GenerationResult(TypedDict):
     analysis: str
     forms: List[str]
@@ -345,6 +362,25 @@ def generate_word_form(analysis: str) -> GenerationResult:
         analysis: root+TAG+TAG..., e.g. "кинигэ+N+PL+ACC".
     """
     return {'analysis': analysis, 'forms': _generator().generate(analysis)}
+
+
+@server.tool(annotations=READ_ONLY)
+def gloss_text(text: str) -> GlossResult:
+    """Gloss Yakut text interlinearly, in the style of the Leipzig Glossing
+    Rules: each word segmented into morphemes with '-', and a gloss line
+    with the analyser's tags (the root stands for itself; there are no
+    translations). Affixes whose boundary is not visible in the written form
+    are glossed together, joined with '.'. The segmentation is approximate.
+    "interlinear" gives each sentence as three aligned lines: the sentence,
+    the segmentation and the glosses.
+
+    Args:
+        text: Yakut text in Cyrillic; it may contain several sentences.
+    """
+    return {'sentences': [
+        {'text': parse.text, 'interlinear': interlinear(parse), 'words': gloss_words(parse)}
+        for parse in _morphology().parse_text(text)
+    ]}
 
 
 @server.tool(annotations=READ_ONLY)

@@ -526,10 +526,26 @@ The server offers these tools (all read-only):
 | `explain_tags` | tags, e.g. `["POSS.3SG.ACC", "PN"]` | what each tag marks, with its Universal Dependencies features |
 | `list_tags` | optionally `roots`, `derivational` or `inflectional` | the tag inventory |
 | `generate_word_form` | an analysis, e.g. `дьиэ+N+POSS.1SG.DAT` | the word form(s): `дьиэбэр` |
+| `gloss_text` | a text | interlinear glosses: each word segmented into morphemes and glossed with the analyser's tags |
 | `inflection_table` | a root and `N` or `V`, e.g. `көр`, `V` | the inflection tables: noun cases by number and possessor; verb tenses by person, affirmative and negative |
 | `find_examples` | a word form, a root and/or a tag, e.g. root `дьиэ` and tag `POSS.3SG.ACC` | manually annotated sentences from [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset), with translation, source, page, authors or translator, and the analysis of every word |
 
 The model is loaded once, on the first call.
+
+
+## Interlinear glosses
+
+`interlinear` gives a sentence as interlinear text in the style of the Leipzig Glossing Rules: the sentence, its words segmented into morphemes, and a gloss line with the analyser's tags:
+
+```
+>>> from yakutmorph.glossing import interlinear
+>>> print(interlinear(morphology.parse('Мин кини дьиэтин көрдүм.')))
+Мин кини дьиэтин көрдүм.
+Мин  кини  дьиэ-тин           көр-дүм      .
+мин  кини  дьиэ-POSS.3SG.ACC  көр-PST.1SG
+```
+
+`gloss_words` returns the same per word (`text`, `segmented`, `gloss`). The transducer does not record where morphemes begin in the written word, so the boundaries are found by generating the analysis step by step and comparing each step with the word, allowing for stem-final alternations (`Хараҕ-ыттан` from `харах`, `ап-пын` from `ат`). Affixes whose boundary is not visible are glossed together with `.` (`көр-бөп-пүн` / `көр-NEG.PART_PRES-1SG`); a word without any visible boundary is left whole. The root is glossed with itself (there are no translations), and category tags (`+N`, `+V`) are not glossed. The segmentation is an approximation.
 
 
 ## Inflection tables

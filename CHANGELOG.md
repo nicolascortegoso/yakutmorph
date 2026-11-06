@@ -3,6 +3,9 @@
 ## Unreleased
 
 ### Added
+- Interlinear glossing: `yakutmorph.glossing` (`gloss_words`, `interlinear`)
+  segments words into morphemes and glosses them with the analyser's tags,
+  Leipzig style; MCP tool `gloss_text`.
 - Inflection tables: `yakutmorph.paradigms.paradigm(root, 'N' | 'V')`, and the
   MCP tool `inflection_table`.
 - Sentence splitting: `YakutMorph.parse_text` (one `Parse` per sentence),

@@ -38,7 +38,7 @@ class TestMCPServer(unittest.TestCase):
         tools = {tool.name: tool for tool in anyio.run(run)}
         self.assertEqual(set(tools), {
             'analyze_text', 'analyze_word', 'to_conllu', 'explain_tags', 'list_tags', 'generate_word_form',
-            'find_examples', 'inflection_table',
+            'find_examples', 'inflection_table', 'gloss_text',
         })
         for tool in tools.values():
             self.assertTrue(tool.annotations.read_only_hint, tool.name)
@@ -89,6 +89,13 @@ class TestMCPServer(unittest.TestCase):
     def test_generate_word_form(self):
         result = structured(call(server, 'generate_word_form', {'analysis': 'дьиэ+N+POSS.1SG.DAT'}))
         self.assertEqual(result['forms'], ['дьиэбэр'])
+
+    def test_gloss_text(self):
+        result = structured(call(server, 'gloss_text', {'text': 'Мин кини дьиэтин көрдүм.'}))
+        sentence = result['sentences'][0]
+        house = sentence['words'][2]
+        self.assertEqual((house['segmented'], house['gloss']), ('дьиэ-тин', 'дьиэ-POSS.3SG.ACC'))
+        self.assertEqual(len(sentence['interlinear'].split('\n')), 3)
 
     def test_inflection_table(self):
         result = structured(call(server, 'inflection_table', {'root': 'көр', 'category': 'V'}))
