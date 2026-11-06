@@ -32,7 +32,10 @@ dependencies = [
     "sfst-transduce>=1.3.1",
     "PyYAML>=6.0.1",
     "sentencepiece>=0.2.0",
-    "onnxruntime>=1.19",
+    # onnxruntime 1.24.1-1.24.3 declare Python 3.10 support but ship no
+    # 3.10 wheels; 1.23.2 is the last release with them.
+    "onnxruntime>=1.19,<1.24; python_version < '3.11'",
+    "onnxruntime>=1.19; python_version >= '3.11'",
     "numpy>=1.24",
 ]
 
