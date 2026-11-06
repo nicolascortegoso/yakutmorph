@@ -115,7 +115,7 @@ class YakutTransducer(Transducer):
         :param path_to_transducer: Path to the binary file of the transducer.
             If not provided, the default transducer binary is used.
         """
-        default_label = 'ymv'
+        default_label = 'voc'  # as in YakutTransducerPipeline
         default_regex = r'[а-яёһҕҥөү]+|[\^\+][A-Za-z_#\d\.\/]+'  # '/' for syncretic tags such as +REFL/PASS
 
         self.transducer = sfst_transduce.Transducer(

@@ -205,12 +205,13 @@ class YakutManualDisambiguation(OutputFormat):
             if token.has_morph:
                 fst = token.analyses.fst
                 for analysis in token.analyses.output:
-                    parse.update({
-                        "fst": fst,
+                    # One entry per candidate analysis, each its own dict.
+                    parses.append({
+                        **parse,
+                        "fst": fst.label,
                         "root": analysis.root.morpheme,
                         "affixes": [m.morpheme for m in analysis.morphemes]
                     })
-                    parses.append(parse)
             else:
                 parses.append(parse)
         fields.update({"parses": parses})

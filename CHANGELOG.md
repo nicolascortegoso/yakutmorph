@@ -24,6 +24,10 @@
   "харах" 'eye') are tagged `+PN` only in mid-sentence.
 
 ### Fixed
+- A standalone `YakutTransducer()` is labelled `voc`, as in the pipeline
+  (it was `ymv`). Transducer labels are `voc`, `syl`, `aff` and `fail`.
+- `YakutManualDisambiguation` repeated the last analysis of an ambiguous word
+  instead of listing each one, and its output could not be written as JSON.
 - `import yakutmorph` failed on environments without `setuptools` (the default
   for new virtual environments on Python 3.12+), because package data was
   located with the deprecated `pkg_resources`. It now uses `importlib.resources`.

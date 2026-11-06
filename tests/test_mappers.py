@@ -1,7 +1,7 @@
 import unittest
 
 from yakutmorph.main import YakutMorph
-from yakutmorph.mappers import CoNLLU
+from yakutmorph.mappers import CoNLLU, YakutManualDisambiguation
 
 
 class TestCoNLLU(unittest.TestCase):
@@ -88,6 +88,17 @@ class TestCoNLLU(unittest.TestCase):
         pos, form, lemma, upos, xpos, feats, *_ = rows[0]
         self.assertEqual((form, upos), ('ким', 'PRON'))
         self.assertIn('PronType=Int', feats.split('|'))
+
+
+class TestYakutManualDisambiguation(unittest.TestCase):
+
+    def test_one_entry_per_candidate_with_transducer_label(self):
+        import json
+        result = YakutManualDisambiguation(YakutMorph().parse('мин аатым Кэскил.'))
+        json.dumps(result, ensure_ascii=False)  # must be serializable
+        min_entries = [p for p in result['parses'] if p['text'] == 'мин']
+        self.assertEqual({p['root'] for p in min_entries}, {'мин+N', 'мин+Pron'})
+        self.assertEqual({p['fst'] for p in min_entries}, {'voc'})
 
 
 if __name__ == '__main__':
