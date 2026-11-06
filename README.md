@@ -447,6 +447,44 @@ general_type:
 ```
 
 
+## Using yakutmorph from an LLM (MCP server)
+
+yakutmorph includes a [Model Context Protocol](https://modelcontextprotocol.io) server, so that LLM applications (Claude Desktop, Claude Code, and other MCP clients) can analyse Yakut text with it. Install it with the `mcp` extra, which adds the `yakutmorph-mcp` command:
+
+```
+pip install "yakutmorph[mcp]"
+```
+
+To add it to Claude Code:
+
+```
+claude mcp add yakutmorph -- yakutmorph-mcp
+```
+
+For other clients, configure a stdio server that runs the command `yakutmorph-mcp`, for example in Claude Desktop's `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "yakutmorph": { "command": "yakutmorph-mcp" }
+  }
+}
+```
+
+The server offers these tools (all read-only):
+
+| Tool | Input | Output |
+|---|---|---|
+| `analyze_text` | a sentence, e.g. `Мин кинигэни аахпытым.` | each word's analysis in context, lemma, UD part of speech and features, the transducer that analysed it, and the alternatives for ambiguous words |
+| `analyze_word` | one word form, e.g. `дьиэтин` | every analysis of the word, out of context |
+| `to_conllu` | a sentence | the CoNLL-U annotation |
+| `explain_tags` | tags, e.g. `["POSS.3SG.ACC", "PN"]` | what each tag marks, with its Universal Dependencies features |
+| `list_tags` | optionally `roots`, `derivational` or `inflectional` | the tag inventory |
+| `generate_word_form` | an analysis, e.g. `дьиэ+N+POSS.1SG.DAT` | the word form(s): `дьиэбэр` |
+
+The model is loaded once, on the first call.
+
+
 ## License
 
 GNU General Public License v3 (GPLv3) — see the `LICENSE` file.

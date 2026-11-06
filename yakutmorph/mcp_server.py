@@ -1,0 +1,277 @@
+"""
+An MCP (Model Context Protocol) server that lets LLM applications use
+yakutmorph: morphological analysis, disambiguation, CoNLL-U output, tag
+explanations and word-form generation for Yakut (Sakha).
+
+Install with the optional dependency and start it over stdio::
+
+    pip install "yakutmorph[mcp]"
+    yakutmorph-mcp
+
+For example, to add it to Claude Code::
+
+    claude mcp add yakutmorph -- yakutmorph-mcp
+"""
+from functools import lru_cache
+from typing import Dict, List, Optional
+
+# typing_extensions (a dependency of the MCP SDK) rather than typing: pydantic
+# needs it for TypedDict on Python < 3.12.
+from typing_extensions import NotRequired, TypedDict
+
+try:
+    from mcp.server.mcpserver import MCPServer
+    from mcp_types import ToolAnnotations
+except ImportError as error:  # pragma: no cover - depends on the environment
+    raise ImportError(
+        'The MCP server needs the optional dependency: pip install "yakutmorph[mcp]"'
+    ) from error
+
+from . import __version__
+from .main import YakutMorph
+from .mappers import CoNLLU
+from .transducers import YakutTransducer
+from .wrappers import Analysis, Token
+
+# Text an MCP client gives the model before it uses the tools.
+INSTRUCTIONS = """\
+Morphological analysis of Yakut (Sakha), a Turkic language written in Cyrillic.
+
+Analyses are written as root+TAG+TAG..., e.g. "дьиэ+N+POSS.3SG.ACC" for
+"дьиэтин" ('his/her house', accusative): the root, its category, then the
+affixes in order. Call explain_tags to get the meaning of any tag.
+
+Each word also reports which transducer analysed it, a measure of how much to
+trust the result:
+- "voc": the word's root is in the lexicon (most reliable);
+- "syl": the root is unknown but has the shape of a Yakut root (a guess);
+- "aff": only the affixes were recognised, e.g. in loanwords (a guess);
+- "fail": the word could not be analysed (tag +UNK).
+
+When a word has several possible analyses, a neural model chooses one from
+the sentence context ("analysis"); the other candidates are listed under
+"alternatives". This choice can be wrong, especially when there are many
+candidates. Proper names are tagged +PN by a heuristic (capitalised word not
+at the start of the input, or a known name).
+"""
+
+TRANSDUCER_LABELS = {
+    'voc': 'root found in the lexicon',
+    'syl': 'unknown root guessed from Yakut syllable structure',
+    'aff': 'unknown root, only the affixes were recognised',
+    'fail': 'not analysed',
+}
+
+server = MCPServer(
+    name='yakutmorph',
+    title='Yakut morphology',
+    version=__version__,
+    instructions=INSTRUCTIONS,
+)
+
+READ_ONLY = ToolAnnotations(read_only_hint=True, idempotent_hint=True, open_world_hint=False)
+
+
+@lru_cache(maxsize=1)
+def _morphology() -> YakutMorph:
+    """The analyser is loaded once, on first use (about a second)."""
+    return YakutMorph()
+
+
+@lru_cache(maxsize=1)
+def _generator() -> YakutTransducer:
+    """The lexicon-based transducer ('voc'), used to generate word forms."""
+    return YakutTransducer()
+
+
+class TokenResult(TypedDict):
+    position: int
+    text: str
+    type: str
+    analysis: NotRequired[str]
+    lemma: NotRequired[str]
+    upos: NotRequired[str]
+    features: NotRequired[str]
+    transducer: NotRequired[str]
+    ambiguous: NotRequired[bool]
+    alternatives: NotRequired[List[str]]
+    construction: NotRequired[str]
+
+
+class TextResult(TypedDict):
+    text: str
+    tokens: List[TokenResult]
+
+
+class WordResult(TypedDict):
+    word: str
+    transducer: str
+    transducer_meaning: str
+    analyses: List[str]
+
+
+class TagInfo(TypedDict):
+    ref: NotRequired[str]
+    UPOS: NotRequired[str]
+    ud: NotRequired[Dict[str, str]]
+
+
+class TagsResult(TypedDict):
+    tags: Dict[str, Optional[TagInfo]]
+
+
+class TagList(TypedDict):
+    roots: NotRequired[List[str]]
+    derivational: NotRequired[List[str]]
+    inflectional: NotRequired[List[str]]
+
+
+class GenerationResult(TypedDict):
+    analysis: str
+    forms: List[str]
+
+
+def _analysis_string(analysis: Analysis) -> str:
+    return ''.join(m.morpheme for m in analysis.morphemes)
+
+
+def _token_record(token: Token, conllu_row: List[str], alternatives: bool) -> TokenResult:
+    record: TokenResult = {
+        'position': token.pos,
+        'text': token.surface,
+        'type': token.type,
+    }
+    if not token.has_morph:
+        return record
+    candidates = [_analysis_string(a) for a in token.analyses.output]
+    chosen = _analysis_string(token.morph)
+    record.update({
+        'analysis': chosen,
+        'lemma': conllu_row[2],
+        'upos': conllu_row[3],
+        'features': conllu_row[5],
+        'transducer': token.analyses.fst.label,
+        'ambiguous': len(candidates) > 1,
+    })
+    if alternatives and len(candidates) > 1:
+        record['alternatives'] = [c for c in candidates if c != chosen]
+    if token.compound:
+        record['construction'] = token.compound
+    return record
+
+
+@server.tool(annotations=READ_ONLY)
+def analyze_text(text: str, include_alternatives: bool = True) -> TextResult:
+    """Analyse a Yakut sentence or short text: split it into tokens and give
+    each word its morphological analysis in context (root, category, affixes),
+    lemma, Universal Dependencies part of speech and features, and, for
+    ambiguous words, the other possible analyses.
+
+    Args:
+        text: Yakut text in Cyrillic, e.g. "Мин кинигэни аахпытым."
+        include_alternatives: Also list the analyses the model did not choose.
+    """
+    parse = _morphology().parse(text)
+    rows = [line.split('\t') for line in str(CoNLLU(parse)).split('\n')[1:]]
+    return {
+        'text': text,
+        'tokens': [
+            _token_record(token, row, include_alternatives)
+            for token, row in zip(parse.tokens, rows)
+        ],
+    }
+
+
+@server.tool(annotations=READ_ONLY)
+def analyze_word(word: str) -> WordResult:
+    """List every morphological analysis of a single Yakut word form, out of
+    context (no disambiguation). Use analyze_text instead to get the most
+    likely analysis in a sentence.
+
+    Args:
+        word: One Yakut word form, e.g. "дьиэтин".
+    """
+    fst, analyses = _morphology().transducer.analyse(word)
+    return {
+        'word': word,
+        'transducer': fst.label,
+        'transducer_meaning': TRANSDUCER_LABELS.get(fst.label, ''),
+        'analyses': [''.join(fst.get_morphemes(a)) for a in analyses],
+    }
+
+
+@server.tool(annotations=READ_ONLY)
+def to_conllu(text: str) -> str:
+    """Analyse Yakut text and return it in CoNLL-U format (the format of
+    Universal Dependencies treebanks): one line per token with form, lemma,
+    UPOS, XPOS and features; the full analysis is in the MISC column.
+    Dependency columns are left empty ("_").
+
+    Args:
+        text: Yakut text in Cyrillic.
+    """
+    return str(CoNLLU(_morphology().parse(text)))
+
+
+@server.tool(annotations=READ_ONLY)
+def explain_tags(tags: List[str]) -> TagsResult:
+    """Explain morphological tags used in the analyses: what each marks,
+    with its affix forms and a reference to the grammar where available,
+    and its Universal Dependencies equivalent.
+
+    Args:
+        tags: Tags with or without the leading "+", e.g. ["POSS.3SG.ACC", "+PN"].
+    """
+    reference = _generator().reference
+    explained = {}
+    for tag in tags:
+        key = tag if tag[:1] in '+^' else f'+{tag}'
+        entry = reference.get_tag(key)
+        if not entry:
+            explained[key] = None
+            continue
+        info: TagInfo = {field: entry[field] for field in ('ref', 'UPOS') if field in entry}
+        if 'ud' in entry:
+            info['ud'] = {feature: str(value) for feature, value in entry['ud'].items()}
+        explained[key] = info
+    return {'tags': explained}
+
+
+@server.tool(annotations=READ_ONLY)
+def list_tags(section: Optional[str] = None) -> TagList:
+    """List the tags the analyser uses, grouped into 'roots' (word
+    categories), 'derivational' and 'inflectional' affixes. Possessive +
+    case portmanteaus such as POSS.3SG.ACC are not listed separately; they
+    combine a POSS tag and a case tag.
+
+    Args:
+        section: Only list one group: "roots", "derivational" or "inflectional".
+    """
+    groups: TagList = {}
+    for tag, group in _generator().reference.sections.items():
+        if section is None or group == section:
+            groups.setdefault(group, []).append(tag)
+    return groups
+
+
+@server.tool(annotations=READ_ONLY)
+def generate_word_form(analysis: str) -> GenerationResult:
+    """Generate the Yakut word form(s) for an analysis, the reverse of
+    analyze_word. Useful to inflect a word correctly, e.g. "дьиэ+N+POSS.1SG.DAT"
+    gives "дьиэбэр" ('to my house'). Only roots in the lexicon can be
+    generated; the tag sequence must be one the analyser itself produces
+    (see list_tags and the analyses returned by the other tools).
+
+    Args:
+        analysis: root+TAG+TAG..., e.g. "кинигэ+N+PL+ACC".
+    """
+    return {'analysis': analysis, 'forms': _generator().generate(analysis)}
+
+
+def main() -> None:
+    """Entry point of the `yakutmorph-mcp` command (stdio transport)."""
+    server.run()
+
+
+if __name__ == '__main__':
+    main()

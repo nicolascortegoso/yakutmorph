@@ -36,6 +36,13 @@ dependencies = [
     "numpy>=1.24",
 ]
 
+[project.optional-dependencies]
+# MCP server for LLM applications: `yakutmorph-mcp` (see yakutmorph/mcp_server.py).
+mcp = ["mcp>=2.3,<3"]
+
+[project.scripts]
+yakutmorph-mcp = "yakutmorph.mcp_server:main"
+
 [project.urls]
 Homepage = "https://github.com/nicolascortegoso/yakutmorph"
 Repository = "https://github.com/nicolascortegoso/yakutmorph"
@@ -43,9 +50,15 @@ Issues = "https://github.com/nicolascortegoso/yakutmorph/issues"
 
 [dependency-groups]
 dev = [
+    "yakutmorph[mcp]",
     "pytest>=8",
     "build>=1.2",
     "twine>=6",
+]
+# Only for retraining the disambiguation model (disambiguation_model/scripts).
+train = [
+    "torch>=2.4",
+    "onnx>=1.16",
 ]
 
 [tool.setuptools.packages.find]
