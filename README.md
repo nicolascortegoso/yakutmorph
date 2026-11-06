@@ -23,6 +23,23 @@ uv build                       # build the wheel and source distribution into di
 
 The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. The exported model gives the same predictions as the PyTorch model it was trained as (see [Retraining the disambiguation model](#retraining-the-disambiguation-model)).
 
+## Command line
+
+Installing the package also installs the `yakutmorph` command:
+
+```
+yakutmorph analyze text.txt                     # CoNLL-U, one block per sentence
+yakutmorph analyze text.txt --format gloss      # interlinear glosses
+yakutmorph analyze text.txt --format json       # one JSON object per sentence
+yakutmorph analyze text.txt --format tsv        # one word per line: analysis, lemma, UPOS, confidence
+echo "Мин кинигэни аахпытым." | yakutmorph analyze
+yakutmorph paradigm көр --category V            # inflection tables
+yakutmorph examples --root дьиэ --tag POSS.3SG.ACC -n 5
+yakutmorph generate дьиэ+N+POSS.1SG.DAT         # дьиэбэр
+```
+
+`analyze` reads UTF-8 text files (or standard input), splits the text into sentences and analyses each one; with `--lines`, each line is taken as one sentence instead. Run `yakutmorph <command> --help` for all options.
+
 ## Basic Usage
 
 For convenience, all three modules (tokenization, morphological analysis, and disambiguation) are implemented within the `YakutMorph` class, which provides a user-friendly interface.

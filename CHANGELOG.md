@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- The `yakutmorph` command: `analyze` (CoNLL-U, JSON, glosses or TSV, from
+  files or standard input), `paradigm`, `examples` and `generate`.
 - Interlinear glossing: `yakutmorph.glossing` (`gloss_words`, `interlinear`)
   segments words into morphemes and glosses them with the analyser's tags,
   Leipzig style; MCP tool `gloss_text`.

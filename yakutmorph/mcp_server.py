@@ -30,11 +30,11 @@ except ImportError as error:  # pragma: no cover - depends on the environment
 from . import __version__
 from .corpus import Corpus
 from .main import YakutMorph
-from .mappers import CoNLLU, conllu_document
 from .glossing import gloss_words, interlinear
+from .mappers import conllu_document
 from .paradigms import paradigm
+from .records import sentence_record
 from .transducers import YakutTransducer
-from .wrappers import Analysis, Token
 
 # Text an MCP client gives the model before it uses the tools.
 INSTRUCTIONS = """\
@@ -218,42 +218,6 @@ class GenerationResult(TypedDict):
     forms: List[str]
 
 
-def _analysis_string(analysis: Analysis) -> str:
-    return ''.join(m.morpheme for m in analysis.morphemes)
-
-
-def _token_record(token: Token, conllu_row: List[str], alternatives: bool) -> TokenResult:
-    record: TokenResult = {
-        'position': token.pos,
-        'text': token.surface,
-        'type': token.type,
-    }
-    if not token.has_morph:
-        return record
-    candidates = [_analysis_string(a) for a in token.analyses.output]
-    chosen = _analysis_string(token.morph)
-    record.update({
-        'analysis': chosen,
-        'lemma': conllu_row[2],
-        'upos': conllu_row[3],
-        'features': conllu_row[5],
-        'transducer': token.analyses.fst.label,
-        'ambiguous': len(candidates) > 1,
-    })
-    confidence = token.analyses.confidence
-    if confidence is not None:
-        record['confidence'] = round(confidence, 3)
-    if alternatives and len(candidates) > 1:
-        probabilities = token.analyses.probabilities
-        record['alternatives'] = [
-            {'analysis': c, **({'probability': round(probabilities[i], 3)} if probabilities else {})}
-            for i, c in enumerate(candidates) if i != token.analyses.idx_mla
-        ]
-    if token.compound:
-        record['construction'] = token.compound
-    return record
-
-
 @server.tool(annotations=READ_ONLY)
 def analyze_text(text: str, include_alternatives: bool = True) -> TextResult:
     """Analyse Yakut text: split it into sentences and tokens and give each
@@ -265,17 +229,9 @@ def analyze_text(text: str, include_alternatives: bool = True) -> TextResult:
         text: Yakut text in Cyrillic, e.g. "Мин кинигэни аахпытым."
         include_alternatives: Also list the analyses the model did not choose.
     """
-    sentences: List[SentenceResult] = []
-    for parse in _morphology().parse_text(text):
-        rows = [line.split('\t') for line in str(CoNLLU(parse)).split('\n')[1:]]
-        sentences.append({
-            'text': parse.text,
-            'tokens': [
-                _token_record(token, row, include_alternatives)
-                for token, row in zip(parse.tokens, rows)
-            ],
-        })
-    return {'text': text, 'sentences': sentences}
+    return {'text': text, 'sentences': [
+        sentence_record(parse, include_alternatives) for parse in _morphology().parse_text(text)
+    ]}
 
 
 @server.tool(annotations=READ_ONLY)
