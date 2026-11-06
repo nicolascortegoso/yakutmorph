@@ -1,7 +1,12 @@
 # Compiled python modules.
 **/*.pyc
+__pycache__/
 
-# Setuptools distribution folder.
+# Virtual environments.
+.venv/
+/yakutenv/
+
+# Build output.
 /dist/
 /build/
 MANIFEST.in
@@ -13,7 +18,7 @@ MANIFEST.in
 # macOS
 .DS_Store
 
-
-data/
-tools/
-vocabulary/
+# Internal folders at the repository root (not part of the library).
+/data/
+/tools/
+/vocabulary/

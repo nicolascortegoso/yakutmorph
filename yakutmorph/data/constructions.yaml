@@ -1,0 +1,74 @@
+# Multi-word constructions matched against disambiguated token roots (see
+# yakutmorph/constructions.py for the pattern mini-language). Each entry
+# flags every member token's `compound` with its own `label`; none of the
+# member tokens' own analyses are replaced.
+#
+# Deliberately conservative for now: the Yakut grammar (Ubryatova et al.,
+# 1982, vol. 1, ch. "Союзы") documents a broader set of fixed multi-word
+# conjunctions (e.g. "буолан баран", "ити гынан баран", "ол эрээри", ...),
+# but cross-checking yakutmorph_dataset showed most of those phrases are
+# only ever *mentioned* inside a chapter-overview note that lists many
+# conjunctions at once, not tied to that example's own sentence the way
+# this one is (see the §976 entry: "in this example *ол да буоллар*
+# stands between the parts of..."). Add further entries once each is
+# verified against a genuine single-instance example the same way.
+
+- label: ол_да_буоллар
+  pattern: ["ол+Pron", "да+Part", "буол+V"]
+
+# Indefinite pronoun/adverb formation: interrogative word + the restrictive
+# particle "эрэ" or "эмэ" ("only, just") forms an indefinite ("ким" who ->
+# "ким эрэ" someone, "туох" what -> "туох эрэ" something, ...). Ubryatova
+# et al. note this explicitly as a distinct word-forming function of these
+# particles (as opposed to their ordinary, purely compositional "only"
+# reading after any other word category, e.g. a verb — which is NOT this
+# construction and isn't listed here). Interrogatives are a closed class
+# in Yakut, unlike verbs, so each is listed literally rather than matched
+# by a category wildcard; the category itself isn't uniform across them
+# either (тоҕо is +Adv, the rest are +Pron). Verified against
+# yakutmorph_dataset (127 "эрэ" and 60 "эмэ" occurrences, both clustering
+# on this same interrogative set) and against the analyzer's own
+# disambiguation for each pairing. "да"/"даҕаны", named for the same
+# function by the same grammar note, are left out for now: "даҕаны" shows
+# mostly its other, unrelated concessive "even" function in the corpus,
+# and needs checking on its own before being added here.
+- label: indefinite_pronoun
+  pattern: ["ким+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["ким+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["туох+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["туох+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["ханна+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["ханна+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["төһө+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["төһө+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хаһан+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хаһан+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["ханнык+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["ханнык+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["тоҕо+Adv", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["тоҕо+Adv", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хайдах+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хайдах+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хайа+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хайа+Pron", "эмэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хас+Pron", "эрэ+Part"]
+- label: indefinite_pronoun
+  pattern: ["хас+Pron", "эмэ+Part"]
