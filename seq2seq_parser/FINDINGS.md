@@ -222,22 +222,103 @@ unlike the original ngram-blocking discovery (§4.1, which fixed an actual
 failure mode), this is fine-tuning around a problem that's already mostly
 solved, not a new finding.
 
-### 4.5 Current best configuration
+### 4.5 Lexicon augmentation: target tokenizer only
 
-**Separate source/target vocabularies (4,000 each) + copy/pointer mechanism
-+ tuned beam search (beam=5, length_alpha=0.7, no_repeat_ngram_size=5)** —
-`checkpoints_copyattn/best.pt`.
+`vocabulary/yakut_roots/*.lex` — an existing project resource, unused until
+now by this pipeline — is a curated Yakut root lexicon (4,320 entries)
+entirely separate from the training *sentences*. Checked against the 129
+distinct unseen roots in the test set: **48.8% already appear in this
+lexicon.** The other half split cleanly into proper names (`иннокенти`,
+`максимов`) and Russian loanwords (`бригада`, `автомат`, `жюри`) — open-class
+categories no static lexicon will ever fully cover.
+
+First test: add all 4,727 lexicon root lines to `spm_tgt`'s training corpus
+(as single, unweighted extra lines — real training-sentence roots keep their
+natural frequency-based influence; the lexicon only adds *coverage* of shapes
+otherwise unseen), producing `spm_tgt_lex`. No new annotated parses needed —
+purely reusing an existing resource.
+
+| | previous best (§4.4) | + target-lexicon `spm_tgt_lex` | Δ |
+|---|---|---|---|
+| sentence exact match | 23.4% | **26.0%** | +2.6pp |
+| token accuracy | 61.3% | **64.1%** | +2.7pp |
+| root accuracy | 67.1% | **67.6%** | +0.5pp |
+| tag-chain accuracy | 59.4% | **62.1%** | +2.6pp |
+| unseen-root root accuracy | 47.8% | 47.7% | ~flat |
+
+A real overall win, concentrated almost entirely in **seen**-root sentences
+(exact match 27.0%→29.9%, root accuracy 71.8%→72.5%) — the metric the
+experiment specifically targeted, unseen-root root accuracy, barely moved.
+Best guess: giving the tokenizer more root shapes improves segmentation
+quality generally, which the *decoder* benefits from wherever it also has
+supervised training examples — but adding a root to the tokenizer's corpus
+only guarantees the pieces exist to spell it; it gives the decoder no
+example of actually producing that root in context, since training targets
+are still only the 15,645 sentence-derived parses.
+
+### 4.6 Lexicon augmentation: both tokenizers (adopted)
+
+Prompted by a direct question worth taking seriously: *if character coverage
+already guarantees every root is composable, why doesn't composition close
+the unseen-root gap on its own?* Checked empirically on the 136 unseen-root
+word tokens in the test set (crude source-piece / target-vocab overlap
+check): **only 96 had fully copy-aligned source pieces; 26 had none at
+all.** `spm_src` had been trained only on the 15,645 sentences since the
+very first version and never revisited — meaning the copy mechanism (§4.4)
+could only ever copy what the *source* tokenizer happened to segment into a
+piece the target vocabulary also recognized. A well-covered target
+vocabulary is necessary but not sufficient if the source segmentation never
+produces a matching piece to copy in the first place.
+
+Fix: add the same 4,727 lexicon lines to `spm_src`'s corpus too
+(`spm_src_lex`), so source-side segmentation is more likely to land on
+root-shaped pieces with a target-vocab counterpart. Source/target piece
+overlap (§2's 37% stat) rose to 42.2%.
+
+| | + target-lexicon only (§4.5) | **+ source-lexicon too** | Δ |
+|---|---|---|---|
+| sentence exact match | 26.0% | **28.2%** | +2.2pp |
+| token accuracy | 64.1% | **67.9%** | +3.9pp |
+| root accuracy | 67.6% | **72.6%** | +5.0pp |
+| tag-chain accuracy | 62.1% | **66.2%** | +4.1pp |
+| unseen-root root accuracy | 47.7% | **53.7%** | **+6.0pp** |
+| unseen-root token accuracy | 46.1% | **51.8%** | +5.7pp |
+| unseen-root tag accuracy | 45.9% | **51.9%** | +6.0pp |
+| repetition-loop predictions | 0/816 | 2/816 | minor regression |
+
+Unseen-root root accuracy crosses 50% for the first time, and — unlike
+§4.5 — this specifically moved the number it targeted, by the largest
+margin since copy attention itself (§4.4). Confirms the two-sided
+dependency directly: the target tokenizer needs good root pieces to
+generate/copy *into*, and the source tokenizer needs to actually produce a
+matching piece to copy *from* — fixing only one side leaves the other as
+the binding constraint. The 2/816 new repetition loops are a minor,
+disclosed side effect, not worth chasing given the scale of the gain
+elsewhere.
+
+One honest caveat: this isn't uniform. The running `хайа арҕаһа` example
+(§5) is *not* fully fixed by this change — it still produces `арҕах`
+instead of `арҕас`, and the first word's tag regresses slightly (`+pron`
+instead of `+n`). Aggregate improvement across 108 unseen-root sentences
+doesn't mean every individual case gets better.
+
+### 4.7 Current best configuration
+
+**Separate source/target vocabularies (4,000 each, both augmented with the
+external root lexicon) + copy/pointer mechanism + tuned beam search
+(beam=5, length_alpha=0.7, no_repeat_ngram_size=5)** —
+`checkpoints_bothlex/best.pt`.
 
 | | overall | seen-root (708 sentences) | unseen-root (108 sentences) |
 |---|---|---|---|
-| sentence exact match | 23.4% | 27.0% | 0.0% |
-| token accuracy (1−WER) | 61.3% | 65.2% | 45.1% |
-| root accuracy | 67.1% | 71.8% | 47.8% |
-| tag-chain accuracy | 59.4% | 63.1% | 44.3% |
+| sentence exact match | 28.2% | 32.5% | 0.0% |
+| token accuracy (1−WER) | 67.9% | 71.8% | 51.8% |
+| root accuracy | 72.6% | 77.2% | 53.7% |
+| tag-chain accuracy | 66.2% | 69.6% | 51.9% |
 
-The seen/unseen gap narrowed substantially (root accuracy gap: 63.0 vs.
-36.3 before → 71.7 vs. 47.0 now) but hasn't closed — see §5 for what's left
-of it.
+The seen/unseen gap has narrowed at every stage of this project (root
+accuracy gap: 63.0 vs. 36.3 → 71.7 vs. 47.0 → 77.2 vs. 53.7) without ever
+closing — see §5 for what's left of it.
 
 ## 5. Attention visualization
 
@@ -312,28 +393,45 @@ Consistent qualitative pattern across every example inspected:
    the separate-vocabulary win it would otherwise have conflicted with — and
    turned out not to need it, since full character coverage on both sides
    already guarantees a copy path exists down to individual characters.
+7. **A mechanism's benefit is bounded by its weakest input, not just its own
+   design.** Copy attention (§4.4) only works as well as the source
+   tokenizer's segmentation lets it — §4.6 re-derived this the hard way:
+   augmenting the *target* vocabulary alone (§4.5) barely moved unseen-root
+   accuracy, but augmenting *both* sides moved it more than any single
+   change except copy attention itself. Two components of one mechanism
+   need to be checked (and fixed) together, not assumed to inherit a fix
+   made to just one of them.
+8. **Aggregate improvement doesn't mean uniform improvement.** The
+   `хайа арҕаһа` example used throughout §5 is *still* not fully fixed by
+   the best model in this project, even though it improved the aggregate
+   unseen-root numbers substantially — worth remembering before reading a
+   single before/after example as proof a fix "worked."
 
 ## 7. Open items / possible next steps
 
-- **Exact character-level reconstruction of a novel root** — copy attention
-  fixed structural collapse (dropped tokens, wrong POS, garbled tag chains)
-  far more than it achieves precise spelling of a root the model has never
-  produced as a target before (§5's `арҕах`-for-`арҕас` near-miss is
-  representative). This is the residual shape of the unseen-root problem
-  now that the bigger, structural part of it is fixed.
+- **Exact character-level reconstruction of a novel root** — even after both
+  lexicon-augmentation rounds, this remains the shape of what's left: the
+  `арҕах`-for-`арҕас` near-miss (§4.6) persists in the current best model.
+  Structural collapse is fixed far more reliably than precise spelling of a
+  root the model has never produced before.
 - **Reintroduce label smoothing** for the copy-attention loss (dropped for
   implementation simplicity, §4.4 — a disclosed regression in rigor, not a
   deliberate finding).
-- **The one-off training slowdown recurred** in the copy-attention run too
-  (one epoch at ~30x normal time, again self-resolving) — now seen across
-  two different architectures on two different training runs, which points
-  away from a code-level cause and toward the OS/environment. Still not
-  root-caused; worth a look if long background runs become routine.
+- **The one-off training slowdown recurred a third time** in the
+  lexicon-augmented run too (again self-resolving) — now seen across three
+  different architectures on three different training runs, which points
+  firmly away from a code-level cause and toward the OS/environment. Still
+  not root-caused; worth a look if long background runs become routine.
 - **Larger target vocab (>4000)** — §4.3's trend is monotonic within the
   range tested; unclear if it continues past the point where most of the
   4,872 train roots already get a dedicated whole piece, or whether it
-  still holds now that copy attention changes the model's reliance on
-  generation vs. copying.
+  still holds now that copy attention and lexicon augmentation change the
+  model's reliance on generation vs. copying.
+- **The remaining ~half of unseen roots not in the external lexicon**
+  (§4.5) — mostly proper names and Russian loanwords — are a structurally
+  different problem (open-class vocabulary) that no amount of lexicon
+  augmentation will solve; would need transliteration/loanword-adaptation
+  rules or named-entity handling specifically.
 - **FST baseline comparison** — the existing `yakutmorph` package has a
   rule-based FST analyzer + disambiguator; a head-to-head comparison would
   contextualize these numbers against the project's other approach.
@@ -344,16 +442,19 @@ Consistent qualitative pattern across every example inspected:
 seq2seq_parser/
   scripts/
     prepare_dataset.py    # yakutmorph_dataset/*/processed → data/{train,dev,test}.jsonl
-    train_tokenizer.py     # trains spm_src / spm_tgt (--tgt-vocab-size, --tgt-prefix for ablations)
+    train_tokenizer.py     # trains spm_src / spm_tgt (--tgt-vocab-size, --tgt-prefix, --extra-root-file for ablations)
     dataset.py, model.py   # data loading; BiGRU+attention+copy-mechanism seq2seq model
     train.py               # --ckpt-dir, --src-tokenizer/--tgt-tokenizer for parallel experiments
     evaluate.py             # --decode {greedy,beam}, alignment-based metrics, seen/unseen breakdown
     plot_attention.py       # attention heatmap for one sentence
   data/                     # prepared splits, tokenizers, tag_vocab.json
+              # data/external_lexicon_roots.txt: vocabulary/yakut_roots/*.lex, extracted+normalized (§4.5-4.6)
   checkpoints/              # v1 shared-vocab run (pre-copy-mechanism architecture)
   checkpoints_sepvocab/     # v2 separate-vocab run (pre-copy-mechanism architecture)
   checkpoints_tgtv1000/, checkpoints_tgtv2000/  # target vocab-size ablation (pre-copy-mechanism)
-  checkpoints_copyattn/     # + copy/pointer mechanism (current best, §4.4-4.5)
+  checkpoints_copyattn/     # + copy/pointer mechanism (§4.4)
+  checkpoints_lexaug/       # + target-lexicon augmentation only (§4.5)
+  checkpoints_bothlex/      # + source-lexicon augmentation too (current best, §4.6-4.7)
   attention_plots/
 ```
 

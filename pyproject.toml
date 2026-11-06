@@ -36,5 +36,5 @@ Homepage = "https://github.com/nicolascortegoso/yakutmorph"
 include = ["yakutmorph", "yakutmorph.*"]
 
 [tool.setuptools.package-data]
-"yakutmorph.data" = ["*.yaml", "*.onnx", "*.model", "*.json"]
+"yakutmorph.data" = ["*.yaml", "*.onnx", "*.model", "*.json", "*.txt"]
 "yakutmorph.fsts" = ["*.a"]

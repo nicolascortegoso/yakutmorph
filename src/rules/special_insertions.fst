@@ -28,17 +28,19 @@ $I-S$ = э:{эс} ^-> сүүрб __ <card-v>+ <C>с <ord>   % сүүрбэ+ис 
 % [I-CV] Inserts a close vowel before affixes --------------------------------------------------------------------------
 
 % [01] special cases for сырыт and ыарыт
-% [14] Nominals ending with т that lose the closed-vowel in the final syllable (өрүт^N+POSS.1PL+DAT -> өттүбүтүгэр)
-% [15] Nominals ending with н that lose the closed-vowel in the final syllable (алын^N+PL+POSS.3SG+ACC -> анныларын)
+% [04] observed in ымсыырт -> ымсыырдыбыт
+% [14] Nominals ending with т that lose the closed-vowel in the final syllable (өрүт+N+POSS.1PL+DAT -> өттүбүтүгэр)
+% [15] Nominals ending with н that lose the closed-vowel in the final syllable (алын+N+PL+POSS.3SG+ACC -> анныларын)
 % [16] when followed by other affixes (CHECK NOT APPLIED)
+% [17] хаамп+V+RECP+PST.3PL -> хаамыстылар
 
-$I-CV01$ = ь:{ь<C>}       ^-> лд __ (<intr-2c><intr-2c>   | <intr-2j><intr-2j>) [#consonants# <B>]
+$I-CV01$ = ь:{ь<C>}       ^-> л<noun-v><noun-v> д __ (<intr-2c><intr-2c> | <verb-j><verb-j>) [#consonants# <B>]
 $I-CV02$ = д:{д<C>}       ^->    __ (<intr-2nl><intr-2nl> | <tran-2c><tran-2c>) <B><C>т <part2>
-$I-CV03$ = л:{л<C>}       ^-> (<tran-1l><tran-1l> | <tran-1r><tran-1r>) __ <refl><refl> <B><C>т <part2>
-$I-CV04$ = <D1>:{<D1><C>} ^-> __ <refl><refl> <B><C>т <part2>
+$I-CV03$ = л:{л<C>}       ^-> (<tran-1l><tran-1l> | <tran-2l><tran-2l> | <tran-1r><tran-1r>) __ <refl><refl> <B><C>т <part2>
+$I-CV04$ = т:{<D1><C>}    ^-> __ (<refl><refl> | <cstv-c><cstv-c>) <B><C>т <part2>
 $I-CV05$ = л:{л<C>}       ^-> л __ <pass><pass> (<B><O>т <part1-n> | <B><C>[тч] <part2> | <B><O> <neg>)
 $I-CV06$ = с:{с<C>}       ^-> [#stem-types#] __ <recp><recp>   ( \
-                              <B><O>т           <part1-n><end> | \
+                              <B><O>т           <part1-n>      | \
                               <B><C>[тч]        <part2>        | \
                               <B><O>            <neg>          )
 $I-CV07$ = с:{с<C>}       ^-> [#consonants#] __ (<intr-2c><intr-2c> | <tran-2c><tran-2c>) ( \
@@ -60,16 +62,21 @@ $I-CV13$ = <noun-2c>:{<noun-2c><C>}  ^-> [нт] <noun-2c> __ [ҥгк]<C> <adj-dv
 $I-CV14$ = н:{н<C>} ^-> н __ <noun-2c><noun-2c> (<D2> | <B> | <V>)
 $I-CV15$ = т:{т<C>} ^-> т __ <noun-2c><noun-2c> (<B> | <D2><O>р <plur>)
 $I-CV16$ = с:{с<C>} ^-> х __ <noun-2c><noun-2c> (<D2> | <B> | <V>)
+$I-CV17$ = с:{<C>с} ^-> <begin> хаамп <intr-1c><intr-1c> __ <recp>
+$I-CV18$ = ь:{ь<C>} ^-> __ <intr-2c><intr-2c> <B>
 
+
+%% || $I-CV13$ % ruins илиҥҥи илин+N+ADJZ#4
 
 $I-CV$ = $I-CV01$ || $I-CV02$ || $I-CV03$ || $I-CV04$ || $I-CV05$ || $I-CV06$ || $I-CV07$ || $I-CV08$ || \
-         $I-CV09$ || $I-CV10$ || $I-CV11$ || $I-CV12$ || $I-CV13$ || $I-CV14$ || $I-CV15$ || $I-CV16$
+         $I-CV09$ || $I-CV10$ || $I-CV11$ || $I-CV12$ || $I-CV13$ || $I-CV14$ || $I-CV15$ || $I-CV16$ || \
+         $I-CV17$ || $I-CV18$
 
 
 
 % [R-HR] Intervocalic р ------------------------------------------------------------------------------------------------
 
-% [01] It was observed to change in (оҥор^V^REFL -> оҥоһун instead of оҥорун).
+% [01] It was observed to change in (оҥор+V+REFL -> оҥоһун instead of оҥорун).
 
 $R-HR01$ = р:с ^-> <begin> оҥо __ <tran-2r><tran-2r> [#symbols#]+ [<refl> <pass>]
 $R-HR$ = $R-HR01$

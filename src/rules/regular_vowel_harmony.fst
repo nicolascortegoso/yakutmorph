@@ -35,10 +35,10 @@
 
 % [R-VHOC] Low (open) vowels -------------------------------------------------------------------------------------------
 
-$R-VHO01$ = <O>:а ^-> ([#back-unrounded-vowels#] .*) | ([уюя] .* ) | (о .* [<LC><C><DI>] .* ) __
-$R-VHO02$ = <O>:э ^-> ([#front-unrounded-vowels#] .*) | (ө .* [<LC><C><DI>] .*) | (ү .*) __
-$R-VHO03$ = <O>:о ^-> [#back-rounded-vowels#] .* __
-$R-VHO04$ = <O>:ө ^-> [#front-rounded-vowels#] .*  __
+$R-VHO01$ = <O>:а     ^-> ([#back-unrounded-vowels#] .*) | ([уюя] .* ) | (о .* [<LC><C><DI>] .* ) __
+$R-VHO02$ = <O>:э     ^-> ([#front-unrounded-vowels#] .*) | (ө .* [<LC><C><DI>] .*) | (ү .*) __
+$R-VHO03$ = <O>:о     ^-> [#back-rounded-vowels#] .* __
+$R-VHO04$ = <O>:ө     ^-> [#front-rounded-vowels#] .*  __
 $R-VHO05$ = <LO>:{аа} ^-> ([#back-unrounded-vowels#] .*) | ([уюя] .* ) | (о .* [<LC><C><DI>] .*)  __
 $R-VHO06$ = <LO>:{ээ} ^-> ([#front-unrounded-vowels#] .*) | (ө .* [<LC><C><DI>] .*) | (ү .*) __
 $R-VHO07$ = <LO>:{оо} ^-> [#back-rounded-vowels#] .* __

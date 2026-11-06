@@ -38,6 +38,7 @@
 ев<noun-c>
 ал<noun-c>
 ик<noun-c>
+ик<noun-sc>
 ич<noun-c>
 ок<noun-uc>
 ок<noun-c>

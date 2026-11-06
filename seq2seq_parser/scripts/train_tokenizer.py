@@ -77,6 +77,11 @@ def main():
     ap.add_argument("--src-prefix", default="spm_src")
     ap.add_argument("--tgt-prefix", default="spm_tgt")
     ap.add_argument("--skip-src", action="store_true", help="reuse an already-trained spm_src (source side is unaffected by target vocab-size experiments)")
+    ap.add_argument("--extra-root-file", default=None,
+                     help="optional text file (one root per line, already normalized) to add to the "
+                          "target-tokenizer corpus alongside the frequency-weighted training-sentence "
+                          "roots — e.g. an external lexicon, to widen coverage of root shapes beyond "
+                          "what happened to appear in the training sentences")
     args = ap.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -89,12 +94,20 @@ def main():
 
     train_records = [json.loads(l) for l in (DATA_DIR / "train.jsonl").read_text(encoding="utf-8").splitlines()]
 
-    # --- source corpus: raw sentences, unchanged ---
+    # --- source corpus: raw sentences, optionally + extra bare root forms so
+    # source-side segmentation is more likely to land on root-shaped pieces
+    # that also exist in the (root-only) target vocabulary — i.e. pieces the
+    # copy mechanism can actually use. ---
+    n_extra_src = 0
     if args.skip_src:
         sp_src = spm.SentencePieceProcessor(model_file=str(OUT_DIR / f"{args.src_prefix}.model"))
         src_lines = []  # not retrained; only used below for the line count in the report
     else:
         src_lines = [normalize_text(r["sah"]) for r in train_records]
+        if args.extra_root_file:
+            extra_roots_src = [l.strip() for l in Path(args.extra_root_file).read_text(encoding="utf-8").splitlines() if l.strip()]
+            src_lines = src_lines + extra_roots_src
+            n_extra_src = len(extra_roots_src)
         sp_src = train_one(src_lines, args.src_prefix, args.src_vocab_size)
 
     # --- target corpus: root text only (one line per token occurrence, so
@@ -106,6 +119,13 @@ def main():
                 tgt_lines.append(tok.split("+")[0])  # root only, tag(s) dropped
             else:
                 tgt_lines.append(tok)  # literal punctuation/number/etc.
+
+    n_extra = 0
+    if args.extra_root_file:
+        extra_roots = [l.strip() for l in Path(args.extra_root_file).read_text(encoding="utf-8").splitlines() if l.strip()]
+        tgt_lines.extend(extra_roots)
+        n_extra = len(extra_roots)
+
     sp_tgt = train_one(tgt_lines, args.tgt_prefix, args.tgt_vocab_size, user_defined_symbols=reserved_tags)
 
     src_special, src_tags, src_learned = vocab_breakdown(args.src_prefix, set())
@@ -120,12 +140,14 @@ def main():
         f"## {args.src_prefix} (encoder input: sah sentences)",
         f"- actual vocab size: {sp_src.vocab_size()}",
         f"- breakdown: {src_special} special + {src_learned} learned subword pieces",
-        "" if args.skip_src else f"- trained on {len(src_lines)} sentences",
+        "" if args.skip_src else f"- trained on {len(src_lines)} lines"
+        + (f" ({len(src_lines) - n_extra_src} sentences + {n_extra_src} extra root lines from {args.extra_root_file})" if n_extra_src else " (sentences)"),
         "",
         f"## {args.tgt_prefix} (decoder output: root text only)",
         f"- actual vocab size: {sp_tgt.vocab_size()}",
         f"- breakdown: {tgt_special} special + {tgt_tags} reserved tags + {tgt_learned} learned subword pieces",
-        f"- trained on {len(tgt_lines)} token occurrences (roots + literals, frequency-weighted)",
+        f"- trained on {len(tgt_lines)} token occurrences (roots + literals, frequency-weighted)"
+        + (f", including {n_extra} extra lines from {args.extra_root_file}" if n_extra else ""),
         "",
         "## Sanity checks",
         "",

@@ -61,7 +61,7 @@
 
 % Participles ----------------------------------------------------------------------------------------------------------
 
-#participles-c# = <part1> <part1-n> <part2> <part3-c> <part4>
+#participles-c# = <part1> <part1-n> <part2> <part3-c> <part4> <part5-c>
 #participles-v# = <part3-v> <part5>
 #participles#   = #participles-c# #participles-v#
 
@@ -79,8 +79,8 @@
 
 #predicatives# = <predsg> <predpl>
 #general# = #predicatives# <psor> <poss>
-#imperative# = <imp-v> <imp-c> <imp-r> <imp-n> <imp>
-#moods# = <cond> <cert> <pot> #imperative#
+#imperative# = <imp-v> <imp-c> <imp-r> <imp-n> <imp> <imp-p>
+#moods# = <cond> <cert> <pot> <deb>
 #dem-prons# = <ka-v> <ka-c>
 
 
@@ -94,7 +94,7 @@
 
 % Derived nouns --------------------------------------------------------------------------------------------------------
 
-#d-nouns# = <noun-dc> <noun-dv>
+#d-nouns# = <noun-dc> <noun-dv> <dim>
 
 
 
@@ -123,7 +123,8 @@
 % <plur-s> the interrogative pronoun ким takes a special type of plural affix.
 
 #cases# = <case-v> <case-c> <acc> <dat> <case-p> <acc-p> <loc>
-#inflections# = #cases# <plur> <psor> <psor-3> <ps-sg> <ps-pl> <ina> <in> <plur-s>
+#plurs# = <plur> <plur-s>
+#inflections# = #cases# #plurs# <psor> <psor-3> <ps-sg> <ps-pl> <ina> <in>
 
 
 
@@ -131,6 +132,6 @@
 %%% 2. AGGREGATED DERIVED STEMS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-#derived-stems-1# = #d-verbs# #d-nouns# #d-adv# #d-adj# #voices# #aspect# #moods#
-#derived-stems-2# = <neg> #participles# #general# #d-nums# #gerunds# #dem-prons# <past>
+#derived-stems-1# = #d-verbs# #d-nouns# #d-adv# #d-adj# #voices# #aspect# #moods# #imperative#
+#derived-stems-2# = <neg> #participles# #general# #d-nums# #gerunds# #dem-prons# <past> <past-v>
 #derived-stems# = #derived-stems-1# #derived-stems-2# #inflections# <adv-col>

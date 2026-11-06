@@ -344,13 +344,15 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 >>> from yakutmorph.mappers import CoNLLU
 >>> print(CoNLLU(parse))
 # text = Мин аатым Кэскил.
-1	Мин	мин	PRON	pron	Case=Nom|Number=Sing|Person=1|PronType=Prs	_	_	мин+Pron
-2	аатым	аат	NOUN	n	Case=Nom|Number=Sing|Number[psor]=Sing|Person[psor]=1	_	_	аат+N+POSS.1SG
-3	Кэскил		PROPN	propn	Case=Nom	_	_	кэскил+PN
-4	.	.	PUNCT	punct	_	_	_	_
+1	Мин	мин	PRON	pron	Case=Nom|Number=Sing|Person=1|PronType=Prs	_	_	_	Analysis=мин+Pron
+2	аатым	аат	NOUN	n	Case=Nom|Number=Sing|Number[psor]=Sing|Person[psor]=1	_	_	_	Analysis=аат+N+POSS.1SG
+3	Кэскил		PROPN	propn	Case=Nom	_	_	_	Analysis=кэскил+PN
+4	.	.	PUNCT	punct	_	_	_	_	_
 ```
 
 (The lemma column is empty for `Кэскил`: capitalized common-noun readings are promoted to proper nouns as a post-processing step, §`PostPipeline`, and the transducer was not itself trained to *generate* surface forms for that promoted tag — a known limitation of that heuristic, not of lemma lookup generally.)
+
+The last column (MISC) carries the full underlying FST analysis as an `Analysis=` entry — this is treebank-specific annotation in the sense the [CoNLL-U spec](https://universaldependencies.org/format.html) describes for that column ("any additional information that does not fit into any of the other fields, such as language-specific annotation"), not a universal UD field.
 
 
 # Morphological Reference

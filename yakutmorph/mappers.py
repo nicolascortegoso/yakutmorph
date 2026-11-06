@@ -127,7 +127,19 @@ class CoNLLU(OutputFormat):
             return '|'.join(to_string) if grammemes else '_'
 
         def __get_root(token: Token) -> str:
-            return ''.join([m.morpheme for m in token.morph.morphemes]) if token.has_morph else '_'
+            """
+            The MISC column: the full underlying FST analysis, as
+            treebank-specific annotation (per the CoNLL-U spec, MISC holds
+            "any additional information that does not fit into any of the
+            other fields, such as language-specific annotation"). Keyed,
+            rather than a bare string, so it coexists unambiguously with
+            any other '|'-joined MISC annotation (e.g. SpaceAfter=No)
+            added later.
+            """
+            if not token.has_morph:
+                return '_'
+            analysis = ''.join([m.morpheme for m in token.morph.morphemes])
+            return f'Analysis={analysis}'
 
         rows = [[line] for line in header] if header else [[f'# text = {parse.text}']]
         rows.extend([
@@ -138,9 +150,10 @@ class CoNLLU(OutputFormat):
                 __map_tag(token, 'UPOS'),
                 __map_tag(token, 'XPOS'),
                 __map_grammmemes(token),
-                '_',
-                '_',
-                __get_root(token)
+                '_',  # HEAD
+                '_',  # DEPREL
+                '_',  # DEPS
+                __get_root(token)  # MISC
             ]
             for token in parse.tokens
         ])

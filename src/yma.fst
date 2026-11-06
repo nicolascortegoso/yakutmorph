@@ -16,7 +16,12 @@
 % This is an implementation of a morphological transducer for Yakut language following the guidelines described
 % in Ubryatova et al. Grammar of Modern Yakut Literary Language. Vol. 1: Phonology and Morphology. Moscow,
 % Nauka Print, 1982.
-% Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV), 2018 was also consulted.
+% It were also consulted:
+% - Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV). Novosibirskay Nauka, 2018.
+% - Kharitonov L.N. Neizmenyayemyye slova v yakutskom yazyke: posobiye dlya uchiteley. Yakutsk, 1943.
+% - Korkina E.I. Nakloneniya glagola v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Moskva, 1970.
+% - Korkina E.I. Deeprichastiya v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Novosibirsk, 1985.
+% - Petrov, Nikolaj Egorovich. Modal'nye slova v yakutskom yazyke. Novosibirsk : Nauka, 1984.
 
 % The transducer is implemented using the Stuttgart Finite State Transducer (SFST) framework, a collection of software
 % tools used for the generation, manipulation, and processing of finite-state automata and transducers by Helmut Schmid.
@@ -127,8 +132,8 @@
 
 % This section retrieves the stem endings from the lexicon and classifies them accordingly.
 
-$nouns$       = ([#alphabet#]+ {\^N}:[#nouns#])                                        || "lexicons/primary_endings.lex"
-$adjectives$  = ([#alphabet#]+ {\^Adj}:[<adj-j> <adj-uj>])                             || "lexicons/primary_endings.lex"
+$nouns$       = ([#alphabet#]+ {\+N}:[#nouns#])                                        || "lexicons/primary_endings.lex"
+$adjectives$  = ([#alphabet#]+ {\+Adj}:[<adj-j> <adj-uj>])                             || "lexicons/primary_endings.lex"
 
 
 % Implementation -------------------------------------------------------------------------------------------------------

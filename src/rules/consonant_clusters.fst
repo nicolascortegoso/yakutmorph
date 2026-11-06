@@ -19,7 +19,7 @@
 % 1. RULES DESCRIPTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Observed in Russian loan words. The final consonant must be dropped before applying progressive assimilation.
-% For example: (студент^N+PL -> студеннар)
+% For example: (студент+N+PL -> студеннар)
 
 % The confluence of two consonants in the end of a word is quite rare phenomenon in Yakut. Frequently sonorants р with
 % plosives т like: бэрт, тарт, түөрт, and single combinations like: булт, эмп, үҥк [§749].
@@ -30,9 +30,9 @@
 
 % [03] Example: председатель
 
-$D-CLS01$ = т:<> ^-> [ксн] __ [#propns-c# #nouns-c#]+ [#symbols#]
-$D-CLS02$ = д:<> ^-> з __ [#propns-c# #nouns-c#]+ [#symbols#]
-$D-CLS03$ = ь:<> ^-> л __ [#propns-c# #nouns-c#]+ [#symbols#]
+$D-CLS01$ = т:<> ^-> [ксн] __ [#nouns-c#]+ [#symbols#]
+$D-CLS02$ = д:<> ^-> з __ [#nouns-c#]+ [#symbols#]
+$D-CLS03$ = ь:<> ^-> л __ [#nouns-c#]+ [#symbols#]
 
 
 

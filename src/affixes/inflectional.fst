@@ -4,7 +4,7 @@
 %  University:     SPBGU, Saint-Petersburg State University
 %  Department:     Mathematical linguistics
 %  Title:          Inflectional affixes definitions
-%  Last review:    27/03/2024
+%  Last review:    02/03/2025
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -37,18 +37,18 @@
 % -лар (&all.) forms the plural affix from various type of stems.
 % The pronoun ким takes нээх to form the plural, after which a regular plural affix can be used for emphasis [§329].
 
-$plur$ = <>:[#noms# #d-nouns# #d-adj# #propns# <poss>                               \    % primary and derived nominals
-             #cards# #d-nums# <ord> <coll-v>                                        \    % numerals
-             <prs> <dem> <dt1> <dt2> <int-c> <int-v> <ind> <ka-v> <ka-c> #cos#      \    % pronouns
-             <int-p>                                                                \    % interrogative
-             <ps> <case-p>                                                          \    % case
-             #auxs#                                                                 \    % auxiliaries
-             #voices#                                                               \    % voice markers
-             <cond> <cert> <pot> <imp-n>                                            \    % mood markers
-             #participles#                                                          \    % participles
-             <gnd1> <gnd3> <gnd4> <gnd5> <gnd6>                                     \    % converbs
-             #parts#                                                                \    % particles
-             <plur-s>                                                               \    % special plural
+$plur$ = <>:[#noms# #d-nouns# #d-adj# <poss>                                          \  % primary and derived nominals
+             #cards# #d-nums# <ord> <coll-v> <int-s>                                  \  % numerals
+             <prs> <dem> <dt1> <dt2> <int-c> <int-v> <ind> <ref> <ka-v> <ka-c> #cos#  \  % pronouns
+             <int-p>                                                                  \  % interrogative
+             <ps> <case-p> <loc>                                                      \  % case
+             #auxs#                                                                   \  % auxiliaries
+             #voices#                                                                 \  % voice markers
+             <cond> <cert> <pot> <deb>                                                \  % mood markers
+             #participles#                                                            \  % participles
+             <gnd1> <gnd3> <gnd4> <gnd5> <gnd6>                                       \  % converbs
+             #parts#                                                                  \  % particles
+             <plur-s>                                                                 \  % special plural
              ]                                                  {\+PL}:{<D2><O>р}                        <>:<plur>   | \
 <>:<int-p>                                                      {\+PL}:{нээх}                            <>:<plur-s>
 
@@ -69,26 +69,41 @@ $plur$ = <>:[#noms# #d-nouns# #d-adj# #propns# <poss>                           
 % - Specific stems for the singular and plural are respectively aggregated as '#g-pred-sg#' and '#g-pred-pl#.'
 % - The third person in Yakut is unmarked (no affix).
 
-#g-pred# = <part1> <part1-n> <part2> <part3-c> <part4> <part5> <part6> \    % participles
+#g-pred# = <part1> <part1-n> <part2> <part3-c>                         \
+           <part4> <part5> <part5-c> <part6>                           \    % participles
            <gnd3> <gnd4> <gnd5>                                        \    % converbs
            #auxs#                                                      \    % auxiliaries
-           <cert> <pot> <cond>                                         \    % mood markers
+           <cert> <pot> <cond> <deb>                                   \    % mood markers
            #voices#                                                    \    % voice markers
            <gnd1> <gnd6>                                               \    % converbs
-           #noms# <poss>                                               \    % nominals
+           #noms#                                                      \    % primary nominals
+           #d-nouns# #d-adj# <poss>                                    \    % derived nominals
            <co-v>                                                      \    % pronouns
            #cards# #colls# <ord> <appr>                                \    % numerals (cardinal, ordinal, approximate)
            <dat>                                                       \    % cases
-           <part-c> <part-av>                                          \    % particles
+           <part-c> <part-v>                                           \    % particles
            <psor-3>                                                    \    % possessives
            <dt1>                                                       \    % determiners
-           <intj-d>                                                         % interjections
+           <intj-d>                                                    \    % interjections
+           <conj>                                                      \    % conjunctions
+           #posts#                                                          % postpositions
 
 $pred$ = \
-<>:[#g-pred#]                                                                  {\+1SG}:{<B><C>н}         <>:<predsg> | \
-<>:[#g-pred#]                                                                  {\+2SG}:{<V><C>н}         <>:<predsg> | \
-<>:[#g-pred#]                                                                  {\+1PL}:{<B><C>т}         <>:<predpl> | \
-<>:[#g-pred#]                                                                  {\+2PL}:{<V><C>т}         <>:<predpl>
+<>:[#g-pred# <int-v> <dt2> <loc>]                                              {\+1SG}:{<B><C>н}         <>:<predsg> | \
+<>:[#g-pred# <int-v> <dt2> <loc>]                                              {\+2SG}:{<V><C>н}         <>:<predsg> | \
+<>:[#g-pred# <plur> <int-v> <dt2> <loc>]                                       {\+1PL}:{<B><C>т}         <>:<predpl> | \
+<>:[#g-pred# <plur> <int-v> <dt2> <loc>]                                       {\+2PL}:{<V><C>т}         <>:<predpl> | \
+<>:[<part2>]                                                                   {\+1SG}:{<B><DI>н}        <>:<predsg> | \
+<>:[<part2>]                                                                   {\+2SG}:{<V><DI>н}        <>:<predsg> | \
+<>:[<part2>]                                                                   {\+3SG}:{<DI>н}           <>:<predsg> | \
+<>:[<part2>]                                                                   {\+1PL}:{<B><C>т<DI>н}    <>:<predpl> | \
+<>:[<part2>]                                                                   {\+2PL}:{<V><C>т<DI>н}    <>:<predpl>
+
+
+% In writing, the narrow vowel in the predicate affix added to participles ending in -byt is transformed into the 
+% corresponding diphthong in the 1st and 2nd persons singular to increase expressiveness [Коркина Е.И., Наклонения 
+% глагола в якутском языке, 90].
+
 
 
 
@@ -98,16 +113,16 @@ $pred$ = \
 % - the pronoun туох <int-c> has alternative forms <int-a> for the accusative and instrumental cases.
 
 % Table 1 [Pronouns]
-#g-com-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v>
-#g-par-pron#   =             <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v>
-#g-acc-pron-c# = <dem>       <dt1>       <int-p> <int-c> <int-a> <int-s>
-#g-acc-pron-v# =       <prs>       <dt2>                                 <int-v> <co-v>
-#g-dat-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v>
-#g-abl-pron-c# = <dem>       <dt1>       <int-p> <int-c>         <int-s>
-#g-abl-pron-v# =       <prs>       <dt2>                                 <int-v> <co-v>
-#g-ins-pron-c# =             <dt1>       <int-p> <int-c> <int-a> <int-s>
-#g-ins-pron-v# = <dem> <prs>       <dt2>                                 <int-v> <co-v>
-#g-cmp-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v>
+#g-com-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v> <ind> <ref>
+#g-par-pron#   =             <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v> <ind> <ref>
+#g-acc-pron-c# = <dem>       <dt1>       <int-p> <int-c> <int-a> <int-s>                <ind>
+#g-acc-pron-v# =       <prs>       <dt2>                                 <int-v> <co-v>       <ref>
+#g-dat-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v> <ind> <ref>
+#g-abl-pron-c# = <dem>       <dt1>       <int-p> <int-c>         <int-s>                <ind>
+#g-abl-pron-v# =       <prs>       <dt2>                                 <int-v> <co-v>       <ref>
+#g-ins-pron-c# =             <dt1>       <int-p> <int-c> <int-a> <int-s>                <ind>
+#g-ins-pron-v# = <dem> <prs>       <dt2>                                 <int-v> <co-v>       <ref>
+#g-cmp-pron#   = <dem> <prs> <dt1> <dt2> <int-p> <int-c>         <int-s> <int-v> <co-v> <ind>
 
 % Table 2 [Postpositions and particles]
 #g-com-nom#   = #noms#    #d-nouns# <poss> <adj-dc> <adj-dj>
@@ -125,59 +140,66 @@ $pred$ = \
 % - Approximate numbers can take simple case forms when replacing nouns [§301].
 
 % Main table:
-#g-com#   = #g-com-nom#   #g-com-pron#   <plur> #cards#  <appr>                                  #parts#
-#g-par#   = #g-par-nom#   #g-par-pron#   <plur> #cards#  <appr>                                  #parts#
-#g-acc-c# = #g-acc-nom-c# #g-acc-pron-c# <plur> <card-c>                 <part1>                 <part-c> <post-c>
-#g-acc-v# = #g-acc-nom-v# #g-acc-pron-v#        <card-v> <appr>                                  <part-v> <post-v>
-#g-dat#   = #g-dat-nom#   #g-dat-pron#   <plur> #cards#  <appr> <coll-c>         <part4>         #parts#  #posts#
-#g-abl-c# = #g-abl-nom-c# #g-abl-pron-c# <plur> <card-c>                                                  <post-c>
-#g-abl-v# = #g-abl-nom-v# #g-abl-pron-v#        <card-v> <appr>                                           <post-v>
-#g-ins-c# = #g-ins-nom-c# #g-ins-pron-c# <plur> <card-c>                                  <part5>         <post-c>
-#g-ins-v# = #g-ins-nom-v# #g-ins-pron-v#        <card-v> <appr>                           <part5>         <post-v>
-#g-cmp#   = #g-cmp-nom#   #g-cmp-pron#   <plur> #cards#  <appr>                                           #posts#
+#g-com#   = #g-com-nom#   #g-com-pron#   #plurs# #cards#  <ord> <appr>                                  #parts#
+#g-par#   = #g-par-nom#   #g-par-pron#   #plurs# #cards#  <ord> <appr>                                  #parts#
+#g-acc-c# = #g-acc-nom-c# #g-acc-pron-c# #plurs# <card-c> <ord>                <part1>                 <part-c> <post-c>
+#g-acc-v# = #g-acc-nom-v# #g-acc-pron-v#         <card-v>       <appr>                          <part5> <part-v> <post-v>
+#g-dat#   = #g-dat-nom#   #g-dat-pron#   #plurs# #cards#  <ord> <appr> <coll-c>         <part4>         #parts#  #posts#
+#g-abl-c# = #g-abl-nom-c# #g-abl-pron-c# #plurs# <card-c> <ord>                                                 <post-c>
+#g-abl-v# = #g-abl-nom-v# #g-abl-pron-v#         <card-v>       <appr>                                           <post-v> <part-v>
+#g-ins-c# = #g-ins-nom-c# #g-ins-pron-c# #plurs# <card-c> <ord>                           <part5>          <post-c>
+#g-ins-v# = #g-ins-nom-v# #g-ins-pron-v#         <card-v>                                 <part5>          <post-v>
+#g-cmp#   = #g-cmp-nom#   #g-cmp-pron#   #plurs# #cards#  <ord> <appr>                                           #posts#
 
 % DEVELOPMENT NOTES:
 % - та (&all) demonstrative pronouns retain the locative case [§318].
 
 $s-case$ = \
-<>:[#g-com#   #propns#   #participles#                     <adj-dv>]           {\+COMIT}:{<D2><LC>н}     <>:<case-c> | \
-<>:[#g-par#   #propns#   #participles#                     <adj-dv>]           {\+PRTV}:{<D1><O>}        <>:<case-v> | \
-<>:[#g-acc-c# #propns-c# #participles-c# <adv-dc> <coll-c>         ]           {\+ACC}:<C>               <>:<acc>    | \
-<>:[#g-acc-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+ACC}:{н<C>}            <>:<case-v> | \
-<>:[#g-dat#   #propns#   #participles#   #d-adv#           <adj-dv>]           {\+DAT}:{<V><O>}          <>:<dat>    | \
-<>:[#g-abl-c# #propns-c# #participles-c# <adv-dc>                  ]           {\+ABL}:{т<O>н}           <>:<case-c> | \
-<>:[#g-abl-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+ABL}:{тт<O>н}          <>:<case-c> | \
-<>:[#g-ins-c# #propns-c# #participles-c# <adv-dc>                  ]           {\+INST}:{<C>н<O>н}       <>:<case-c> | \
-<>:[#g-ins-v# #propns-v# <part3-v>       <adv-dv>          <adj-dv>]           {\+INST}:{н<O>н}          <>:<case-c> | \
-<>:<dem>                                                                       {\+INST}:{<O>н}           <>:<case-c> | \
-<>:[#g-cmp#   #propns#   #participles#                     <adj-dv>]           {\+COMP}:{<D1><LO>ҕ<O>р}  <>:<case-c> | \
+<>:[#g-com#   #participles#                     <adj-dv>]                      {\+COMIT}:{<D2><LC>н}     <>:<case-c> | \
+<>:[#g-par#   #participles#                     <adj-dv>]                      {\+PRTV}:{<D1><O>}        <>:<case-v> | \
+<>:[#g-acc-c# #participles-c# <adv-dc> <coll-c>         ]                      {\+ACC}:<C>               <>:<acc>    | \
+<>:[#g-acc-v# <part3-v>       <adv-dv>          <adj-dv>]                      {\+ACC}:{н<C>}            <>:<case-v> | \
+<>:[#g-dat#   #participles#   #d-adv#           <adj-dv>]                      {\+DAT}:{<V><O>}          <>:<dat>    | \
+<>:[#g-abl-c# #participles-c# <adv-dc>                   <int-v>]              {\+ABL}:{т<O>н}           <>:<case-c> | \
+<>:[#g-abl-v# <part3-v>       <adv-dv>          <adj-dv>]                      {\+ABL}:{тт<O>н}          <>:<case-c> | \
+<>:[#g-ins-c# #participles-c# <adv-dc>                  ]                      {\+INST}:{<C>н<O>н}       <>:<case-c> | \
+<>:[#g-ins-v# <part3-v>       <adv-dv>          <adj-dv>]                      {\+INST}:{н<O>н}          <>:<case-c> | \
+<>:[<dem> <int-v>                                                  ]           {\+INST}:{<O>н}           <>:<case-c> | \
+<>:[#g-cmp#   #participles#                     <adj-dv>]                      {\+COMP}:{<D1><LO>ҕ<O>р}  <>:<case-c> | \
 <>:[<dem> <int-c>                                                  ]           {\+LOC}:{<D1><O>}         <>:<loc>
 
 
 
 % 1.4 Personal possessive affixes --------------------------------------------------------------------------------------
 
-#g-verb-sg-c# = <part1> <part1-n> <part2> <part3-c> <part4>         #voices#
+#g-verb-sg-c# = <part1> <part1-n> <part2> <part3-c> <part4>         <part5-c> <deb> <int-a> <int-c>
 #g-verb-sg-v# =                           <part3-v>         <part5>
-#g-verb-pl#   = <part1> <part1-n> <part2> <part3-c> <part4> <part5> #voices#
+#g-verb-pl#   = <part1> <part1-n> <part2> <part3-c> <part4> <part5> <part5-c> <deb>
 
-#g-nom-sg-cj_1# = #noms-cj# <noun-dc> #d-adj-cj# <adv-dc> <adv-col> #propns-c# <card-c> <ord>
-#g-nom-sg-v_1#  = #noms-v#  <noun-dv> <adj-dv>   <adv-dv>           #propns-v# <card-v>
-#g-nom-pl_1#    = #noms#    #d-nouns# #d-adj#    <adv-dc> <adv-col> #propns#   #cards#  <ord>
+#g-nom-sg-cj_1# = #noms-cj# <noun-dc> #d-adj-cj# <adv-dc> <adv-col> <card-c> <ord>
+#g-nom-sg-v_1#  = #noms-v#  <noun-dv> <adj-dv>   <adv-dv>           <card-v>
+#g-nom-pl_1#    = #noms#    #d-nouns# #d-adj#    <adv-dc> <adv-col> #cards#  <ord>
 
 #g-nom-sg-cj# = #g-nom-sg-cj_1#        <post-c>  <poss> <part-c>
-#g-nom-sg-v#  = #g-nom-sg-v_1#  <appr> <post-v>         <part-v>  <co-v>
-#g-nom-pl#    = #g-nom-pl_1#    <appr> #posts#   <poss> #parts#   <co-v>
+#g-nom-sg-v#  = #g-nom-sg-v_1#  <appr> <post-v>         <part-v>  <co-v> <ref>
+#g-nom-pl#    = #g-nom-pl_1#    <appr> #posts#   <poss> #parts#   <co-v> <ref>
+
+#3-sing# = <ka-v> <prs> <dem> <int-p> <ref> <int-v> <dim>
 
 $psor$ = \
-<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur>                       <int-p>]          {\+POSS\.1SG}:{<C>м}      <>:<psor>   | \
-<>:[#g-verb-sg-v# #g-nom-sg-v#         <ka-v>          <dem>        ]          {\+POSS\.1SG}:м           <>:<psor>   | \
-<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur>                       <int-p>]          {\+POSS\.2SG}:{<C>ҥ}      <>:<psor>   | \
-<>:[#g-verb-sg-v# #g-nom-sg-v#         <ka-v>          <dem>        ]          {\+POSS\.2SG}:ҥ           <>:<psor>   | \
-<>:[#g-verb-pl#   #g-nom-pl#    <plur>          <ka-v> <dem> <int-p>]          {\+POSS\.1PL}:{<B><C>т}   <>:<psor>   | \
-<>:[#g-verb-pl#   #g-nom-pl#    <plur>          <ka-v> <dem> <int-p>]          {\+POSS\.2PL}:{<V><C>т}   <>:<psor>   | \
-<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur>                    <ps> <ind>]          {\+POSS\.3SG}:<O>         <>:<psor-3> | \
-<>:[#g-verb-sg-v# #g-nom-sg-v#                  <ka-v> <dem> <int-p> <int-v>]  {\+POSS\.3SG}:{т<O>}      <>:<psor-3>
+<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur> <ka-c>      <dem> <int-p>      ]        {\+POSS\.1SG}:{<C>м}      <>:<psor>   | \
+<>:[#g-verb-sg-v# #g-nom-sg-v#         <ka-v>                    <dim>]        {\+POSS\.1SG}:м           <>:<psor>   | \
+<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur> <ka-c>      <dem> <int-p>      ]        {\+POSS\.2SG}:{<C>ҥ}      <>:<psor>   | \
+<>:[#g-verb-sg-v# #g-nom-sg-v#         <ka-v>                    <dim>]        {\+POSS\.2SG}:ҥ           <>:<psor>   | \
+<>:[#g-verb-pl#   #g-nom-pl#    <plur> #dem-prons# <dem> <int-p> <dim> <int-a> <int-v>] {\+POSS\.1PL}:{<B><C>т}   <>:<psor>   | \
+<>:[#g-verb-pl#   #g-nom-pl#    <plur> #dem-prons# <dem> <int-p> <dim> <int-a> <int-v>] {\+POSS\.2PL}:{<V><C>т}   <>:<psor>   | \
+<>:[#g-verb-sg-c# #g-nom-sg-cj# <plur> <ka-c>            <ind>   <ps> ]        {\+POSS\.3SG}:<O>         <>:<psor-3> | \
+<>:[#g-verb-sg-v# #g-nom-sg-v#         #3-sing#                       ]        {\+POSS\.3SG}:{т<O>}      <>:<psor-3> | \
+<>:<part3-c>                                                                   {\+POSS\.1PL}:{<B><C>т<C>н} <>:<psor> | \
+<>:<part3-c>                                                                   {\+POSS\.2PL}:{<V><C>т<C>н} <>:<psor>
+
+% DEVELOPMENT NOTES: According to Korkina E.I. [1970: 55-56], before the interrogative suffix and after the plural \
+% participle, the first and second person plural possessives can take respectively the forms at the end of the list.
 
 
 
@@ -193,149 +215,72 @@ $psor$ = \
 #g-case-v#  = #g-nom-sg-v#  #participles-v#   <card-v>  <prs> <co-v> <adv-dv>
 
 $poss-case$ = \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1SG\+COMIT}:{<B><C>н<LC>н}         <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\+COMIT}:{<V><C>н<LC>н}         <>:<case-p>  | \
-<>:[#g-case-cj# <plur>]                                     {\+POSS\.3SG\+COMIT}:{<C>н<LC>н}            <>:<case-p>  | \
-<>:[#g-case-v#        ]                                     {\+POSS\.3SG\+COMIT}:{т<C>н<LC>н}           <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\+COMIT}:{<B><C>т<C>н<LC>н}     <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\+COMIT}:{<V><C>т<C>н<LC>н}     <>:<case-p>  | \
-<>:[#g-case#          ]                                     {\+POSS\.3PL\+COMIT}:{<D2><O>р<C>н<LC>н}    <>:<case-p>  | \
+<>:[#g-case#    <plur> <dem>]                               {\+POSS\.1SG\.COMIT}:{<B><C>н<LC>н}         <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\.COMIT}:{<V><C>н<LC>н}         <>:<case-p>  | \
+<>:[#g-case-cj# <plur>        <ps>]                         {\+POSS\.3SG\.COMIT}:{<C>н<LC>н}            <>:<case-p>  | \
+<>:[#g-case-v#        ]                                     {\+POSS\.3SG\.COMIT}:{т<C>н<LC>н}           <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\.COMIT}:{<B><C>т<C>н<LC>н}     <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\.COMIT}:{<V><C>т<C>н<LC>н}     <>:<case-p>  | \
+<>:[#g-case#          ]                                     {\+POSS\.3PL\.COMIT}:{<D2><O>р<C>н<LC>н}    <>:<case-p>  | \
 \
-<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.1SG\+ACC}:{<B><C>н}                <>:<acc-p>  | \
-<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.2SG\+ACC}:{<V><C>н}                <>:<acc-p>  | \
-<>:[#g-case-cj# <plur> <int-p> <ps>]                        {\+POSS\.3SG\+ACC}:{<C>н}                   <>:<acc-p>  | \
-<>:[#g-case-v#         <int-p>]                             {\+POSS\.3SG\+ACC}:{т<C>н}                  <>:<acc-p>  | \
-<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.1PL\+ACC}:{<B><C>т<C>н}            <>:<acc-p>  | \
-<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.2PL\+ACC}:{<V><C>т<C>н}            <>:<acc-p>  | \
-<>:[#g-case#           <int-p>]                             {\+POSS\.3PL\+ACC}:{<D2><O>р<C>н}           <>:<acc-p>  | \
+<>:[#g-case#    <plur> <int-p>      <dem>]                  {\+POSS\.1SG\.ACC}:{<B><C>н}                <>:<acc-p>  | \
+<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.2SG\.ACC}:{<V><C>н}                <>:<acc-p>  | \
+<>:[#g-case-cj# <plur> <int-p> <ps> <int-a>]                {\+POSS\.3SG\.ACC}:{<C>н}                   <>:<acc-p>  | \
+<>:[#g-case-v#         <int-p>]                             {\+POSS\.3SG\.ACC}:{т<C>н}                  <>:<acc-p>  | \
+<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.1PL\.ACC}:{<B><C>т<C>н}            <>:<acc-p>  | \
+<>:[#g-case#    <plur> <int-p>]                             {\+POSS\.2PL\.ACC}:{<V><C>т<C>н}            <>:<acc-p>  | \
+<>:[#g-case#           <int-p>]                             {\+POSS\.3PL\.ACC}:{<D2><O>р<C>н}           <>:<acc-p>  | \
 \
-<>:[#g-case#    <plur> <part4>]                             {\+POSS\.1SG\+PRTV}:{<B><C>н<O>}            <>:<case-p>  | \
-<>:[#g-case#    <plur> <part4>]                             {\+POSS\.2SG\+PRTV}:{<V><C>н<O>}            <>:<case-p>  | \
-<>:[#g-case-cj# <plur> <part4>]                             {\+POSS\.3SG\+PRTV}:{<C>н<O>}               <>:<case-p>  | \
-<>:[#g-case-v#         <part4>]                             {\+POSS\.3SG\+PRTV}:{т<C>н<O>}              <>:<case-p>  | \
-<>:[#g-case#    <plur> <part4>]                             {\+POSS\.1PL\+PRTV}:{<B><C>т<C>н<O>}        <>:<case-p>  | \
-<>:[#g-case#    <plur> <part4>]                             {\+POSS\.2PL\+PRTV}:{<V><C>т<C>н<O>}        <>:<case-p>  | \
-<>:[#g-case#           <part4>]                             {\+POSS\.3PL\+PRTV}:{<D2><O>р<C>н<O>}       <>:<case-p>  | \
+<>:[#g-case#    <plur> <part4>]                             {\+POSS\.1SG\.PRTV}:{<B><C>н<O>}            <>:<case-p>  | \
+<>:[#g-case#    <plur> <part4>]                             {\+POSS\.2SG\.PRTV}:{<V><C>н<O>}            <>:<case-p>  | \
+<>:[#g-case-cj# <plur> <part4> <ps>]                        {\+POSS\.3SG\.PRTV}:{<C>н<O>}               <>:<case-p>  | \
+<>:[#g-case-v#         <part4>]                             {\+POSS\.3SG\.PRTV}:{т<C>н<O>}              <>:<case-p>  | \
+<>:[#g-case#    <plur> <part4>]                             {\+POSS\.1PL\.PRTV}:{<B><C>т<C>н<O>}        <>:<case-p>  | \
+<>:[#g-case#    <plur> <part4>]                             {\+POSS\.2PL\.PRTV}:{<V><C>т<C>н<O>}        <>:<case-p>  | \
+<>:[#g-case#           <part4>]                             {\+POSS\.3PL\.PRTV}:{<D2><O>р<C>н<O>}       <>:<case-p>  | \
 \
-<>:[#g-case#    <plur> <ord>]                               {\+POSS\.1SG\+DAT}:{<B><O>р}                <>:<case-p>  | \
-<>:[#g-case#    <plur> <ord>]                               {\+POSS\.2SG\+DAT}:{<V><O>р}                <>:<case-p>  | \
-<>:[#g-case-cj# <plur> <ord>]                               {\+POSS\.3SG\+DAT}:{<C>г<O>р}               <>:<case-p>  | \
-<>:[#g-case-v#               <dt2>]                         {\+POSS\.3SG\+DAT}:{т<C>г<O>р}              <>:<case-p>  | \
-<>:[#g-case#    <plur> <ord>]                               {\+POSS\.1PL\+DAT}:{<B><C>т<C>г<O>р}        <>:<case-p>  | \
-<>:[#g-case#    <plur> <ord>]                               {\+POSS\.2PL\+DAT}:{<V><C>т<C>г<O>р}        <>:<case-p>  | \
-<>:[#g-case#           <ord>]                               {\+POSS\.3PL\+DAT}:{<D2><O>р<C>г<O>р}       <>:<case-p>  | \
+<>:[#g-case#    <plur> <ord> <dem>]                         {\+POSS\.1SG\.DAT}:{<B><O>р}                <>:<case-p>  | \
+<>:[#g-case#    <plur> <ord>]                               {\+POSS\.2SG\.DAT}:{<V><O>р}                <>:<case-p>  | \
+<>:[#g-case-cj# <plur> <ord> <ps> <ind>]                    {\+POSS\.3SG\.DAT}:{<C>г<O>р}               <>:<case-p>  | \
+<>:[#g-case-v#                          <dt2>]              {\+POSS\.3SG\.DAT}:{т<C>г<O>р}              <>:<case-p>  | \
+<>:[#g-case#    <plur> <ord>]                               {\+POSS\.1PL\.DAT}:{<B><C>т<C>г<O>р}        <>:<case-p>  | \
+<>:[#g-case#    <plur> <ord>]                               {\+POSS\.2PL\.DAT}:{<V><C>т<C>г<O>р}        <>:<case-p>  | \
+<>:[#g-case#           <ord>]                               {\+POSS\.3PL\.DAT}:{<D2><O>р<C>г<O>р}       <>:<case-p>  | \
 \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1SG\+ABL}:{<B><C>тт<O>н}           <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\+ABL}:{<V><C>тт<O>н}           <>:<case-p>  | \
-<>:[#g-case-cj# <plur>]                                     {\+POSS\.3SG\+ABL}:{<C>тт<O>н}              <>:<case-p>  | \
-<>:[#g-case-v#        ]                                     {\+POSS\.3SG\+ABL}:{т<C>тт<O>н}             <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\+ABL}:{<B><C>т<C>тт<O>н}       <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\+ABL}:{<V><C>т<C>тт<O>н}       <>:<case-p>  | \
-<>:[#g-case#          ]                                     {\+POSS\.3PL\+ABL}:{<D2><O>р<C>тт<O>н}      <>:<case-p>  | \
+<>:[#g-case#    <plur> <dem>]                               {\+POSS\.1SG\.ABL}:{<B><C>тт<O>н}           <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\.ABL}:{<V><C>тт<O>н}           <>:<case-p>  | \
+<>:[#g-case-cj# <plur>       <ps>]                          {\+POSS\.3SG\.ABL}:{<C>тт<O>н}              <>:<case-p>  | \
+<>:[#g-case-v#        ]                                     {\+POSS\.3SG\.ABL}:{т<C>тт<O>н}             <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\.ABL}:{<B><C>т<C>тт<O>н}       <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\.ABL}:{<V><C>т<C>тт<O>н}       <>:<case-p>  | \
+<>:[#g-case#          ]                                     {\+POSS\.3PL\.ABL}:{<D2><O>р<C>тт<O>н}      <>:<case-p>  | \
 \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1SG\+INST}:{<B><C>н<O>н}           <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\+INST}:{<V><C>н<O>н}           <>:<case-p>  | \
-<>:[#g-case-cj# <plur>]                                     {\+POSS\.3SG\+INST}:{<C>н<O>н}              <>:<case-p>  | \
-<>:[#g-case-v#        ]                                     {\+POSS\.3SG\+INST}:{т<C>н<O>н}             <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\+INST}:{<B><C>т<C>н<O>н}       <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\+INST}:{<V><C>т<C>н<O>н}       <>:<case-p>  | \
-<>:[#g-case#          ]                                     {\+POSS\.3PL\+INST}:{<D2><O>р<C>н<O>н}      <>:<case-p>  | \
+<>:[#g-case#    <plur> <dem>]                               {\+POSS\.1SG\.INST}:{<B><C>н<O>н}           <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\.INST}:{<V><C>н<O>н}           <>:<case-p>  | \
+<>:[#g-case-cj# <plur>       <ps>]                          {\+POSS\.3SG\.INST}:{<C>н<O>н}              <>:<case-p>  | \
+<>:[#g-case-v#        ]                                     {\+POSS\.3SG\.INST}:{т<C>н<O>н}             <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\.INST}:{<B><C>т<C>н<O>н}       <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\.INST}:{<V><C>т<C>н<O>н}       <>:<case-p>  | \
+<>:[#g-case#          ]                                     {\+POSS\.3PL\.INST}:{<D2><O>р<C>н<O>н}      <>:<case-p>  | \
 \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1SG\+COMP}:{<B><C>н<LO>ҕ<O>р}      <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\+COMP}:{<V><C>н<LO>ҕ<O>р}      <>:<case-p>  | \
-<>:[#g-case-cj# <plur>]                                     {\+POSS\.3SG\+COMP}:{<C>н<LO>ҕ<O>р}         <>:<case-p>  | \
-<>:[#g-case-v#        ]                                     {\+POSS\.3SG\+COMP}:{т<C>н<LO>ҕ<O>р}        <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\+COMP}:{<B><C>т<C>н<LO>ҕ<O>р}  <>:<case-p>  | \
-<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\+COMP}:{<V><C>т<C>н<LO>ҕ<O>р}  <>:<case-p>  | \
-<>:[#g-case#          ]                                     {\+POSS\.3PL\+COMP}:{<D2><O>р<C>н<LO>ҕ<O>р} <>:<case-p>
+<>:[#g-case#    <plur> <dem>]                               {\+POSS\.1SG\.COMP}:{<B><C>н<LO>ҕ<O>р}      <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\.COMP}:{<V><C>н<LO>ҕ<O>р}      <>:<case-p>  | \
+<>:[#g-case-cj# <plur>       <ps>]                          {\+POSS\.3SG\.COMP}:{<C>н<LO>ҕ<O>р}         <>:<case-p>  | \
+<>:[#g-case-v#        ]                                     {\+POSS\.3SG\.COMP}:{т<C>н<LO>ҕ<O>р}        <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\.COMP}:{<B><C>т<C>н<LO>ҕ<O>р}  <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\.COMP}:{<V><C>т<C>н<LO>ҕ<O>р}  <>:<case-p>  | \
+<>:[#g-case#          ]                                     {\+POSS\.3PL\.COMP}:{<D2><O>р<C>н<LO>ҕ<O>р} <>:<case-p>
 
 
+$poss-case-2$ = \
+<>:[#g-case#    <plur> <dem>]                               {\+POSS\.1SG\.COMIT}:{<B><C>н<LO>н}         <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2SG\.COMIT}:{<V><C>н<LO>н}         <>:<case-p>  | \
+<>:[#g-case-cj# <plur>        <ps>]                         {\+POSS\.3SG\.COMIT}:{<C>н<LO>н}            <>:<case-p>  | \
+<>:[#g-case-v#        ]                                     {\+POSS\.3SG\.COMIT}:{т<C>н<LO>н}           <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.1PL\.COMIT}:{<B><C>т<C>н<LO>н}     <>:<case-p>  | \
+<>:[#g-case#    <plur>]                                     {\+POSS\.2PL\.COMIT}:{<V><C>т<C>н<LO>н}     <>:<case-p>  | \
+<>:[#g-case#          ]                                     {\+POSS\.3PL\.COMIT}:{<D2><O>р<C>н<LO>н}    <>:<case-p>
 
-% 2.1 Voice markers ----------------------------------------------------------------------------------------------------
-
-% There are five voices in Yakut [§472]:
-% 1) base: is the primary verb form (null affix) [§473].
-% 2) causative: indicates mainly that the grammatical subject is not the one that is completing the action [§477].
-% 3) reflexive:
-% 4) passive
-% 5) reciprocal
-
-
-% 2.1.1 Causative affixes from transitive verbs ------------------------------------------------------------------------
-
-% The following affixes are attached to:
-% -т after long vowel- or diphthong ending stems [§481].
-% -тар (&all.) attach to stems ending in consonant [§482] (PO: only monosyllabic?).
-% -тар attaches to different types of living and dead roots, frequently causative and other voices [§482].
-% Affixes -т and -тар are very productive in modern Yakut [§482].
-
-$caus$ = \
-<>:[#trans-v# <verb-v>]                                                        {\+CAUS}:т                <>:<caus-c> | \
-<>:[<tran-1c> <tran-1r> <tran-1l> <tran-2c> <refl> <pass> <recp>]              {\+CAUS}:{<D1><O>р}       <>:<caus-r> | \
-<>:[<tran-2r> <tran-2j> <cstv-c> <tran-1j>]                                    {\+CAUS}:{т<O>р}          <>:<caus-r>
-
-
-
-% 2.1.2 Causative affixes from intransitive verbs ----------------------------------------------------------------------
-
-% Forms causative-transitive verbs from intransitives [§483].
-% -т (^cstv) from intransitives ending in long vowels, й and р [§483].
-% -тар (&all) attaches to a small group of monosyllabic intransitives [§484].
-% -ар (&all) a reduced group of one-syllable intransitive verbs [§485].
-% -ыар (&all) from one-syllable intransitive verbs [§486].
-
-$cstv$ = \
-<>:[#intrs-v# #intrs-j# <intr-2r> <intr-1r> <verb-r> <verb-j>]                 {\+CSTV}:т                <>:<cstv-c> | \
-<>:[#intrs-c# #intrs-j# #intrs-r# #recps#]                                     {\+CSTV}:{<C>т}           <>:<cstv-c> | \
-<>:[#intrs-nl# <intr-1c>]                                                      {\+CSTV}:{<D1><O>р}       <>:<cstv-r> | \
-<>:[<intr-1c>]                                                                 {\+CSTV}:{<O>р}           <>:<cstv-r> | \
-<>:[<intr-1c> <intr-1r>]                                                       {\+CSTV}:{<DI>р}          <>:<cstv-r>
-
-
-
-% 2.1.3 Reflective affixes ---------------------------------------------------------------------------------------------
-
-% It is formed only from verbal stems (primary or derived) with transitive meaning (including causatives) [§493].
-% -н after verbal stems ending in long vowel or diphthong (same form as the passive voice) [§493].
-% -ын (&all) after verbal stems ending in consonant [§493].
-
-% ABOUT DEAD forms (verbs that do not longer are used without the affix)
-
-$refl$ = \
-<>:[#trans-v# <verb-v> <tran-2j> <tran-1j>                           <aux-v>]            {\+REFL}:н       <>:<refl>  | \
-<>:[#trans-c# #trans-l# <tran-j> <tran-1j> #trans-r# #cstvs# #recps# <aux-c>]            {\+REFL}:{<C>н}  <>:<refl>
-
-
-
-% 2.1.4 Passive affixes ------------------------------------------------------------------------------------------------
-
-% The same as reflexive, passive verbs are formed from transitive verbs and a few verbs of movement [§505].
-% The passive voice is formed by affixes -н and -ылын [§505]:
-% -н after verbal stems ending in long vowel or diphthong (same form as the reflexive voice).
-% -ылын (&all) after verbal stems ending in consonants.
-
-$pass$ = \
-<>:[#trans-v# <verb-v>                                        #moods# <aux-v>]     {\+PASS}:н            <>:<pass>   | \
-<>:[#trans-c# #trans-r# <tran-1l>          <tran-1j> #voices#                ]     {\+PASS}:{<C>л<C>н}   <>:<pass>   | \
-<>:[<tran-j>  <tran-2l> <tran-l> <tran-1j> <tran-2j> <fig-j>          <aux-c>]     {\+PASS}:{л<C>н}      <>:<pass>
-
-% DEVELOPMENT NOTES:
-% Check where to place #trans-l#
-
-
-
-% 2.1.5 Joint-reciprocal affixes ---------------------------------------------------------------------------------------
-
-% Reciprocal affix express reciprocal and simultaneous mutual action [§510].
-% -с attaches to long vowel or diphthong ending stems.
-% -ыс (&all) attaches to final consonants.
-% -сыс (&all) joint-reciprocal verbs can appear in double form.
-
-$recp$ = \
-<>:[#trans-v# #intrs-v# <verb-v> <intr-j> <tran-j> <verb-j>]                         {\+RECP}:с          <>:<recp-s> | \
-<>:[<intr-1j> <tran-1j> <intr-2j> <tran-2j> <fig-j>]                                 {\+RECP}:с          <>:<recp-s> | \
-<>:[#verbs-c# #verbs-j# #verbs-r# <verb-j> <tran-1l> <intr-1nl> <cstv-c> <caus-c>]   {\+RECP}:{<C>с}     <>:<recp>   | \
-<>:[#verbs-c# #verbs-j# #verbs-r# <verb-c> <tran-1l> <verb-j> <verb-r> <intr-1nl>]   {\+RECP\#1}:{с<C>с} <>:<recp-s>
 
 
 
@@ -356,135 +301,41 @@ $neg$ = \
 % It is formed by adding the affix <LO>р after the verbal stem. The plural, the same as the regular imperative,
 % requires also the addition of the possessive affix <C>ҥ.
 
-$mood$ = \
-<>:[#verbs#       #d-verbs#     #voices#  <neg>          ]                         {\+AFFIR}:{<LC>һ<C>}  <>:<cert>   | \
-<>:[#verbs-crjnl# #d-verbs-jrc# #voices#  <neg> <aux-c>  ]                         {\+POT}:{<LO>р<O>й}   <>:<pot>    | \
-<>:[#verbs-v#     <verb-v>                      <aux-v>  ]                         {\+POT}:{р<O>й}       <>:<pot>    | \
-<>:[#verbs#       #d-verbs#     #voices#  <neg>          ]                         {\+IMP\.FUT}:{<LO>р}  <>:<imp-r>  | \
-<>:[<part3-c>                             <neg>          ]                         {\+IMP}:{<O>й}        <>:<imp-c>  | \
-<>:[#verbs#       #d-verbs#     #voices#  <neg>          ]                         {\+IMP}:<LC>          <>:<imp-v>  | \
-<>:[#verbs#       #d-verbs#     #voices#  <neg> #auxs#   ]                         {\+IMP}:{<D1><C>н}    <>:<imp-n>  | \
-<>:<imp-v>                                                                         {\+1SG}:м             <>:<psor>   | \
-<>:<part3-c>                                                                       {\+1PL}:{<C>ҥ}        <>:<psor>   | \
-<>:[#verbs-crjnl# #d-verbs-jrc# #voices#        <imp-r>   <aux-c>]                 {\+IMP\+2PL}:{<C>ҥ}   <>:<psor>   | \
-<>:[#verbs-v#     <verb-v>                <neg> <part3-v> <aux-v>]                 {\+IMP\+2PL}:ҥ        <>:<psor>
-
 $imp$ = \
-<>:<part3-c>                                                              {\+IMP\+1SG}:{т<C>б<C>н}       <>:<psor>   | \
-<>:<part3-c>                                                              {\+IMP\+2SG}:{т<C>г<C>н}       <>:<psor>   | \
-<>:<part3-c>                                                              {\+IMP\+3SG}:{т<C>н}           <>:<psor>   | \
-<>:<part3-c>                                                              {\+IMP\+1PL}:{т<C>б<C>т<C>н}   <>:<psor>   | \
-<>:<part3-c>                                                              {\+IMP\+2PL}:{т<C>г<C>т<C>н}   <>:<psor>   | \
-<>:<part3-c>                                                              {\+IMP\+3PL}:{т<C>нн<O>р}      <>:<psor>
+<>:[#verbs#       #d-verbs#     <neg> #voices#]                        {\+IMP\#1\.1SG}:{<LC>м}         <>:<imp>      | \
+<>:[#verbs#       #d-verbs#     <neg> #voices# <aux-c>]                {\+IMP\#1\.3SG}:{<D1><C>н}      <>:<imp-n>    | \
+<>:[<part3-c>]                                                         {\+IMP\#1\.1PL}:{<C>ҥ}          <>:<imp-p>    | \
+<>:[#verbs-v#     <verb-v>      <neg>         ]                        {\+IMP\#1\.2PL}:ҥ               <>:<imp-p>    | \
+<>:[#verbs-crjnl# #d-verbs-jrc#       #voices# <aux-c>]                {\+IMP\#1\.2PL}:{<C>ҥ}          <>:<imp-p>    | \
+<>:[#verbs#       #d-verbs#     <neg> #voices#]                        {\+IMP\#1\.3PL}:{<D1><C>нн<O>р} <>:<imp>      | \
+<>:[#verbs#       #d-verbs#     <neg> #voices#]                        {\+IMP\#2\.2SG}:{<LO>р}         <>:<imp>      | \
+<>:[#verbs#       #d-verbs#     <neg> #voices#]                        {\+IMP\#2\.2PL}:{<LO>р<C>ҥ}     <>:<imp>
+
+
+% -лаах   it forms the debitive mood after participles.
+
+% -ааччы (&all) can be attached to any verbal stem. It has a meaning close to the active participle in Russian [§176].
+% -ааччы commonly performed action is also considered a secondary participle [§429].
+% Kharitonov L.N. and other specialists considered -ааччы to be a verbal noun or the name of an actor, as it forms nouns
+% denoting the actor's name. Ubryatova E.I. interprets this affix as a participle capable of taking predicate affixes
+% and denoting an action that is usually performed [Korkina E.I. Nakloneniya glagola v yakutskom yazyke. Nauka, 1970,
+% p. 221].
+
+$mood$ = \
+<>:[#verbs#       #d-verbs#     #voices#  <neg> <aux-c>  ]                       {\+AFFIR#1}:{<LC>һ<C>}  <>:<cert>   | \
+<>:[#verbs#       #d-verbs#     #voices#  <neg> <aux-c>  ]                       {\+AFFIR#2}:{<LC>һ<C>к} <>:<cert>   | \
+<>:[#verbs-crjnl# #d-verbs-jrc# #voices#  <neg> <aux-c>  ]                       {\+POT}:{<LO>р<O>й}     <>:<pot>    | \
+<>:[#verbs-v#     <verb-v>                      <aux-v>  ]                       {\+POT}:{р<O>й}         <>:<pot>    | \
+<>:[<part1> <part1-n> <part2> <part3-c> <part4>          ]                       {\+DEB}:{<D2><LO>х}     <>:<deb>    | \
+<>:[#verbs-crjnl#               #voices#  <neg> <aux-c>  ]                       {\+HAB#1}:{<LO>чч<C>}   <>:<part5>  | \
+<>:[#verbs-v#     <verb-v>                      <aux-v>  ]                       {\+HAB#1}:{чч<C>}       <>:<part5>  | \
+<>:[#verbs-crjnl#               #voices#  <neg> <aux-c>  ]                       {\+HAB#2}:{<LO>чч<C>к}  <>:<part5-c>| \
+<>:[#verbs-v#     <verb-v>                      <aux-v>  ]                       {\+HAB#2}:{чч<C>к}      <>:<part5-c>
 
 
 
-% 2.4 Expressive marker ------------------------------------------------------------------------------------------------
 
-% Affix that can be attached to any global stem (non-derivative, derivative, including complex) with a modal-emotional
-% connotation of affection, pity, regret for in relation to the performer of the action or, conversely, a shade of
-% humiliation, irony, annoyance, contempt for someone [§396].
-
-$expr$ = \
-<>:[#verbs-c# #verbs-j# #verbs-r# #trans-l# #intrs-nl# <verb-j> <verb-r> \
-    #voices# <aux-c>]                                                              {\+EXPR}:{<LO>хт<LO>} <>:<verb-v> | \
-<>:[#verbs-v# <aux-v>]                                                             {\+EXPR}:{хт<LO>}     <>:<verb-v>
-
-
-
-% 2.5 Aspect markers ---------------------------------------------------------------------------------------------------
-
-% Yakut has a developed system of forms that serve to characterize the characteristics of the course of action from
-% the side of its manifestation in time and space, its amount of force, achievements and results [§518].
-
-% This affixes can be attached to almost every verb form, primary or derived:
-% -бахтаа (&all.) expresses an action performed at an accelerated rate [§523].
-% -(ы)талаа (&all.) expresses the sequential alternation of actions [§521].
-
-% Apart from these forms, there are other less used [§536]:
-% -таа (&all.) express repetition from transitives ending in р or л (also from causative forms) [§538].
-% -аттаа (&all.) found in a few verbs formed from some monosyllabic stems with a transitive meaning [§539].
-% -ыалаа (&all.) attached to stems that primarily express various types of movement (productive) [§541].
-% -ыак(к)алаа (&all.) a variation of the -ыалаа with similar meaning [§542].
-% -ыахтаа (&all.) forms verbs that are close in meaning to previous verbs [§543].
-% -алаа (&all.) occurs in few verbs with the meaning is the same as -ыалаа [§544].
-% -ак(к)алаа (&all.) occurs in several verbs [§545].
-% -балаа (&all.) found in some verbs, usually formed from monosyllabic stems [§546].
-
-$aspv$ = \
-<>:[#verbs# <verb-v> #voices#]                                               {\+ACCE}:{<B><O>хт<LO>}     <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ACCE}:{х<C>с}            <>:<acce>   | \
-<>:[<fig-j>]                                                                 {\+ACCE}:{к<C>с}            <>:<acce>   | \
-<>:[#intrs-v# #trans-v# #verbs-j# #verbs-r# #trans-l# #intrs-nl#]            {\+ITER}:{т<O>л<LO>}        <>:<verb-v> | \
-<>:[#verbs-c# #verbs-r# #verbs-j# #trans-l# #intrs-nl# <cstv-c>]             {\+ITER}:{<C>т<O>л<LO>}     <>:<verb-v> | \
-<>:[#trans-r# #trans-l# <caus-r> <cstv-r> <recp>]                            {\+ITER}:{т<LO>}            <>:<verb-v> | \
-<>:[<tran-1c> <tran-1l> <tran-1r> <tran-2c>]                                 {\+ITER}:{<O>тт<LO>}        <>:<verb-v> | \
-<>:[<tran-2v>]                                                               {\+ITER}:{тт<LO>}           <>:<verb-v> | \
-<>:[#intrs# #trans#]                                                         {\+ITER}:{<DI>л<LO>}        <>:<verb-v> | \
-<>:[#intrs# #trans#]                                                         {\+ITER}:{<DI>кк<O>л<LO>}   <>:<verb-v> | \
-<>:[#intrs# #trans#]                                                         {\+ITER}:{<DI>к<O>л<LO>}    <>:<verb-v> | \
-<>:[#intrs# #trans#]                                                         {\+ITER}:{<DI>хт<LO>}       <>:<verb-v> | \
-<>:[#intrs# #trans# <caus-c> <cstv-c>]                                       {\+ITER}:{<O>л<LO>}         <>:<verb-v> | \
-<>:[#verbs-v#]                                                               {\+ITER}:{к<O>л<LO>}        <>:<verb-v> | \
-<>:[#verbs-c# #verbs-r# <intr-1nl>]                                          {\+ITER}:{<O>кк<O>л<LO>}    <>:<verb-v> | \
-<>:[#verbs-c# #verbs-r# <intr-1nl>]                                          {\+ITER}:{<O>к<O>л<LO>}     <>:<verb-v> | \
-<>:[<intr-1c> <tran-1c> <intr-1r> <tran-1r> <intr-1nl>]                      {\+ITER}:{<B><O>л<LO>}      <>:<verb-v>
-
-% DEVELOPMENT NOTES:
-% тт<LO> was observed in тамнаа -> тамнааттаа and холбоо -> холбооттоо.
-% This section is underdefined and needs to be studied in detail. This outputs to many variants in generation mode.
-% Is the initial т not affected by regressive assimilation?
-
-
-
-% 2.6 Aspect markers (figuratives) -------------------------------------------------------------------------------------
-
-% These affixes mainly function among individual semantic groups of verbs. The following groups of forms are
-% distinguished here based on their meaning [§572]:
-% - movability: special dynamism or prevalence of a particular action or phenomenon [§572].
-% - separative repetition: the action as a whole is represented as a series of repeated actions [§573].
-% - frequentative repetition: is accelerated repetition of movement or its actions [§577].
-% - slowness: indicates that the action is manifested at a slow pace [§580].
-
-% Forms of movability [§573]:
-% Close in meaning and in some cases are used interchangeable after the same figurative root.
-% -рый (&all.) more common
-% -һый (&all.) more common
-% -лый (&all.) less common
-% -чый (&all.) less common
-
-% Accelerated for imitatives and figuratives is formed by ҥнаа (&all.).
-% -ҥнаа consist of two elements -ҥ and -наа. The last is a phonetical variant of affix -лаа. The element -ҥ represents
-% a half-deprecated nominal affix. Implemented as a combination of ^NMLZ7 + ^VRBZ1 [§570].
-% с к are implemented as adjectives
-% Uniform multiplicity. These are unproductive affixes.
-
-$aspf$ = \
-<>:[<fig-j>]                                                                 {\+ACCE}:{р<C>й}            <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ACCE}:{һ<C>й}            <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ACCE}:{л<C>й}            <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ACCE}:{ч<C>й}            <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{лдь<C>й}          <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{рд<LO>}           <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{х<O>чч<C>й}       <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+FREC\#1}:{х<O>чч<C>й}    <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{к<C>чч<C>й}       <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{ҕ<O>лдь<C>й}      <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{г<C>лдь<C>й}      <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{х<C>с}            <>:<verb-c> | \
-<>:[<fig-j>]                                                                 {\+FREC}:{к<C>с}            <>:<verb-c> | \
-<>:[<fig-j>]                                                                 {\+SLOW}:{<LO>р<C>й}        <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{ҥ<O>л<LO>}        <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{ҥх<O>л<LO>}       <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{<LO>д<C>й}        <>:<verb-j> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{<LO>х<O>йд<LO>}   <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{<LO>р<O>йд<LO>}   <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{<LO>хт<LO>}       <>:<verb-v> | \
-<>:[<fig-j>]                                                                 {\+ITER}:{ҥх<O>ст<LO>}      <>:<verb-v>
-
-
-
-% 2.7 Participial affixes ----------------------------------------------------------------------------------------------
+% 2.4 Participial affixes ----------------------------------------------------------------------------------------------
 
 % Participles retain the basic characteristics of the verb [Ubryatova, p. 37]:
 % 1) express the concept of action;
@@ -501,7 +352,7 @@ $aspf$ = \
 % Secondary forms are considered a combination of primary participle affixes with the affix -тах.
 
 $partz$ = \
-<>:[#verbs-crjnl# #d-verbs-jrc# #voices#        <aux-c>       ]          {\+PART\_PRES}:{<O>р}          <>:<part1>   | \
+<>:[#verbs-crjnl# #d-verbs-jrc# #voices# <fig-j><aux-c>       ]          {\+PART\_PRES}:{<O>р}          <>:<part1>   | \
 <>:[#verbs-v#     <verb-v>                                    ]          {\+PART\_PRES}:{<LC>р}         <>:<part1>   | \
 <>:[#verbs#       #d-verbs#     #voices#        #auxs#        ]          {\+NEG\+PART\_PRES}:{<B><O>т}  <>:<part1-n> | \
 <>:[#verbs#       #d-verbs#     #voices#  <neg> #auxs#  <gnd1>]          {\+PART\_PAST}:{<B><C>т}       <>:<part2>   | \
@@ -512,10 +363,11 @@ $partz$ = \
 
 
 
-% 2.8 Adverbial participles --------------------------------------------------------------------------------------------
+% 2.5 Adverbial participles --------------------------------------------------------------------------------------------
 
 % There are nine types of adverbial participles [§433]:
 % -ан (&all) express relative tense in relation with the action of the main verb.
+% -аан (&all) in some dialects of the Yakut language, the affix -ан acquires a long vowel, becoming -аан [Korkina: 1985:15].
 % -а/-ыы (&all)
 % -ымына (&all) negative form of -ан, and -а [§450].
 % -бакка (&all) negative form of -ан, and -а/-ыы. More widely used than -ымына [§455].
@@ -531,9 +383,10 @@ $partz$ = \
 % form the 3 person plural, while, typically, the plural affix precedes the dative case affix.
 
 $gndz$ =  \
-<>:[#verbs-crjnl# #d-verbs-jrc#     #voices#                  <aux-c>]     {\+CONV\#1}:{<O>н}            <>:<gnd1>   | \
+<>:[#verbs-crjnl# #d-verbs-jrc#     #voices#        <fig-j>   <aux-c>]     {\+CONV\#1}:{<O>н}            <>:<gnd1>   | \
+<>:[#verbs-crjnl# #d-verbs-jrc#     #voices#        <fig-j>   <aux-c>]     {\+CONV\#1}:{<LO>н}           <>:<gnd1>   | \
 <>:[#verbs-v#     <verb-v>                          <part3-v> <aux-v>]     {\+CONV\#1}:н                 <>:<gnd1>   | \
-<>:[#verbs-crjnl# <verb-c> <verb-j> <verb-r> #voices#         <aux-c>]     {\+CONV\#2}:<O>               <>:<gnd2>   | \
+<>:[#verbs-crjnl# <verb-c> <verb-j> <fig-j> <verb-r> #voices# <aux-c>]     {\+CONV\#2}:<O>               <>:<gnd2>   | \
 <>:[#verbs-v#     <verb-v>          #voices#                  <aux-v>]     {\+CONV\#2}:<LC>              <>:<gnd2>   | \
 <>:[<neg>                                                            ]     {\+CONV\#3}:{<C>н<O>}         <>:<gnd3>   | \
 <>:[<neg>                                                            ]     {\+CONV\#3a}:{н<O>}           <>:<gnd3>   | \
@@ -545,12 +398,12 @@ $gndz$ =  \
 
 
 
-% 2.9 Near past --------------------------------------------------------------------------------------------------------
+% 2.7 Near past --------------------------------------------------------------------------------------------------------
 
 $past$ = \
 <>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.1SG}:{<D1><C>м}         <>:<past>   | \
 <>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.2SG}:{<D1><C>ҥ}         <>:<past>   | \
-<>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.3SG}:{<D1><O>}          <>:<past>   | \
+<>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.3SG}:{<D1><O>}          <>:<past-v> | \
 <>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.1PL}:{<D1><C>б<C>т}     <>:<past>   | \
 <>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.2PL}:{<D1><C>г<C>т}     <>:<past>   | \
 <>:[#verbs# #voices# #d-verbs# <neg> <iter> <acce> #auxs#]               {\+PST\.3PL}:{<D1><C>л<O>р}     <>:<past>
@@ -561,10 +414,38 @@ $past$ = \
 
 $int$ = \
 <>:[<poss> <predsg> <predpl> <plur> <part1> <part2> <part-c> <psor> \
-    <int-c> <int-p> <imp-n> <aux-c> <ord> ]                                                  {\+INT}:{<C>й}  <>:<in> | \
-<>:[#noms-v# <int-v> <part-v> <part-av> <psor-3> <adj-dv>]                                   {\+INT}:{н<C>й} <>:<in> | \
-<>:[<part3-v> <psor-3> <psor-3> <acc>]                                                       {\+INT}:{й}     <>:<in>
+    <int-c> <int-p> <imp-n> <aux-c> <ord> #noms-c# <deb> <int-s>]          {\+INT}:{<C>й}                   <>:<in>  | \
+<>:[#noms-v# <int-v> <part-v> <part-av> <psor-3> <adj-dv> <post-v>]        {\+INT}:{н<C>й}                  <>:<in>  | \
+<>:[<part3-v> <psor-3> <psor-3> <acc> <past-v>]                            {\+INT}:{й}                      <>:<in>  | \
+<>:[#verbs-crjnl# #d-verbs-jrc#       <imp> <imp-n> <part3-c>]             {\+INT\#1}:{<LC>й}               <>:<in>  | \
+<>:[#verbs-v#     <verb-v>      <neg>]                                     {\+INT\#1}:{р<LC>й}              <>:<in>  | \
+<>:[<imp-p>                                         <part3-c>]             {\+INT\#1}:{<C>т<LC>й}           <>:<in>  | \
+<>:[<imp>                                           <part3-c>]             {\+INT\#2}:{<C>ҥ<LC>й}           <>:<in>  | \
+<>:[#verbs-crjnl# #d-verbs-jrc#]                                           {\+INT\#2}:{<LC>ҥ<LC>й}          <>:<in>  | \
+<>:[#verbs-v#     <verb-v>      <neg>]                                     {\+INT\#2}:{р<C>ҥ<LC>й}          <>:<in>  | \
+<>:[<imp-p>]                                                               {\+INT\#2}:{<C>т<C>н<LC>й}       <>:<in>
 
+
+
+% 3.2 Diminutive and intensifying marks --------------------------------------------------------------------------------
+
+% -ыары/лык (&all) forms not productive adverbs of time, more rarely, place [§707].
+
+$emph$ = \
+<>:[#advs# <adv-dv>]                                                             {\+AUG\#1}:{<D1><C>к}   <>:<adv-dv> | \
+<>:[#advs-v#]                                                                    {\+AUG\#2}:{чч<C>}      <>:<adv-dv> | \
+<>:[#advs-c# #adjs-c# #adjs-j#]                                                  {\+AUG\#3}:{<C>н}       <>:<adv-dv> | \
+<>:[#advs#]                                                                      {\+DIM\#1}:{<DI>р}      <>:<adv-dc> | \
+<>:[#advs#]                                                                      {\+DIM\#1a}:{<DI>р<C>}  <>:<adv-dv> | \
+<>:[#advs#]                                                                      {\+DIM\#1b}:{<DI>р<O>х} <>:<adv-dc> | \
+<>:[#advs-v#]                                                                    {\+DIM\#1c}:{һ<DI>р}    <>:<adv-dc> | \
+<>:[#advs-c#]                                                                    {\+DIM\#1c}:{с<DI>р}    <>:<adv-dc> | \
+<>:[#advs#]                                                                      {\+DIM\#2}:{<D2><C>к}   <>:<adv-dc>
+
+% DEVELOPMENT NOTES:
+% Most of the diminutive and augmentative affix variants were added to match examples from the grammar [§707]. However,
+% they still need to be revised.
+% 'ыраах+Adv+DIM#1c', 'ыраах+Adj+DIM#5'
 
 
 
@@ -573,7 +454,6 @@ $int$ = \
 % This section specifies which of the previously defined affixes to include in the transducer by listing them in
 % ('$inflectional-affixes$')
 
-$voice$ = $caus$ | $cstv$ | $refl$ | $pass$ | $recp$
 
-$inflectional-affixes$ = $plur$ | $pred$ | $mood$ | $imp$ | $past$ | $psor$ | $s-case$ | $poss-case$ | \
-                         $voice$ | $neg$ | $expr$ | $aspv$ | $aspf$ | $partz$ | $gndz$ | $int$
+$inflectional-affixes$ = $plur$ | $pred$ | $imp$ | $mood$ | $past$ | $psor$ | $s-case$ | $poss-case$ | \
+                         $poss-case-2$ | $neg$ | $partz$ | $gndz$ | $int$ | $emph$

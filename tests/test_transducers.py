@@ -9,11 +9,11 @@ class TestYakutTransducer(unittest.TestCase):
 
     def test_analyse(self):
         surface_form = 'дьоннор'
-        analysis_form = ['дьон^N+PL']
+        analysis_form = ['дьон+N+PL']
         self.assertEqual(self.transducer.analyse(surface_form), analysis_form)
 
     def test_generate(self):
-        analysis_form = 'дьон^N+PL'
+        analysis_form = 'дьон+N+PL'
         surface_form = ['дьоннор']
         self.assertEqual(self.transducer.generate(analysis_form), surface_form)
 

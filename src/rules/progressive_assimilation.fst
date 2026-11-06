@@ -84,9 +84,9 @@ $R-PAB$ = $R-PAB01$ || $R-PAB02$ || $R-PAB03$
 
 % Occurs before the affix -һыт [§123].
 
-$R-PAH01$ = <H>:һ ^-> [#vowels#] [#stem-types#]+ __
-$R-PAH02$ = <H>:с ^-> [кх] [#stem-types#]+ __
-$R-PAH03$ = <H>:ч ^-> [#unvoiced-stops# сх] [#stem-types#]+ __
+$R-PAH01$ = <H>:һ    ^-> [#vowels#] [#stem-types#]+ __
+$R-PAH02$ = <H>:с    ^-> [кх] [#stem-types#]+ __
+$R-PAH03$ = <H>:ч    ^-> [#unvoiced-stops# сх] [#stem-types#]+ __
 $R-PAH04$ = <H>:{дь} ^-> [лйр] [#stem-types#]+ __
 $R-PAH05$ = <H>:{нь} ^-> [#nasals#] [#stem-types#]+ __
 

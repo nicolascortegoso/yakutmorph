@@ -109,7 +109,27 @@ class YakutTransducer(Transducer):
         return self.transducer.generate(analysis)
 
     def get_morphemes(self, analysis: str) -> List[str]:
-        return self.morphemes.findall(analysis)
+        """
+        Splits a raw FST analysis string into its morphemes.
+
+        `self.morphemes` still matches a tag's leading symbol as either
+        '^' (deprecated) or '+' (live), since not every compiled FST
+        binary in the pipeline has been rebuilt to emit '+' — the 'syl'
+        fallback transducer, in particular, still produces '^'-tagged
+        output. Normalising to '+' here, once, keeps that compiled-binary
+        detail from leaking into `Analysis.root` and everything built on
+        top of it (CoNLL-U output, `yakutmorph.constructions` pattern
+        matching, ...), all of which are written against the live '+'
+        convention.
+
+        :param analysis: A raw analysis string from the transducer.
+        :return: The list of morpheme strings, each tag normalised to a
+            leading '+'.
+        """
+        return [
+            '+' + morpheme[1:] if morpheme.startswith('^') else morpheme
+            for morpheme in self.morphemes.findall(analysis)
+        ]
 
 
 class DummyTransducer(Transducer):
@@ -216,24 +236,62 @@ class YakutTransducerPipeline(Transducer):
         return f'Pipeline({"|".join([fst for fst in self.pipeline])})'
 
 
+def _load_proper_names(path_to_file: str, inside_package: bool = False) -> set:
+    path = get_file_path(path_to_file) if inside_package else path_to_file
+    with open(path, 'r') as f:
+        return {line.strip() for line in f if line.strip()}
+
+
 class PostPipeline(PostAnalysis):
     """
-    A class that provides a static method for applying some heuristics to a sequence
-    of morphological analyses.
+    A class that applies post-processing rules to a sequence of
+    morphological analyses, including an ordered chain of heuristics for
+    proper-noun promotion (see `apply`).
     """
+
+    # Known proper-name roots (lowercase), the strongest and first-tried
+    # signal for proper-noun promotion in `apply` — unlike the fallback
+    # capitalization heuristic, list membership doesn't depend on sentence
+    # position, so it also catches a name at the very start of a sentence,
+    # which bare capitalization can never distinguish from ordinary
+    # sentence-initial capitalization. Seeded from the `<propn-*>`-classed
+    # entries already present in `src/lexicons/lexical_roots.lex`, but
+    # kept and maintained here by design, not as a stopgap for a `+PN`
+    # tag the compiled `ymv.a` binary is expected to grow later: adding
+    # such a label to the vocabulary transducer's own output isn't
+    # planned, so this list is the actual, permanent mechanism for
+    # proper-noun recognition. Meant to be extended with a more complete
+    # list over time.
+    PROPER_NAMES = _load_proper_names('data/proper_names.txt', inside_package=True)
 
     @staticmethod
     def apply(morphemes: List[str], surface_form: str, token_pos: int) -> List[str]:
         """
-        Applies post-processing rules to the given morphemes list.
+        Applies post-processing rules to the given morphemes list,
+        including an ordered chain of proper-noun promotion heuristics,
+        from most to least reliable:
+
+        1. Known-name lookup: the root is in `PROPER_NAMES`. Doesn't
+           require `token_pos > 1` the way (2) does, since list membership
+           is positive evidence of properness independent of where in the
+           sentence the token happens to sit.
+        2. Position + capitalization (fallback, used only when (1) doesn't
+           apply — e.g. for a real name not yet in the list): the token
+           isn't the first in the sentence, so its capitalization can't be
+           explained by ordinary sentence-initial capitalization alone.
+
+        Both require the surface form to be capitalized, and both only
+        ever apply to a root the transducer already analysed as `+N` (a
+        common noun) — a root under any other category is left alone,
+        since there's no `+N` candidate to promote.
 
         :param morphemes: A list of morphemes representing the morphological analysis of a token.
         :param surface_form: The original surface form of the token.
         :param token_pos: The position of the token in the sequence.
         :return: The modified list of morphemes after applying the post-processing rules.
         """
-        if len(morphemes) < 2:
+        if len(morphemes) < 2 or morphemes[1] != '+N' or not surface_form[0].isupper():
             return morphemes
-        if token_pos > 1 and surface_form[0].isupper() and morphemes[1] == '+N':
+        if morphemes[0] in PostPipeline.PROPER_NAMES or token_pos > 1:
             morphemes[1] = '+PN'
         return morphemes

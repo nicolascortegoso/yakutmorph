@@ -14,7 +14,13 @@
 % This is an implementation of a morphological transducer for Yakut language following the guidelines described
 % in Ubryatova et al. Grammar of Modern Yakut Literary Language. Vol. 1: Phonology and Morphology. Moscow,
 % Nauka Print, 1982.
-% Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV), 2018 was also consulted.
+% It were also consulted:
+% - Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV). Novosibirskay Nauka, 2018.
+% - Kharitonov L.N. Neizmenyayemyye slova v yakutskom yazyke: posobiye dlya uchiteley. Yakutsk, 1943.
+% - Kharitonov L.N. Zagolovyye formy glagoly v yakutskom yazyke. Moskva-Leningrad, 1963.
+% - Korkina E.I. Nakloneniya glagola v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Moskva, 1970.
+% - Korkina E.I. Deeprichastiya v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Novosibirsk, 1985.
+% - Petrov, Nikolaj Egorovich. Modal'nye slova v yakutskom yazyke. Novosibirsk : Nauka, 1984.
 
 % The transducer is implemented using the Stuttgart Finite State Transducer (SFST) framework, a collection of software
 % tools used for the generation, manipulation, and processing of finite-state automata and transducers by Helmut Schmid.
@@ -125,33 +131,41 @@
 
 % Open-class lexical roots ---------------------------------------------------------------------------------------------
 
-$adverbs$       = ([#alphabet#]+ {\^Adv}:[#advs#])                                       || "lexicons/lexical_roots.lex"
-$adjectives$    = ([#alphabet#]+ {\^Adj}:[#adjs#])                                       || "lexicons/lexical_roots.lex"
-$imitatives$    = ([#alphabet#]+ {\^IMIT}:[#imis#])                                      || "lexicons/lexical_roots.lex"
-$interjections$ = ([#alphabet#]+ {\^INJ}:[#intj#])                                       || "lexicons/lexical_roots.lex"
-$nouns$         = ([#alphabet#]+ {\^N}:[#nouns#])                                        || "lexicons/lexical_roots.lex"
-$propnouns$     = ([#alphabet#]+ {\^PN}:[#propns#])                                      || "lexicons/lexical_roots.lex"
-$verbs$         = ([#alphabet#]+ {\^V}:[#verbs#])                                        || "lexicons/lexical_roots.lex"
+$adverbs$       = ([#alphabet#]+ {\+Adv}:[#advs#])                                         || "lexicons/yakut_roots.lex"
+$adjectives$    = ([#alphabet#]+ {\+Adj}:[#adjs#])                                         || "lexicons/yakut_roots.lex"
+$imitatives$    = ([#alphabet#]+ {\+IMIT}:[#imis#])                                        || "lexicons/yakut_roots.lex"
+$interjections$ = ([#alphabet#]+ {\+INJ}:[#intj#])                                         || "lexicons/yakut_roots.lex"
+$nouns$         = ([#alphabet#]+ {\+N}:[#nouns#])                                          || "lexicons/yakut_roots.lex"
+$verbs$         = ([#alphabet#]+ {\+V}:[#verbs#])                                          || "lexicons/yakut_roots.lex"
 
-$open-class$    = $adverbs$ | $adjectives$ | $nouns$ | $imitatives$ | $propnouns$ | $verbs$ | $interjections$
+$open-class$    = $adverbs$ | $adjectives$ | $imitatives$ | $interjections$ | $nouns$ | $verbs$
 
 
 % Closed-class lexical roots -------------------------------------------------------------------------------------------
 
-$auxiliaries$   = ([#alphabet#]+ {\^aux}:[#auxs#])                                       || "lexicons/lexical_roots.lex"
-$cardinals$     = ([#alphabet#]+ {\^Num}:[#cards#])                                      || "lexicons/lexical_roots.lex"
-$conjunctions$  = ([#alphabet#]+ {\^CONJ}:<conj>)                                        || "lexicons/lexical_roots.lex"
-$modals$        = ([#alphabet#]+ {\^MOD}:[#modals#])                                     || "lexicons/lexical_roots.lex"
-$particles$     = ([#alphabet#]+ {\^Part}:[#parts#])                                     || "lexicons/lexical_roots.lex"
-$postpositions$ = ([#alphabet#]+ {\^POST}:[#posts#])                                     || "lexicons/lexical_roots.lex"
-$pronouns$      = ([#alphabet#]+ {\^Pron}:[#prons#])                                     || "lexicons/lexical_roots.lex"
+$auxiliaries$   = ([#alphabet#]+ {\+V}:[#auxs#])                                           || "lexicons/yakut_roots.lex"
+$cardinals$     = ([#alphabet#]+ {\+Num}:[#cards#])                                        || "lexicons/yakut_roots.lex"
+$conjunctions$  = ([#alphabet#]+ {\+CONJ}:<conj>)                                          || "lexicons/yakut_roots.lex"
+$modals$        = ([#alphabet#]+ {\+MOD}:[#modals#])                                       || "lexicons/yakut_roots.lex"
+$particles$     = ([#alphabet#]+ {\+Part}:[#parts#])                                       || "lexicons/yakut_roots.lex"
+$postpositions$ = ([#alphabet#]+ {\+POST}:[#posts#])                                       || "lexicons/yakut_roots.lex"
+$pronouns$      = ([#alphabet#]+ {\+Pron}:[#prons#])                                       || "lexicons/yakut_roots.lex"
 
 $closed-class$  = $auxiliaries$ | $cardinals$ | $conjunctions$ | $modals$ | $particles$ | $postpositions$ | $pronouns$
 
 
+% Loan lexical roots ---------------------------------------------------------------------------------------------------
+
+$propernames$        = ([#alphabet#]+ {\+N}:[#nouns#])                                     || "lexicons/propernames.lex"
+$loan_nouns$         = ([#alphabet#]+ {\+N}:[#nouns#])                                     || "lexicons/loan_roots.lex"
+$loan_adjectives$    = ([#alphabet#]+ {\+Adj}:[#adjs#])                                    || "lexicons/loan_roots.lex"
+
+$loan_roots$ = $loan_nouns$ | $loan_adjectives$ | $propernames$
+
+
 % Implementation -------------------------------------------------------------------------------------------------------
 
-$lexical-roots$ = $open-class$ | $closed-class$
+$lexical-roots$ = $open-class$ | $closed-class$ | $loan_roots$
 
 
 
@@ -246,7 +260,8 @@ $base-transformations$   = $primary-stems$                 || $derived-stems$
 % $special-vowel-harmony$         ||
 
 $consonant-assimilation$ = $progressive-assimilation$      || $regressive-assimilation$
-$vowel-harmony$          = $special-vowel-harmony$         || $regular-vowel-harmony$
+% $vowel-harmony$          = $special-vowel-harmony$         || $regular-vowel-harmony$
+$vowel-harmony$          = $regular-vowel-harmony$
 
 $phonological-rules$ = $base-transformations$ || $consonant-assimilation$ || $vowel-harmony$ || $post-transformations$
 

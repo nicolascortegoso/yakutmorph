@@ -14,7 +14,12 @@
 % This is an implementation of a morphological transducer for Yakut language following the guidelines described
 % in Ubryatova et al. Grammar of Modern Yakut Literary Language. Vol. 1: Phonology and Morphology. Moscow,
 % Nauka Print, 1982.
-% Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV), 2018 was also consulted.
+% It were also consulted:
+% - Sleptsov P.A. Saha tılın bıḫaarıılaah ulahan tıldıta E (XV). Novosibirskay Nauka, 2018.
+% - Kharitonov L.N. Neizmenyayemyye slova v yakutskom yazyke: posobiye dlya uchiteley. Yakutsk, 1943.
+% - Korkina E.I. Nakloneniya glagola v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Moskva, 1970.
+% - Korkina E.I. Deeprichastiya v yakutskom yazyke. Chast' pervaya. Izdatel'stvo Nauka, Novosibirsk, 1985.
+% - Petrov, Nikolaj Egorovich. Modal'nye slova v yakutskom yazyke. Novosibirsk : Nauka, 1984.
 
 % The transducer is implemented using the Stuttgart Finite State Transducer (SFST) framework, a collection of software
 % tools used for the generation, manipulation, and processing of finite-state automata and transducers by Helmut Schmid.
@@ -154,10 +159,10 @@ $middle-syllables$    = (<>:[#boundaries#] [#alphabet#]+ <>:[#boundaries#])     
 
 
 
-$disyllabic-adjs$    = (<>:[#boundaries#] [#alphabet#]+ {\^Adj}:[#disyllabic-adjs#])    || "lexicons/last_syllables.lex"
-$disyllabic-advs$    = (<>:[#boundaries#] [#alphabet#]+ {\^Adv}:[#disyllabic-advs#])    || "lexicons/last_syllables.lex"
-$disyllabic-nouns$   = (<>:[#boundaries#] [#alphabet#]+ {\^N}:[#disyllabic-nouns#])     || "lexicons/last_syllables.lex"
-$disyllabic-verbs$   = (<>:[#boundaries#] [#alphabet#]+ {\^V}:[#disyllabic-verbs#])     || "lexicons/last_syllables.lex"
+$disyllabic-adjs$    = (<>:[#boundaries#] [#alphabet#]+ {\+Adj}:[#disyllabic-adjs#])    || "lexicons/last_syllables.lex"
+$disyllabic-advs$    = (<>:[#boundaries#] [#alphabet#]+ {\+Adv}:[#disyllabic-advs#])    || "lexicons/last_syllables.lex"
+$disyllabic-nouns$   = (<>:[#boundaries#] [#alphabet#]+ {\+N}:[#disyllabic-nouns#])     || "lexicons/last_syllables.lex"
+$disyllabic-verbs$   = (<>:[#boundaries#] [#alphabet#]+ {\+V}:[#disyllabic-verbs#])     || "lexicons/last_syllables.lex"
 
 $disyllabics-stems$ = $disyllabic-adjs$ | $disyllabic-advs$ | $disyllabic-nouns$ | $disyllabic-verbs$
 
@@ -166,10 +171,10 @@ $disyllabics-stems$ = $disyllabic-adjs$ | $disyllabic-advs$ | $disyllabic-nouns$
 % Reads ending syllables for polysyllabic lexical roots ----------------------------------------------------------------
 
 
-$polysyllabic-adjs$   = (<>:[#boundaries#] [#alphabet#]+ {\^Adj}:[#polysyllabic-adjs#]) || "lexicons/last_syllables.lex"
-$polysyllabic-advs$   = (<>:[#boundaries#] [#alphabet#]+ {\^Adv}:[#polysyllabic-advs#]) || "lexicons/last_syllables.lex"
-$polysyllabic-nouns$  = (<>:[#boundaries#] [#alphabet#]+ {\^N}:[#polysyllabic-nouns#])  || "lexicons/last_syllables.lex"
-$polysyllabic-verbs$  = (<>:[#boundaries#] [#alphabet#]+ {\^V}:[#polysyllabic-verbs#])  || "lexicons/last_syllables.lex"
+$polysyllabic-adjs$   = (<>:[#boundaries#] [#alphabet#]+ {\+Adj}:[#polysyllabic-adjs#]) || "lexicons/last_syllables.lex"
+$polysyllabic-advs$   = (<>:[#boundaries#] [#alphabet#]+ {\+Adv}:[#polysyllabic-advs#]) || "lexicons/last_syllables.lex"
+$polysyllabic-nouns$  = (<>:[#boundaries#] [#alphabet#]+ {\+N}:[#polysyllabic-nouns#])  || "lexicons/last_syllables.lex"
+$polysyllabic-verbs$  = (<>:[#boundaries#] [#alphabet#]+ {\+V}:[#polysyllabic-verbs#])  || "lexicons/last_syllables.lex"
 
 $polysyllabics-stems$ = $polysyllabic-adjs$ | $polysyllabic-advs$ | $polysyllabic-nouns$ | $polysyllabic-verbs$
 

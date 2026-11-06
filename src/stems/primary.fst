@@ -111,21 +111,16 @@
 
 % [pron] Primary prononimal stems --------------------------------------------------------------------------------------
 
+% - <prs> personal pronouns [§312-317].
 % - <dem-n> demonstrative pronouns that do not take affixes. Example, the demonstrative pronoun били [§318];
-% - <int-s> quantitive pronouns;
+% - <int-s> quantitive pronouns.
+% - <ref> reflexive pronouns.
 % - <int> interrogative pronouns that takes no affixes.
+% - <int-av> marks ханна as a special case.
 
 #cos# = <co-v> <co-c>
 #int# = <int> <int-c> <int-v> <int-p> <int-a> <int-s>
-#prons# = <prs> <dem> <dem-n> <dt1> <dt2> <ind> <ps> #int# #cos#
-
-
-
-% [propn] Proper nouns stem endings ------------------------------------------------------------------------------------
-
-#propns-v# = <propn-v> <propn-uv> <propn-sv>
-#propns-c# = <propn-c> <propn-uc> <propn-sc>
-#propns#   = #propns-v# #propns-c#
+#prons# = <prs> <dem> <dem-n> <ref> <dt1> <dt2> <ind> <ps> #int# #cos#
 
 
 
@@ -153,7 +148,7 @@
 
 % [fig] Figurative verbal stems ----------------------------------------------------------------------------------------
 
-#fig# = <fig-j> <fig-r> <fig>
+#figs# = <fig-j> <fig-r> <fig>
 
 
 
@@ -198,7 +193,7 @@
 #verbs-v#     = #intrs-v# #trans-v#
 #verbs-crnl#  = #intrs-crnl# #trans-crl#
 #verbs-crjnl# = #intrs-cjrnl# #trans-cjrl#
-#verbs#       = #verbs-v# #verbs-crjnl# #fig#
+#verbs#       = #verbs-v# #verbs-crjnl# #figs#
 
 
 
@@ -206,6 +201,6 @@
 
 % The stem <comp> refers to lexical units that always appear in combination with others, never standing by itself.
 
-#primary-stems# = #verbs# #advs# #adjs# #nouns# #propns# \
+#primary-stems# = #verbs# #advs# #adjs# #nouns# \
                   #prons# #cards# #parts# #imis# #intj# \
                   <conj> <comp> #posts# #auxs# #modals#
