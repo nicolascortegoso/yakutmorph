@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-11-06)
 
 ### Added
 - The `yakutmorph` command: `analyze` (CoNLL-U, JSON, glosses or TSV, from
