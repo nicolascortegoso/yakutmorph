@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Proper nouns (`+PN`) had an empty lemma. Their lemma is now the root
+  without inflectional affixes, as for every other word (`Кэскилгэ` → `кэскил`).
+
 ## 0.1.0 (2026-11-06)
 
 ### Added

@@ -368,11 +368,11 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 # text = Мин аатым Кэскил.
 1	Мин	мин	PRON	pron	Case=Nom|Number=Sing|Person=1|PronType=Prs	_	_	_	Analysis=мин+Pron
 2	аатым	аат	NOUN	n	Case=Nom|Number=Sing|Number[psor]=Sing|Person[psor]=1	_	_	_	Analysis=аат+N+POSS.1SG
-3	Кэскил		PROPN	propn	Case=Nom	_	_	_	Analysis=кэскил+PN
+3	Кэскил	кэскил	PROPN	propn	Case=Nom	_	_	_	Analysis=кэскил+PN
 4	.	.	PUNCT	punct	_	_	_	_	_
 ```
 
-(The lemma column is empty for `Кэскил`: capitalized common-noun readings are promoted to proper nouns as a post-processing step (see [Proper names](#proper-names)), and the transducer was not itself trained to *generate* surface forms for that promoted tag — a known limitation of that heuristic, not of lemma lookup generally.)
+The lemma of every word, proper nouns included, is its root without inflectional affixes (`Кэскилгэ` → `кэскил`).
 
 The last column (MISC) carries the full underlying FST analysis as an `Analysis=` entry — this is treebank-specific annotation in the sense the [CoNLL-U spec](https://universaldependencies.org/format.html) describes for that column ("any additional information that does not fit into any of the other fields, such as language-specific annotation"), not a universal UD field.
 

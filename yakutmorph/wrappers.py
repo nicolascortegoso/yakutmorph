@@ -286,6 +286,11 @@ class Token:
         :return: A list of surface forms for a given analysis.
         """
         analysis = ''.join([m.morpheme for m in self.morph.remove_inflections()])
+        if self.morph.root.morpheme.endswith('+PN'):
+            # '+PN' is assigned after the transducer (see
+            # transducers.PostPipeline), which analyses names as '+N', so
+            # a proper noun's lemma is generated from its '+N' form.
+            analysis = analysis.replace('+PN', '+N', 1)
         lemmas = self.analyses.fst.generate(analysis)
         return lemmas
 

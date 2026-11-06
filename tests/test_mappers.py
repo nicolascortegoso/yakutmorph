@@ -71,15 +71,15 @@ class TestCoNLLU(unittest.TestCase):
         self.assertEqual((form, lemma, upos, xpos), ('.', '.', 'PUNCT', 'punct'))
         self.assertEqual((feats, head, deprel, deps, misc), ('_', '_', '_', '_', '_'))
 
-    def test_proper_noun_promotion_empties_lemma(self):
+    def test_proper_noun_lemma_is_the_root_without_inflection(self):
         """Кэскил, capitalized and non-sentence-initial, is promoted
-        N -> PN by PostPipeline; the transducer wasn't trained to
-        *generate* surface forms for the promoted tag, so the lemma
-        column is correctly empty rather than wrong."""
+        N -> PN by PostPipeline; like any other word, its lemma is the
+        root without inflectional affixes."""
         _, rows = self._rows('мин аатым Кэскил.')
         _, form, lemma, upos, xpos, *_ = rows[2]
-        self.assertEqual((form, upos, xpos), ('Кэскил', 'PROPN', 'propn'))
-        self.assertEqual(lemma, '')
+        self.assertEqual((form, lemma, upos, xpos), ('Кэскил', 'кэскил', 'PROPN', 'propn'))
+        _, rows = self._rows('мин Кэскилгэ бардым.')
+        self.assertEqual(rows[1][1:4], ['Кэскилгэ', 'кэскил', 'PROPN'])
 
     def test_indefinite_pronoun_construction_does_not_change_conllu_tags(self):
         """Token.compound isn't surfaced in CoNLL-U (see the compounds
