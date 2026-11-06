@@ -38,7 +38,7 @@ class TestMCPServer(unittest.TestCase):
         tools = {tool.name: tool for tool in anyio.run(run)}
         self.assertEqual(set(tools), {
             'analyze_text', 'analyze_word', 'to_conllu', 'explain_tags', 'list_tags', 'generate_word_form',
-            'find_examples',
+            'find_examples', 'inflection_table',
         })
         for tool in tools.values():
             self.assertTrue(tool.annotations.read_only_hint, tool.name)
@@ -89,6 +89,14 @@ class TestMCPServer(unittest.TestCase):
     def test_generate_word_form(self):
         result = structured(call(server, 'generate_word_form', {'analysis': 'дьиэ+N+POSS.1SG.DAT'}))
         self.assertEqual(result['forms'], ['дьиэбэр'])
+
+    def test_inflection_table(self):
+        result = structured(call(server, 'inflection_table', {'root': 'көр', 'category': 'V'}))
+        affirmative = result['tables'][0]
+        past = next(row for row in affirmative['rows'] if row['label'] == 'NearPast')
+        self.assertEqual(past['cells']['1SG'], ['көрдүм'])
+        self.assertEqual(past['analyses']['1SG'], 'көр+V+PST.1SG')
+        self.assertTrue(call(server, 'inflection_table', {'root': 'дьиэ', 'category': 'V'}).is_error)
 
     def test_find_examples(self):
         result = structured(call(server, 'find_examples', {'root': 'дьиэ', 'tag': 'POSS.3SG.ACC', 'limit': 2}))

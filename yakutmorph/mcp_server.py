@@ -31,6 +31,7 @@ from . import __version__
 from .corpus import Corpus
 from .main import YakutMorph
 from .mappers import CoNLLU, conllu_document
+from .paradigms import paradigm
 from .transducers import YakutTransducer
 from .wrappers import Analysis, Token
 
@@ -175,6 +176,24 @@ class Example(TypedDict):
 class ExamplesResult(TypedDict):
     total: int
     examples: List[Example]
+
+
+class ParadigmRow(TypedDict):
+    label: str
+    cells: Dict[str, List[str]]
+    analyses: Dict[str, str]
+
+
+class ParadigmTable(TypedDict):
+    name: str
+    columns: List[str]
+    rows: List[ParadigmRow]
+
+
+class ParadigmResult(TypedDict):
+    root: str
+    category: str
+    tables: List[ParadigmTable]
 
 
 class GenerationResult(TypedDict):
@@ -326,6 +345,24 @@ def generate_word_form(analysis: str) -> GenerationResult:
         analysis: root+TAG+TAG..., e.g. "кинигэ+N+PL+ACC".
     """
     return {'analysis': analysis, 'forms': _generator().generate(analysis)}
+
+
+@server.tool(annotations=READ_ONLY)
+def inflection_table(root: str, category: str = 'N') -> ParadigmResult:
+    """Generate the inflection tables of a Yakut noun or verb. Nouns: the
+    cases (NOM, ACC, DAT, ABL, INST, COMIT, COMP, PRTV) in singular and
+    plural, and with each possessor (1SG...3PL), for one and for several
+    possessed. Verbs: the finite forms in each tense (Pres, NearPast,
+    PastResult, Fut) and person, affirmative and negative. Each cell lists
+    the generated forms (some have variants) and the analysis it comes from;
+    an empty cell means the analyser generates no form for it. Only roots in
+    the lexicon can be inflected.
+
+    Args:
+        root: The root, e.g. "дьиэ" (house) or "көр" (see).
+        category: "N" for a noun or "V" for a verb.
+    """
+    return paradigm(root, category, transducer=_generator())
 
 
 @server.tool(annotations=READ_ONLY)

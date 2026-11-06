@@ -526,9 +526,26 @@ The server offers these tools (all read-only):
 | `explain_tags` | tags, e.g. `["POSS.3SG.ACC", "PN"]` | what each tag marks, with its Universal Dependencies features |
 | `list_tags` | optionally `roots`, `derivational` or `inflectional` | the tag inventory |
 | `generate_word_form` | an analysis, e.g. `дьиэ+N+POSS.1SG.DAT` | the word form(s): `дьиэбэр` |
+| `inflection_table` | a root and `N` or `V`, e.g. `көр`, `V` | the inflection tables: noun cases by number and possessor; verb tenses by person, affirmative and negative |
 | `find_examples` | a word form, a root and/or a tag, e.g. root `дьиэ` and tag `POSS.3SG.ACC` | manually annotated sentences from [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset), with translation, source, page, authors or translator, and the analysis of every word |
 
 The model is loaded once, on the first call.
+
+
+## Inflection tables
+
+`paradigm` generates the inflection tables of a noun or a verb from the lexicon transducer:
+
+```
+>>> from yakutmorph.paradigms import paradigm
+>>> tables = paradigm('көр', 'V')['tables']
+>>> [table['name'] for table in tables]
+['Affirmative', 'Negative']
+>>> tables[0]['rows'][1]['cells']['1SG']
+['көрдүм']
+```
+
+Nouns (`'N'`) get three tables: the cases (NOM, ACC, DAT, ABL, INST, COMIT, COMP, PRTV) in singular and plural, and each case with each possessor (1SG…3PL), for one and for several possessed. Verbs (`'V'`) get the finite forms in each tense (Pres, NearPast, PastResult, Fut, as in the CoNLL-U features) and person, affirmative and negative. Each cell lists the generated forms (some have variants) together with the analysis it was generated from; an empty cell means the transducer generates no form for it. Only roots in the lexicon can be inflected.
 
 
 ## Example sentences from the annotated corpus

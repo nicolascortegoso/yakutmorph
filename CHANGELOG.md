@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Inflection tables: `yakutmorph.paradigms.paradigm(root, 'N' | 'V')`, and the
+  MCP tool `inflection_table`.
 - Sentence splitting: `YakutMorph.parse_text` (one `Parse` per sentence),
   `yakutmorph.sentences.split_sentences`, and `mappers.conllu_document` for
   multi-sentence CoNLL-U. The MCP tools `analyze_text` and `to_conllu` now
