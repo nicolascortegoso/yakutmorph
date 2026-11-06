@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (2026-11-06)
 
 ### Added
 - An MCP server for LLM applications: `pip install "yakutmorph[mcp]"`, then run
