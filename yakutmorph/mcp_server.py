@@ -30,7 +30,7 @@ except ImportError as error:  # pragma: no cover - depends on the environment
 from . import __version__
 from .corpus import Corpus
 from .main import YakutMorph
-from .mappers import CoNLLU
+from .mappers import CoNLLU, conllu_document
 from .transducers import YakutTransducer
 from .wrappers import Analysis, Token
 
@@ -121,9 +121,14 @@ class TokenResult(TypedDict):
     construction: NotRequired[str]
 
 
-class TextResult(TypedDict):
+class SentenceResult(TypedDict):
     text: str
     tokens: List[TokenResult]
+
+
+class TextResult(TypedDict):
+    text: str
+    sentences: List[SentenceResult]
 
 
 class WordResult(TypedDict):
@@ -215,24 +220,26 @@ def _token_record(token: Token, conllu_row: List[str], alternatives: bool) -> To
 
 @server.tool(annotations=READ_ONLY)
 def analyze_text(text: str, include_alternatives: bool = True) -> TextResult:
-    """Analyse a Yakut sentence or short text: split it into tokens and give
-    each word its morphological analysis in context (root, category, affixes),
-    lemma, Universal Dependencies part of speech and features, and, for
-    ambiguous words, the other possible analyses.
+    """Analyse Yakut text: split it into sentences and tokens and give each
+    word its morphological analysis in context (root, category, affixes),
+    lemma, Universal Dependencies part of speech and features, the model's
+    confidence and, for ambiguous words, the other possible analyses.
 
     Args:
         text: Yakut text in Cyrillic, e.g. "Мин кинигэни аахпытым."
         include_alternatives: Also list the analyses the model did not choose.
     """
-    parse = _morphology().parse(text)
-    rows = [line.split('\t') for line in str(CoNLLU(parse)).split('\n')[1:]]
-    return {
-        'text': text,
-        'tokens': [
-            _token_record(token, row, include_alternatives)
-            for token, row in zip(parse.tokens, rows)
-        ],
-    }
+    sentences: List[SentenceResult] = []
+    for parse in _morphology().parse_text(text):
+        rows = [line.split('\t') for line in str(CoNLLU(parse)).split('\n')[1:]]
+        sentences.append({
+            'text': parse.text,
+            'tokens': [
+                _token_record(token, row, include_alternatives)
+                for token, row in zip(parse.tokens, rows)
+            ],
+        })
+    return {'text': text, 'sentences': sentences}
 
 
 @server.tool(annotations=READ_ONLY)
@@ -256,14 +263,14 @@ def analyze_word(word: str) -> WordResult:
 @server.tool(annotations=READ_ONLY)
 def to_conllu(text: str) -> str:
     """Analyse Yakut text and return it in CoNLL-U format (the format of
-    Universal Dependencies treebanks): one line per token with form, lemma,
-    UPOS, XPOS and features; the full analysis is in the MISC column.
-    Dependency columns are left empty ("_").
+    Universal Dependencies treebanks): one block per sentence, one line per
+    token with form, lemma, UPOS, XPOS and features; the full analysis is in
+    the MISC column. Dependency columns are left empty ("_").
 
     Args:
-        text: Yakut text in Cyrillic.
+        text: Yakut text in Cyrillic; it may contain several sentences.
     """
-    return str(CoNLLU(_morphology().parse(text)))
+    return conllu_document(_morphology().parse_text(text))
 
 
 @server.tool(annotations=READ_ONLY)

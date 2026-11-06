@@ -3,6 +3,7 @@ from typing import List, Tuple
 from .constructions import detect as detect_multiword_constructions, load_patterns
 from .disambiguation import YakutReranker
 from .intensifiers import classify, construction_type
+from .sentences import split_sentences
 from .interfaces import Tokenizer, Transducer, DisambiguationModel, PostAnalysis
 from .tokenizers import YakutTokenizer
 from .transducers import YakutTransducerPipeline, PostPipeline, YakutMorphReference
@@ -151,6 +152,19 @@ class YakutMorph:
             token's most likely candidate analysis.
         """
         return self.disambiguation_model.disambiguate(tokens)
+
+    def parse_text(self, text: str, post_analysis: PostAnalysis = PostPipeline) -> List[Parse]:
+        """
+        Splits a text into sentences (see `yakutmorph.sentences`) and parses
+        each one separately, so that each sentence is the context for its
+        own disambiguation and proper-name detection.
+
+        :param text: The text to parse; it may contain several sentences
+            and paragraphs.
+        :param post_analysis: The post-analysis process to apply.
+        :return: One Parse object per sentence.
+        """
+        return [self.parse(sentence, post_analysis) for sentence in split_sentences(text, self.tokenizer)]
 
     def parse(self, input_text: str, post_analysis: PostAnalysis = PostPipeline):
         """

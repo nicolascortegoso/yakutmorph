@@ -45,7 +45,8 @@ class TestMCPServer(unittest.TestCase):
 
     def test_analyze_text(self):
         result = structured(call(server, 'analyze_text', {'text': 'мин кини дьиэтин көрдүм.'}))
-        tokens = result['tokens']
+        self.assertEqual(len(result['sentences']), 1)
+        tokens = result['sentences'][0]['tokens']
         self.assertEqual([t['text'] for t in tokens], ['мин', 'кини', 'дьиэтин', 'көрдүм', '.'])
         house = tokens[2]
         self.assertEqual(house['analysis'], 'дьиэ+N+POSS.3SG.ACC')
@@ -54,7 +55,7 @@ class TestMCPServer(unittest.TestCase):
         self.assertNotIn('analysis', tokens[4])  # punctuation has no analysis
 
     def test_ambiguous_word_lists_alternatives(self):
-        tokens = structured(call(server, 'analyze_text', {'text': 'мин аатым Кэскил.'}))['tokens']
+        tokens = structured(call(server, 'analyze_text', {'text': 'мин аатым Кэскил.'}))['sentences'][0]['tokens']
         self.assertTrue(tokens[0]['ambiguous'])
         self.assertNotIn(tokens[0]['analysis'], [a['analysis'] for a in tokens[0]['alternatives']])
         total = tokens[0]['confidence'] + sum(a['probability'] for a in tokens[0]['alternatives'])
@@ -69,8 +70,16 @@ class TestMCPServer(unittest.TestCase):
     def test_to_conllu(self):
         result = call(server, 'to_conllu', {'text': 'мин аатым Кэскил.'})
         conllu = result.content[0].text
-        self.assertTrue(conllu.startswith('# text = мин аатым Кэскил.'))
-        self.assertEqual(len(conllu.split('\n')), 5)
+        self.assertTrue(conllu.startswith('# sent_id = 1\n# text = мин аатым Кэскил.\n'))
+        self.assertTrue(conllu.endswith('\n\n'))  # each sentence ends with a blank line
+
+    def test_several_sentences(self):
+        text = 'Мин оскуолаҕа бардым. Оскуолабыттан кэллим.'
+        sentences = structured(call(server, 'analyze_text', {'text': text}))['sentences']
+        self.assertEqual([s['text'] for s in sentences], ['Мин оскуолаҕа бардым.', 'Оскуолабыттан кэллим.'])
+        self.assertEqual(sentences[1]['tokens'][0]['analysis'], 'оскуола+N+POSS.1SG.ABL')
+        conllu = call(server, 'to_conllu', {'text': text}).content[0].text
+        self.assertIn('# sent_id = 2\n# text = Оскуолабыттан кэллим.', conllu)
 
     def test_explain_tags(self):
         tags = structured(call(server, 'explain_tags', {'tags': ['POSS.3SG.ACC', '+NOT_A_TAG']}))['tags']

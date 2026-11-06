@@ -160,6 +160,20 @@ class CoNLLU(OutputFormat):
         return '\n'.join(['\t'.join(row) for row in rows])
 
 
+def conllu_document(parses: List[Parse]) -> str:
+    """
+    A CoNLL-U document for several sentences (e.g. from
+    `YakutMorph.parse_text`): one block per sentence, each with
+    `# sent_id` and `# text` comments and followed by a blank line, as the
+    format requires.
+    """
+    blocks = [
+        CoNLLU(parse, header=[f'# sent_id = {i}', f'# text = {parse.text}'])
+        for i, parse in enumerate(parses, start=1)
+    ]
+    return ''.join(block + '\n\n' for block in blocks)
+
+
 class YakutAnnotation(OutputFormat):
     """
     A custom class to format a Parse object.

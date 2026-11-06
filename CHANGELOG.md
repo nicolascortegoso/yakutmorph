@@ -3,6 +3,11 @@
 ## Unreleased
 
 ### Added
+- Sentence splitting: `YakutMorph.parse_text` (one `Parse` per sentence),
+  `yakutmorph.sentences.split_sentences`, and `mappers.conllu_document` for
+  multi-sentence CoNLL-U. The MCP tools `analyze_text` and `to_conllu` now
+  split their input into sentences (`analyze_text` returns `sentences`, each
+  with its `tokens`, instead of a single `tokens` list).
 - Confidence of the disambiguation: `token.analyses.probabilities` (the model's
   probability for each candidate) and `token.analyses.confidence` (that of the
   chosen analysis). The MCP tool `analyze_text` reports both.

@@ -54,6 +54,17 @@ The property `tokens` returns a list of `Token` objects:
 ```
 
 
+### Texts with several sentences
+
+`parse` treats its input as one sentence. For longer texts, `parse_text` splits the text into sentences and returns one `Parse` per sentence, so that each sentence is the context for its own disambiguation:
+
+```
+>>> [p.text for p in morphology.parse_text('Мин оскуолаҕа бардым. Оскуолабыттан кэллим.')]
+['Мин оскуолаҕа бардым.', 'Оскуолабыттан кэллим.']
+```
+
+A sentence ends after `.`, `...`, `?` or `!` when the next word is capitalized (or the next token is a dash, an opening quotation mark or a number); closing quotation marks stay with their sentence, and a period after a single capital letter is read as an initial (`В.И. Ленин`). Blank lines always end a sentence. The splitter can also be used on its own: `from yakutmorph.sentences import split_sentences`.
+
 ### Tokens
 
 Tokens within a `Parse` object can be accessed by their index. For example:
@@ -384,6 +395,14 @@ The `mappers` module provides classes to convert the `Parse` object to a given f
 ```
 
 The lemma of every word, proper nouns included, is its root without inflectional affixes (`Кэскилгэ` → `кэскил`).
+
+For several sentences, `conllu_document` writes one block per sentence, each with `# sent_id` and `# text` and followed by a blank line:
+
+```
+>>> from yakutmorph.mappers import conllu_document
+>>> print(conllu_document(morphology.parse_text('Мин бардым. Кини кэллэ.')).split('\n')[6])
+# sent_id = 2
+```
 
 The last column (MISC) carries the full underlying FST analysis as an `Analysis=` entry — this is treebank-specific annotation in the sense the [CoNLL-U spec](https://universaldependencies.org/format.html) describes for that column ("any additional information that does not fit into any of the other fields, such as language-specific annotation"), not a universal UD field.
 
