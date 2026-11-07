@@ -53,9 +53,14 @@ CURRENT=$(sed -n 's/^version = "\(.*\)"$/\1/p' pyproject.toml)
 $PY -c "import sys; v=lambda s: tuple(map(int, s.split('.'))); sys.exit(v('$VERSION') <= v('$CURRENT'))" \
   || fail "the new version ($VERSION) must be higher than the current one ($CURRENT)"
 CORPUS=yakutmorph_dataset
+# Files this script regenerates itself (steps 4 and 6). An interrupted run
+# leaves them changed; they are rebuilt below, so they don't block a new run.
+GENERATED=("$DM/data/split.tsv" "$DM/data/prepare_report.md" "$DM/tokenizer/tokenizer_report.md")
+EXCLUDE=(); for f in "${GENERATED[@]}"; do EXCLUDE+=(":(exclude)$f"); done
 if [ $CHECKS = 1 ]; then
 [ "$(git branch --show-current)" = main ] || fail "yakutmorph is not on main"
-git diff --quiet && git diff --cached --quiet || fail "yakutmorph has uncommitted changes; commit your lexicon/transducer work first"
+git diff --quiet -- . "${EXCLUDE[@]}" && git diff --cached --quiet \
+  || fail "yakutmorph has uncommitted changes; commit your lexicon/transducer work first: $(git diff --name-only -- . "${EXCLUDE[@]}" | tr '\n' ' ')"
 git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null && fail "tag v$VERSION already exists"
 git fetch -q origin
 [ "$(git rev-parse main)" = "$(git rev-parse origin/main)" ] || fail "yakutmorph main differs from GitHub (push or pull first)"
@@ -75,7 +80,7 @@ echo "yakutmorph $CURRENT -> $VERSION; corpus at $CORPUS_COMMIT; $SEEDS training
 if [ $REBUILD = 1 ]; then
   step "2. Rebuilding lexicon and transducer"
   ./rebuild.sh
-  git diff --quiet || fail "rebuilding changed committed files (lexicon or transducer were not rebuilt/committed after your last edit): $(git diff --name-only | tr '\n' ' ')"
+  git diff --quiet -- . "${EXCLUDE[@]}" || fail "rebuilding changed committed files (lexicon or transducer were not rebuilt/committed after your last edit): $(git diff --name-only -- . "${EXCLUDE[@]}" | tr '\n' ' ')"
 else
   step "2. Rebuild skipped"
 fi
