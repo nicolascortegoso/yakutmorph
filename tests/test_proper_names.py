@@ -24,6 +24,7 @@ class TestProperNamePromotion(unittest.TestCase):
 
     def test_capitalized_after_dialogue_dash_is_not_a_name(self):
         self.assertEqual(self.analysis('— Суох.', 'Суох'), 'суох+N')
+        self.assertEqual(self.analysis('Кэлбэт, ― Суох диэтэ.', 'Суох'), 'суох+N')
 
     def test_listed_name_after_full_stop_is_a_name(self):
         text = 'Мин Микиитэни көрдүм. Микиитэ кэллэ.'

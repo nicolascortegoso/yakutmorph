@@ -81,7 +81,7 @@ class YakutTokenizer(Tokenizer):
             (self.url.pattern, lambda scanner, token: (token, self.token_type.URI)),
             (self.email.pattern, lambda scanner, token: (token, self.token_type.EMAIL)),
             (self.roman.pattern, lambda scanner, token: (token, self.token_type.ROMAN)),
-            (r"[—–]", lambda scanner, token: (token, self.token_type.DASH)),
+            (r"[—–―‒]", lambda scanner, token: (token, self.token_type.DASH)),
             (r"-", lambda scanner, token: (token, self.token_type.HYPHEN)),
             (r"[\"'«»`“”‘’]", lambda scanner, token: (token, self.token_type.QUOTATION)),
             (r"[\(\)\[\]{}]", lambda scanner, token: (token, self.token_type.BRACKET)),

@@ -57,6 +57,15 @@ class TestYakutTokenizer(unittest.TestCase):
         ]
         self.assertEqual(self.tokenizer.tokenize(text), expected)
 
+    def test_dash_variants(self):
+        # Em dash, en dash, horizontal bar (U+2015) and figure dash (U+2012)
+        # are all dashes; some books print dialogue with the horizontal bar.
+        for dash in '—–―‒':
+            self.assertEqual(self.tokenizer.tokenize(f'Ыт {dash} киһи доҕоро.'), [
+                ('Ыт', 'title'), (dash, 'dash'), ('киһи', 'lowercase'),
+                ('доҕоро', 'lowercase'), ('.', 'period')
+            ])
+
 
 if __name__ == '__main__':
     unittest.main()
