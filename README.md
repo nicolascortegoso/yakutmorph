@@ -21,7 +21,7 @@ uv run --group dev pytest      # run the tests
 uv build                       # build the wheel and source distribution into dist/
 ```
 
-The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. The exported model gives the same predictions as the PyTorch model it was trained as (see [Retraining the disambiguation model](#retraining-the-disambiguation-model)).
+The disambiguation model runs on [onnxruntime](https://onnxruntime.ai/) rather than `torch` — the trained model is exported to ONNX once and shipped with the package, so installing `yakutmorph` pulls in `onnxruntime` and `numpy` (together, well under 100MB) instead of the full `torch` framework (hundreds of MB) needed to train it in the first place. The exported model gives the same predictions as the PyTorch model it was trained as (see [Maintenance](#maintenance-rebuilding-and-releasing)).
 
 ## Command line
 
@@ -602,11 +602,21 @@ uv run python scripts/build_corpus_snapshot.py yakutmorph_dataset
 ```
 
 
-## Retraining the disambiguation model
+## Maintenance: rebuilding and releasing
 
-The training code is in `disambiguation_model/scripts/`. It expects the corpus ([yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset)) checked out in `yakutmorph_dataset/` and the train/dev/test split produced by `seq2seq_parser/scripts/prepare_dataset.py`. With the `train` dependency group (PyTorch):
+Two scripts at the repository root cover the routine work:
+
+- **`./rebuild.sh`**, after editing the vocabulary (`vocabulary/`) or the transducer rules (`src/`): rebuilds the lexicon and the transducer, builds the package and runs the tests. It does not retrain the disambiguation model.
+- **`./release.sh 0.3.0`**, every few weeks: retrains the disambiguation model on the current lexicon, transducers and annotated corpus, and publishes the new version. It needs both repositories on `main`, committed and in sync with GitHub (it stops and says why otherwise), and takes about 25 minutes per training run (3 by default, the best on the dev set is kept). Try it first with `./release.sh 0.3.0 --dry-run`, which stops after comparing the new model with the installed one and puts the installed one back.
+
+`release.sh` rebuilds the transducer, reports annotations whose notation no longer matches the transducer, updates the train/dev/test split, prepares the training data, trains, and compares the new model with the installed one on the test set. It installs the new model only if it is not worse by more than one point on ambiguous words (`--max-drop`). It then rebuilds the corpus snapshot for `find_examples`, runs the tests, sets the version, adds the model's numbers to `CHANGELOG.md`, commits, pushes, waits for CI and pushes the tag `v0.3.0`. The tag starts the `publish` workflow, which uploads the release to PyPI with Trusted Publishing; set that up once on PyPI (project → Settings → Publishing → GitHub publisher: owner `nicolascortegoso`, repository `yakutmorph`, workflow `publish.yml`, environment `pypi`). Until then, `release.sh` prints the command to upload by hand.
+
+The split is kept in `disambiguation_model/data/split.tsv` (`update_split.py`): sentences keep their place across releases, so every release is evaluated on the same test sentences plus the newly annotated ones; a new sentence that repeats an existing one goes to the same split, and other new sentences are assigned from their id (about 90/5/5).
+
+The individual steps can also be run by hand (the `train` dependency group installs PyTorch):
 
 ```
+uv run python disambiguation_model/scripts/update_split.py                     # stable train/dev/test split
 uv run --group train python disambiguation_model/scripts/prepare_dataset.py    # candidates for every word, via the library itself
 uv run --group train python disambiguation_model/scripts/train_tokenizer.py    # SentencePiece tokenizers
 uv run --group train python disambiguation_model/scripts/train.py --seed 1     # train; reports dev and test accuracy

@@ -20,9 +20,10 @@ Usage:
     python disambiguation_model/scripts/update_corpus_notation.py          # report only
     python disambiguation_model/scripts/update_corpus_notation.py --write  # change the files
     ... --rules poss_case_fused,refl_pass   # only these rules (names as in GOLD_RULES)
+    ... --report path/to/report.tsv         # where to write the list of changes
 
-Writes the list of changes to yakutmorph_dataset/reports/notation_update.tsv.
-"""
+Writes the list of changes to yakutmorph_dataset/reports/notation_update.tsv
+unless --report is given."""
 import collections
 import json
 import re
@@ -137,6 +138,7 @@ def apply_edits(path, edits):
 
 def main():
     write = "--write" in sys.argv
+    report_path = Path(sys.argv[sys.argv.index("--report") + 1]) if "--report" in sys.argv else REPORT_PATH
     if "--rules" in sys.argv:
         chosen = sys.argv[sys.argv.index("--rules") + 1].split(",")
         unknown = set(chosen) - {name for name, _ in prep.GOLD_RULES}
@@ -155,8 +157,8 @@ def main():
             if write:
                 apply_edits(path, edits)
 
-    REPORT_PATH.parent.mkdir(exist_ok=True)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write("file\tentry_id\tpos\ttext\tannotation\tnew_annotation\trules\tstatus\n")
         for path, entry_id, pos, text, gold, target, rules, status in report:
             f.write(f"{path.relative_to(DATASET_DIR)}\t{entry_id}\t{pos}\t{text}\t{gold}\t{target}\t{rules}\t{status}\n")
@@ -166,7 +168,7 @@ def main():
         print(f"  {key[5:]}: {stats[key]}")
     print(f"Skipped (change would cross the root/affixes boundary): {stats['words_skipped_field_boundary']}")
     print(f"Entries not checked (tokenization differs from the annotation): {stats['entries_skipped_tokenization']}")
-    print(f"Report: {REPORT_PATH}")
+    print(f"Report: {report_path}")
 
 
 if __name__ == "__main__":

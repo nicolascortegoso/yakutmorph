@@ -59,6 +59,9 @@ def evaluate(model, loader, device):
 
 def main():
     seed = int(sys.argv[sys.argv.index("--seed") + 1]) if "--seed" in sys.argv else SEED
+    global CKPT_DIR
+    if "--checkpoint-dir" in sys.argv:
+        CKPT_DIR = Path(sys.argv[sys.argv.index("--checkpoint-dir") + 1])
     torch.manual_seed(seed)
     random.seed(seed)
     print(f"Seed: {seed}")

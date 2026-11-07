@@ -10,3 +10,8 @@ __pycache__/
 # Quote corpus sentences; kept local until the corpus is published.
 data/fst_issues.md
 data/gold_conversions.tsv
+
+# One folder per training run made by release.sh; the chosen run's log is
+# copied to checkpoints/train_log.txt.
+checkpoints/seed_*/
+data/notation_report.tsv

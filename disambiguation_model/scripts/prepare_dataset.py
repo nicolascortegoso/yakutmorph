@@ -12,11 +12,10 @@ among the regenerated candidates, then emits one training example per word
 token (§3.2's augmentation scheme), marking the target word with
 <TARGET>/</TARGET> in the sentence.
 
-Reuses the exact sentence-level train/dev/test split already computed for
-the sibling seq2seq project (seq2seq_parser/data/{train,dev,test}.jsonl) for
-direct comparability and zero extra leakage-control work (disambiguation.md
-§5). Sentences that project's own preparation excluded (genuine annotation
-gaps) are excluded here too, for the same reason.
+The sentence-level train/dev/test split is read from
+disambiguation_model/data/split.tsv, which update_split.py keeps stable
+across releases (it started as the seq2seq project's split). Sentences with
+a word that has no annotation are excluded.
 """
 import collections
 import itertools
@@ -32,7 +31,7 @@ from yakutmorph.interfaces import DisambiguationModel
 from yakutmorph.main import YakutMorph
 
 DATASET_DIR = REPO_ROOT / "yakutmorph_dataset"
-SEQ2SEQ_DATA_DIR = REPO_ROOT / "seq2seq_parser" / "data"
+SPLIT_PATH = Path(__file__).resolve().parents[1] / "data" / "split.tsv"
 OUT_DIR = Path(__file__).resolve().parents[1] / "data"
 
 # Same constants as seq2seq_parser/scripts/prepare_dataset.py, needed to
@@ -89,16 +88,10 @@ def gold_target_string(parse):
 
 
 def load_split_ids():
-    """Sentence id -> 'train'/'dev'/'test', copied from the seq2seq
-    project's own already-computed, leakage-controlled split."""
-    split_of = {}
-    for split in ("train", "dev", "test"):
-        path = SEQ2SEQ_DATA_DIR / f"{split}.jsonl"
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                rec = json.loads(line)
-                split_of[rec["id"]] = split
-    return split_of
+    """Sentence id -> 'train'/'dev'/'test', from the stable split kept in
+    disambiguation_model/data/split.tsv (see update_split.py)."""
+    lines = SPLIT_PATH.read_text(encoding="utf-8").splitlines()[1:]
+    return dict(line.split("\t") for line in lines)
 
 
 def load_entries():
@@ -212,7 +205,7 @@ def main():
         sid = f"{folder}/{filename}#{entry.get('id')}"
         split = split_of.get(sid)
         if split is None:
-            excluded_no_split += 1  # excluded by the seq2seq project (annotation gap)
+            excluded_no_split += 1  # not in split.tsv
             continue
 
         sah = entry.get("sah")
@@ -221,7 +214,7 @@ def main():
         try:
             gold_targets = [gold_target_string(p) for p in parses]
         except ValueError:
-            excluded_no_split += 1  # should not happen: seq2seq split already filtered these
+            excluded_no_split += 1  # a word without annotation
             continue
 
         regenerated = generator.candidates_for_sentence(sah)
@@ -343,12 +336,12 @@ def main():
     report = f"""# Reranker dataset preparation report
 
 Source: `yakutmorph_dataset/*/processed/*.json` (read-only)
-Split: reused verbatim from `seq2seq_parser/data/{{train,dev,test}}.jsonl`
+Split: `disambiguation_model/data/split.tsv` (stable across releases, see `update_split.py`)
 Output: `disambiguation_model/data/{{train,dev,test}}.jsonl`
 
 ## Filtering
 
-- Excluded (no split assignment — seq2seq project's own annotation-gap exclusion): {excluded_no_split}
+- Excluded (no split assignment, or a word without annotation): {excluded_no_split}
 - Excluded (regenerated tokenization length != gold parse count): {len(length_mismatches)}
 {chr(10).join('  - ' + m for m in length_mismatches[:20])}
 - Excluded (sentence contains at least one token whose gold analysis is not among the regenerated candidates, see `fst_issues.md`): {stats['excluded_sentences_fst_gap']} sentences, costing {stats['tokens_lost_in_excluded_sentences']} word tokens total ({stats['excluded_tokens_fst_gap']} of them the actual unrecoverable tokens, the rest otherwise-fine tokens excluded along with their sentence)

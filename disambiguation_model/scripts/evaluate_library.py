@@ -12,7 +12,9 @@ It also checks that the library still produces the same candidates the
 model was trained on. A mismatch means the transducer or the post-analysis
 changed after the data was prepared: rerun prepare_dataset.py and retrain.
 
-Usage: python disambiguation_model/scripts/evaluate_library.py [test|dev]
+Usage: python disambiguation_model/scripts/evaluate_library.py [test|dev] [--json]
+
+With --json, prints the numbers as one JSON object instead of a report.
 """
 import collections
 import json
@@ -56,7 +58,8 @@ def most_frequent_choice(train):
 
 
 def main():
-    split = sys.argv[1] if len(sys.argv) > 1 else "test"
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    split = args[0] if args else "test"
     records = load(split)
     baseline = most_frequent_choice(load("train"))
 
@@ -95,6 +98,14 @@ def main():
 
     total = c["ambiguous"] + c["unambiguous"]
     correct = c["ambiguous_correct"] + c["unambiguous_correct"]
+    if "--json" in sys.argv:
+        print(json.dumps({
+            "split": split, "words": total, "accuracy": correct / total,
+            "ambiguous": c["ambiguous"], "ambiguous_accuracy": c["ambiguous_correct"] / c["ambiguous"],
+            "baseline_ambiguous_accuracy": c["baseline_correct"] / c["ambiguous"],
+            "candidates_differ": c["candidates_differ"], "token_mismatch": c["token_mismatch"],
+        }))
+        sys.exit(1 if c["candidates_differ"] or c["token_mismatch"] else 0)
     print(f"# End-to-end evaluation on {split} ({len(by_sentence)} sentences)\n")
     print(f"- Overall accuracy: {correct / total:.4f} ({correct}/{total})")
     print(f"- Ambiguous words: {c['ambiguous_correct'] / c['ambiguous']:.4f} "

@@ -27,7 +27,9 @@ def main():
         input_vocab_size=vocabs.sp_input.vocab_size(),
         candidate_vocab_size=vocabs.candidate_vocab_size,
     )
-    model.load_state_dict(torch.load(CKPT_DIR / "best.pt", map_location="cpu"))
+    checkpoint_dir = (Path(sys.argv[sys.argv.index("--checkpoint-dir") + 1])
+                      if "--checkpoint-dir" in sys.argv else CKPT_DIR)
+    model.load_state_dict(torch.load(checkpoint_dir / "best.pt", map_location="cpu"))
     model.eval()
 
     # A small, representative dummy batch: batch=1, sentence length 6,
