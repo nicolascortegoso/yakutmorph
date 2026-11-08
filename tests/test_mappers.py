@@ -78,6 +78,10 @@ class TestCoNLLU(unittest.TestCase):
             with self.subTest(word=word):
                 self.assertIn('Mood=Imp', self._feats(word).split('|'))
 
+    def test_fused_reflexive_passive_is_middle_voice(self):
+        self.assertIn('Voice=Mid', self._feats('суунна').split('|'))
+        self.assertIn('Voice=Pass', self._feats('ыытылынна').split('|'))
+
     def test_punctuation_row(self):
         _, rows = self._rows('мин аатым Кэскил.')
         pos, form, lemma, upos, xpos, feats, head, deprel, deps, misc = rows[-1]
