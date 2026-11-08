@@ -6,10 +6,11 @@ from .wrappers import Morph, Parse, Token
 # Words whose UPOS in CoNLL-U is AUX: the auxiliaries registered for Sakha in
 # Universal Dependencies (the copula э-, existential баар and negative
 # existential суох), as tagged in the UD_Yakut-YKTDT treebank, when not
-# further derived. буол (copula 'be' and lexical 'become') and the aspectual
+# further derived. баар has two lexicon entries (noun and <aux-c>, tagged +V); both
+# count. буол (copula 'be' and lexical 'become') and the aspectual
 # service verbs (бар, кэбис, олор, ...) stay VERB: whether they are used as
 # auxiliaries depends on their meaning in context (see the grammar, §§ 793-796).
-AUXILIARIES = {'э+V', 'баар+N', 'суох+N'}
+AUXILIARIES = {'э+V', 'баар+N', 'баар+V', 'суох+N'}
 
 
 class CoNLLU(OutputFormat):

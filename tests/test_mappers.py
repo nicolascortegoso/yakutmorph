@@ -97,6 +97,19 @@ class TestCoNLLU(unittest.TestCase):
         self.assertEqual((баар[3], баар[5]), ('AUX', '_'))
         self.assertEqual(self._row('Бу сир чиэрбэтэ суох.', 'суох')[3], 'AUX')
 
+    def test_plural_auxiliaries(self):
+        """бааллар / суохтар, with either lexicon entry of баар (noun or <aux-c>, +V)."""
+        суохтар = self._row('Оҕолор манна суохтар.', 'суохтар')
+        self.assertEqual((суохтар[3], суохтар[5]), ('AUX', 'Number=Plur'))
+        parse = self.morphology.parse('Кинилэр бааллар.')
+        analyses = parse.tokens[1].analyses
+        readings = [''.join(m.morpheme for m in a.morphemes) for a in analyses.output]
+        for reading in ('баар+N+PL', 'баар+V+PL'):
+            with self.subTest(reading=reading):
+                analyses.idx_mla = readings.index(reading)
+                row = str(CoNLLU(parse)).split('\n')[2].split('\t')
+                self.assertEqual((row[3], row[5]), ('AUX', 'Number=Plur'))
+
     def test_service_verbs_and_copula_buol_stay_verb(self):
         self.assertEqual(self._row('Кыыс чобуотук эппиэттээн барда.', 'барда')[3], 'VERB')
         self.assertEqual(self._row('Кини быраас буолла.', 'буолла')[3], 'VERB')
