@@ -1,0 +1,8 @@
+# Send Docker only what the image needs (the repository folder also holds
+# large, untracked research files).
+*
+!pyproject.toml
+!README.md
+!LICENSE
+!yakutmorph/
+yakutmorph/**/__pycache__

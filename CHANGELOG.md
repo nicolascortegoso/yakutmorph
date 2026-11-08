@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- HTTP mode for the MCP server: `yakutmorph-mcp --http` (streamable HTTP at
+  `/mcp`, status page at `/health`), with a text length limit
+  (`--max-text-chars`, default 5000) and `--no-examples`; a `Dockerfile` for
+  hosting it.
+
+### Fixed
+- CoNLL-U: past-tense verbs (e.g. `кэл+V+PST.3PL`) no longer get `Mood=Imp`.
+- CoNLL-U `Voice` follows UD's Sakha feature values: `+REFL/PASS` is
+  `PassRfl`, and stacked voices are one value (`+CAUS+PASS` → `CauPass`)
+  instead of only the last one.
+
 ## 0.3.0 (2026-11-07)
 
 ### Model and data

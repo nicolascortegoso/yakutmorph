@@ -129,6 +129,47 @@ class TestMCPServer(unittest.TestCase):
         result = structured(call(params, 'analyze_word', {'word': 'дьиэтин'}))
         self.assertIn('дьиэ+N+POSS.3SG.ACC', result['analyses'])
 
+    def test_text_length_limit(self):
+        import yakutmorph.mcp_server as module
+        module.MAX_TEXT_CHARS = 10
+        try:
+            result = call(server, 'analyze_text', {'text': 'Мин кинигэни аахпытым.'})
+            self.assertTrue(result.is_error)
+            self.assertIn('at most 10', result.content[0].text)
+            self.assertFalse(call(server, 'analyze_text', {'text': 'Мин.'}).is_error)
+        finally:
+            module.MAX_TEXT_CHARS = None
+
+    def test_runs_over_http(self):
+        """Starts the server in HTTP mode as a separate process and calls it
+        over the network, as a remote client (e.g. claude.ai) would."""
+        import socket
+        import subprocess
+        import time
+        import urllib.request
+
+        with socket.socket() as sock:
+            sock.bind(('127.0.0.1', 0))
+            port = sock.getsockname()[1]
+        process = subprocess.Popen(
+            [sys.executable, '-m', 'yakutmorph.mcp_server', '--http', '--port', str(port)],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            for _ in range(60):
+                try:
+                    with urllib.request.urlopen(f'http://127.0.0.1:{port}/health') as response:
+                        self.assertEqual(json.loads(response.read())['status'], 'ok')
+                    break
+                except OSError:
+                    time.sleep(0.5)
+            else:
+                self.fail('the HTTP server did not start')
+            result = structured(call(f'http://127.0.0.1:{port}/mcp', 'analyze_word', {'word': 'дьиэтин'}))
+            self.assertIn('дьиэ+N+POSS.3SG.ACC', result['analyses'])
+        finally:
+            process.terminate()
+            process.wait(timeout=10)
+
 
 if __name__ == '__main__':
     unittest.main()

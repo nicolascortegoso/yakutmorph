@@ -549,6 +549,26 @@ The server offers these tools (all read-only):
 
 The model is loaded once, on the first call.
 
+### Serving it over HTTP (public hosting)
+
+`yakutmorph-mcp --http` serves the same tools over the network ("streamable HTTP") instead of stdio, so a remote client such as claude.ai (Settings → Connectors → Add custom connector) can use it by URL:
+
+```
+yakutmorph-mcp --http --port 8000          # this computer only: http://127.0.0.1:8000/mcp
+yakutmorph-mcp --http --host 0.0.0.0       # accept outside connections (e.g. in a container)
+```
+
+`/health` answers `{"status": "ok", "version": ...}`, for hosting services' health checks. Over HTTP, the text tools accept at most 5000 characters per call (`--max-text-chars`, `0` = no limit), and `--no-examples` switches off `find_examples`. Run `yakutmorph-mcp --help` for all options.
+
+The repository's `Dockerfile` builds an image of the server from the working folder (lexicon, transducers and model as they are there):
+
+```
+docker build -t yakutmorph-mcp .
+docker run --rm -p 8000:8000 yakutmorph-mcp
+```
+
+The image reads `PORT` (most hosts set it), `YAKUTMORPH_MCP_MAX_TEXT_CHARS` and `YAKUTMORPH_MCP_NO_EXAMPLES=1` from the environment, and runs on any service that runs containers (Google Cloud Run, AWS App Runner or Lightsail, Render, a Docker Space on Hugging Face). It is built for x86-64 (`linux/amd64`), because `sfst-transduce` publishes Linux wheels only for that platform; on an Apple Silicon Mac, Docker emulates it.
+
 
 ## Interlinear glosses
 

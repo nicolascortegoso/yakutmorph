@@ -11,7 +11,17 @@ Install with the optional dependency and start it over stdio::
 For example, to add it to Claude Code::
 
     claude mcp add yakutmorph -- yakutmorph-mcp
+
+Or serve it over HTTP (streamable HTTP, at /mcp), e.g. on a public host::
+
+    yakutmorph-mcp --http --host 0.0.0.0 --port 8000
+
+Run ``yakutmorph-mcp --help`` for the options (text length limit, switching
+off find_examples); the port can also be given in the PORT environment
+variable, as most hosting services do.
 """
+import argparse
+import os
 from functools import lru_cache
 from typing import Dict, List, Optional
 
@@ -21,6 +31,7 @@ from typing_extensions import NotRequired, TypedDict
 
 try:
     from mcp.server.mcpserver import MCPServer
+    from mcp.server.mcpserver.exceptions import ToolError
     from mcp_types import ToolAnnotations
 except ImportError as error:  # pragma: no cover - depends on the environment
     raise ImportError(
@@ -81,6 +92,17 @@ server = MCPServer(
     version=__version__,
     instructions=INSTRUCTIONS,
 )
+
+# Longest text (in characters) the text tools accept; None = no limit.
+# Unlimited over stdio (a local user), limited over HTTP (see main()).
+MAX_TEXT_CHARS: Optional[int] = None
+
+
+def _check_length(text: str) -> None:
+    if MAX_TEXT_CHARS is not None and len(text) > MAX_TEXT_CHARS:
+        raise ToolError(f'The text is {len(text)} characters long; this server accepts at most '
+                         f'{MAX_TEXT_CHARS}. Send it in smaller parts.')
+
 
 READ_ONLY = ToolAnnotations(read_only_hint=True, idempotent_hint=True, open_world_hint=False)
 
@@ -229,6 +251,7 @@ def analyze_text(text: str, include_alternatives: bool = True) -> TextResult:
         text: Yakut text in Cyrillic, e.g. "Мин кинигэни аахпытым."
         include_alternatives: Also list the analyses the model did not choose.
     """
+    _check_length(text)
     return {'text': text, 'sentences': [
         sentence_record(parse, include_alternatives) for parse in _morphology().parse_text(text)
     ]}
@@ -262,6 +285,7 @@ def to_conllu(text: str) -> str:
     Args:
         text: Yakut text in Cyrillic; it may contain several sentences.
     """
+    _check_length(text)
     return conllu_document(_morphology().parse_text(text))
 
 
@@ -333,6 +357,7 @@ def gloss_text(text: str) -> GlossResult:
     Args:
         text: Yakut text in Cyrillic; it may contain several sentences.
     """
+    _check_length(text)
     return {'sentences': [
         {'text': parse.text, 'interlinear': interlinear(parse), 'words': gloss_words(parse)}
         for parse in _morphology().parse_text(text)
@@ -380,9 +405,50 @@ def find_examples(word: Optional[str] = None, root: Optional[str] = None, tag: O
     return result
 
 
-def main() -> None:
-    """Entry point of the `yakutmorph-mcp` command (stdio transport)."""
-    server.run()
+@server.custom_route('/health', methods=['GET'])
+async def health(request):
+    """A plain status page (HTTP mode only), for hosting services' health checks."""
+    from starlette.responses import JSONResponse
+    return JSONResponse({'status': 'ok', 'version': __version__})
+
+
+def _flag(name: str) -> bool:
+    return os.environ.get(name, '').strip().lower() in ('1', 'true', 'yes')
+
+
+def main(argv: Optional[List[str]] = None) -> None:
+    """Entry point of the `yakutmorph-mcp` command: stdio by default, or HTTP."""
+    global MAX_TEXT_CHARS
+    parser = argparse.ArgumentParser(
+        prog='yakutmorph-mcp',
+        description='MCP server for Yakut (Sakha) morphology. Without --http it talks over '
+                    'stdio, as Claude Desktop and Claude Code expect.')
+    parser.add_argument('--http', action='store_true',
+                        help='serve over streamable HTTP at /mcp instead of stdio')
+    parser.add_argument('--host', default=os.environ.get('HOST', '127.0.0.1'),
+                        help='address to listen on in HTTP mode (default 127.0.0.1, this computer only; '
+                             '0.0.0.0 to accept outside connections, e.g. in a container)')
+    parser.add_argument('--port', type=int, default=int(os.environ.get('PORT', 8000)),
+                        help='port in HTTP mode (default: $PORT, else 8000)')
+    parser.add_argument('--max-text-chars', type=int,
+                        default=int(os.environ.get('YAKUTMORPH_MCP_MAX_TEXT_CHARS', 5000)),
+                        help='in HTTP mode, the longest text accepted by analyze_text, to_conllu '
+                             'and gloss_text (default 5000; 0 = no limit)')
+    parser.add_argument('--no-examples', action='store_true', default=_flag('YAKUTMORPH_MCP_NO_EXAMPLES'),
+                        help='do not offer find_examples (the corpus sentences)')
+    args = parser.parse_args(argv)
+
+    if args.no_examples:
+        server.remove_tool('find_examples')
+    if not args.http:
+        server.run()
+        return
+    MAX_TEXT_CHARS = args.max_text_chars or None
+    _morphology()  # load the analyser now, not on the first request
+    # Stateless, with plain JSON responses: each request stands alone, so the
+    # server can be restarted or run in several copies behind a load balancer.
+    server.run(transport='streamable-http', host=args.host, port=args.port,
+               stateless_http=True, json_response=True)
 
 
 if __name__ == '__main__':
