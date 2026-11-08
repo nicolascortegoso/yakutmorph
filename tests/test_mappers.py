@@ -78,9 +78,13 @@ class TestCoNLLU(unittest.TestCase):
             with self.subTest(word=word):
                 self.assertIn('Mood=Imp', self._feats(word).split('|'))
 
-    def test_fused_reflexive_passive_is_middle_voice(self):
-        self.assertIn('Voice=Mid', self._feats('суунна').split('|'))
-        self.assertIn('Voice=Pass', self._feats('ыытылынна').split('|'))
+    def test_voice_values_follow_ud_sakha(self):
+        """Values as in UD's Sakha Voice feature: the fused reflexive-passive
+        is PassRfl; stacked voices are one value, parts in alphabetical order."""
+        for word, voice in (('суунна', 'PassRfl'), ('ыытылынна', 'Pass'),
+                            ('ыыттарда', 'Cau'), ('оҥоһуллубут', 'PassRcp')):
+            with self.subTest(word=word):
+                self.assertIn(f'Voice={voice}', self._feats(word).split('|'))
 
     def test_punctuation_row(self):
         _, rows = self._rows('мин аатым Кэскил.')

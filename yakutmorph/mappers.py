@@ -116,8 +116,17 @@ class CoNLLU(OutputFormat):
             grammemes.update(__lexical_root(category_morph.map('ud'), token.morph.root_text))
 
             affix_grammemes = dict()
+            voices = []
             for affix in inflections:
-                affix_grammemes.update(__affixes(affix))
+                mapped = __affixes(affix)
+                if 'Voice' in mapped:
+                    voices.append(mapped['Voice'])
+                affix_grammemes.update(mapped)
+            # Stacked voices form one value, as in UD's Sakha (and Turkish)
+            # Voice feature: the parts in alphabetical order, repeats kept,
+            # e.g. +RECP+PASS -> PassRcp, +CAUS+CAUS -> CauCau.
+            if voices:
+                affix_grammemes['Voice'] = ''.join(sorted(voices))
             # The default Mood=Imp of a verb (a bare stem is the 2SG
             # imperative) does not hold for a tensed form whose affixes
             # bring no mood of their own, e.g. кэл+V+PST.3PL. Forms whose

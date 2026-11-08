@@ -639,7 +639,7 @@ inflectional:
   +REFL/PASS:
     ref: -н fused reflexive-passive voice. Some transitive verbal roots form a single reflexive-passive voice instead of separate reflexive (+REFL) and passive (+PASS) ones.
     ud:
-      Voice: Mid
+      Voice: PassRfl
     aper: unk
   +PASS:
     ref: -н, -(ы)лын forms the passive voice from verbal stems [Ubryatova et al., §505].
