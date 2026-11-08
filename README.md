@@ -511,7 +511,27 @@ general_type:
 
 ## Using yakutmorph from an LLM (MCP server)
 
-yakutmorph includes a [Model Context Protocol](https://modelcontextprotocol.io) server, so that LLM applications (Claude Desktop, Claude Code, and other MCP clients) can analyse Yakut text with it. Install it with the `mcp` extra, which adds the `yakutmorph-mcp` command:
+yakutmorph includes a [Model Context Protocol](https://modelcontextprotocol.io) server, so that LLM applications (Claude Desktop, Claude Code, and other MCP clients) can analyse Yakut text with it.
+
+### Public server (nothing to install)
+
+A public instance runs at
+
+```
+https://yakutmorph-mcp.onrender.com/mcp
+```
+
+It is updated from this repository's `main` branch, so it can be ahead of the latest PyPI release. To use it:
+
+- **claude.ai** (or Claude Desktop): Settings → Connectors → Add custom connector, with that URL. If the first attempt reports that it could not register with a sign-in service, try again: the server needs no login.
+- **Claude Code**: `claude mcp add --transport http yakutmorph https://yakutmorph-mcp.onrender.com/mcp`
+- Any other MCP client: a "streamable HTTP" server at that URL, without authentication.
+
+It runs on a free plan: after 15 minutes without requests it goes to sleep, and the next request takes about a minute while it starts again. Texts are limited to 5000 characters per call. For heavy use, run your own copy (below).
+
+### Running it yourself
+
+Install it with the `mcp` extra, which adds the `yakutmorph-mcp` command:
 
 ```
 pip install "yakutmorph[mcp]"
@@ -533,7 +553,9 @@ For other clients, configure a stdio server that runs the command `yakutmorph-mc
 }
 ```
 
-The server offers these tools (all read-only):
+### Tools
+
+The server (public or your own) offers these tools, all read-only:
 
 | Tool | Input | Output |
 |---|---|---|
