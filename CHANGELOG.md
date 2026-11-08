@@ -9,7 +9,7 @@
   hosting it.
 
 ### Changed
-- Corpus snapshot for `find_examples`: yakutmorph_dataset ead934d, 17881
+- Corpus snapshot for `find_examples`: yakutmorph_dataset 2bc7124, 17881
   sentences. The Little Prince (folder 101) is no longer part of the
   published corpus, and the snapshot is now built only from the files
   tracked in the dataset's repository.
@@ -30,7 +30,7 @@
 
 ### Model and data
 - Disambiguation model retrained on the current lexicon, transducers and corpus: 93.33% of ambiguous test words correct (previous model 92.09%, most-frequent baseline 85.31%).
-- Corpus snapshot for `find_examples`: yakutmorph_dataset ca5b9ac, 19168 sentences.
+- Corpus snapshot for `find_examples`: yakutmorph_dataset ca5b9ac, 19168 sentences (the dataset history was rewritten on 2026-11-08; that commit is now e6d8ecc, without folder 101).
 - Lexicon and transducer changes: 3 commit(s) since v0.2.0.
 
 ## 0.2.0 (2026-11-06)
