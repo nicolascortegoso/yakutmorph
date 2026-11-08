@@ -8,6 +8,12 @@
   (`--max-text-chars`, default 5000) and `--no-examples`; a `Dockerfile` for
   hosting it.
 
+### Changed
+- Corpus snapshot for `find_examples`: yakutmorph_dataset ead934d, 17881
+  sentences. The Little Prince (folder 101) is no longer part of the
+  published corpus, and the snapshot is now built only from the files
+  tracked in the dataset's repository.
+
 ### Fixed
 - CoNLL-U: past-tense verbs (e.g. `кэл+V+PST.3PL`) no longer get `Mood=Imp`.
 - CoNLL-U `Voice` follows UD's Sakha feature values: `+REFL/PASS` is

@@ -625,7 +625,7 @@ Nouns (`'N'`) get three tables: the cases (NOM, ACC, DAT, ABL, INST, COMIT, COMP
 
 ## Example sentences from the annotated corpus
 
-The package includes a snapshot of [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset) (about 19,000 manually annotated sentences, Apache-2.0), searchable by word form, root and/or tag:
+The package includes a snapshot of [yakutmorph_dataset](https://github.com/nicolascortegoso/yakutmorph_dataset) (about 18,000 manually annotated sentences, Apache-2.0), searchable by word form, root and/or tag:
 
 ```
 >>> from yakutmorph.corpus import Corpus

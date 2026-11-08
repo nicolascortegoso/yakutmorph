@@ -96,7 +96,7 @@ def _tags(analysis: Optional[str]) -> List[str]:
 
 class Corpus:
     """
-    The annotated corpus, loaded once into memory (about 19,000 sentences).
+    The annotated corpus, loaded once into memory (about 18,000 sentences).
 
     :param directory: A yakutmorph_dataset checkout to read instead of the
         bundled snapshot. Defaults to the YAKUTMORPH_CORPUS environment

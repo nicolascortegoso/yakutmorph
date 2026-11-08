@@ -7,8 +7,10 @@ Run before a release, against a clean checkout of yakutmorph_dataset's main:
 
     uv run python scripts/build_corpus_snapshot.py [path/to/yakutmorph_dataset]
 
-The default path is ./yakutmorph_dataset. Also writes corpus_info.json with
-the corpus commit and the number of sentences.
+The default path is ./yakutmorph_dataset. Only the files tracked by the
+dataset's git repository are included (what is published), so folders kept
+locally and ignored by git (e.g. 101) stay out of the snapshot. Also writes
+corpus_info.json with the corpus commit and the number of sentences.
 """
 import datetime
 import json
@@ -32,7 +34,16 @@ def main():
     dataset = Path(sys.argv[1] if len(sys.argv) > 1 else REPO_ROOT / "yakutmorph_dataset").resolve()
     if git(dataset, "status", "--porcelain", "--untracked-files=no", "--", "*/processed/*"):
         sys.exit(f"{dataset} has uncommitted changes in its annotations; commit or stash them first.")
-    n = write_snapshot(records_from_dataset(dataset), DATA_DIR / "corpus.jsonl.gz")
+    tracked = set(git(dataset, "ls-files", "--", "*/processed/*.json").splitlines())
+    if not tracked:
+        sys.exit(f"{dataset}: no tracked */processed/*.json files (not a git checkout?)")
+
+    def published(record):
+        # record ids are '<folder>/<file>.json#<id>'
+        folder, name = record["id"].split("#")[0].split("/")
+        return f"{folder}/processed/{name}" in tracked
+
+    n = write_snapshot(filter(published, records_from_dataset(dataset)), DATA_DIR / "corpus.jsonl.gz")
     info = {
         "corpus": "https://github.com/nicolascortegoso/yakutmorph_dataset",
         "commit": git(dataset, "rev-parse", "HEAD"),

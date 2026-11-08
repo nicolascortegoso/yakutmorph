@@ -71,7 +71,7 @@ data the choice is right for 99% of words with confidence >= 0.99, 97% at
 choices as uncertain and mention the alternatives. Proper names are tagged +PN by a heuristic (capitalised word not
 at the start of a sentence, or a known name).
 
-find_examples searches yakutmorph_dataset, a corpus of about 19,000 manually
+find_examples searches yakutmorph_dataset, a corpus of about 18,000 manually
 annotated Yakut sentences (mostly examples from grammars and literary texts),
 by word form, root and/or tag. Use it to show real usage, or to check an
 analysis against manually annotated examples. Examples flagged "ungrammatical"

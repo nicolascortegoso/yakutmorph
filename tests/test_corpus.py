@@ -23,7 +23,7 @@ class TestCorpus(unittest.TestCase):
         cls.corpus = Corpus()
 
     def test_bundled_snapshot(self):
-        self.assertGreater(len(self.corpus.records), 18000)
+        self.assertGreater(len(self.corpus.records), 17000)
         self.assertEqual(self.corpus.origin['sentences'], len(self.corpus.records))
 
     def test_find_by_word_root_and_tag(self):
