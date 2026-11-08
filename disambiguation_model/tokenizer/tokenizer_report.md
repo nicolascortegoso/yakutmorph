@@ -2,20 +2,20 @@
 
 ## Input tokenizer
 
-- Unique word forms (train, <TARGET>-marked): 18219
-- Unique syllable types: 3691
-- Vocab size sweep: [923, 1714, 2505, 3296, 4086, 4877, 5668, 6459]
+- Unique word forms (train, <TARGET>-marked): 18341
+- Unique syllable types: 3707
+- Vocab size sweep: [927, 1721, 2516, 3310, 4104, 4898, 5693, 6487]
 
-  - vocab_size=923: EMD=0.8275
-  - vocab_size=1714: EMD=0.3933
-  - vocab_size=2505: EMD=0.3906
-  - vocab_size=3296: EMD=0.4735
-  - vocab_size=4086: EMD=0.5920
-  - vocab_size=4877: EMD=0.7042
-  - vocab_size=5668: EMD=0.8138
-  - vocab_size=6459: EMD=0.9246
+  - vocab_size=927: EMD=0.8069
+  - vocab_size=1721: EMD=0.3958
+  - vocab_size=2516: EMD=0.3980
+  - vocab_size=3310: EMD=0.4784
+  - vocab_size=4104: EMD=0.5933
+  - vocab_size=4898: EMD=0.7033
+  - vocab_size=5693: EMD=0.8110
+  - vocab_size=6487: EMD=0.9232
 
-**Selected: vocab_size=2505 (EMD=0.3906)**
+**Selected: vocab_size=1721 (EMD=0.3958)**
 
 
 ## Candidate (root) tokenizer

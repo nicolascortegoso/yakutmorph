@@ -1,16 +1,16 @@
-# End-to-end evaluation on dev (771 sentences)
+# End-to-end evaluation on dev (790 sentences)
 
-- Overall accuracy: 0.9591 (3538/3689)
-- Ambiguous words: 0.9185 (1702/1853)
-- Unambiguous words: 1.0000 (1836/1836)
-- Most-frequent-choice baseline on ambiguous words: 0.8332
+- Overall accuracy: 0.9611 (3632/3779)
+- Ambiguous words: 0.9223 (1744/1891)
+- Unambiguous words: 1.0000 (1888/1888)
+- Most-frequent-choice baseline on ambiguous words: 0.8361
 - Words whose candidates differ from the training data: 0
 - Words not found at their position: 0
 
 | candidates | accuracy | n |
 |---|---|---|
-| 2 | 0.9235 | 1059 |
-| 3 | 0.9388 | 441 |
-| 4 | 0.8947 | 209 |
-| 5 | 0.8696 | 69 |
-| 6+ | 0.8400 | 75 |
+| 2 | 0.9251 | 1082 |
+| 3 | 0.9469 | 452 |
+| 4 | 0.8815 | 211 |
+| 5 | 0.8857 | 70 |
+| 6+ | 0.8816 | 76 |

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (2026-11-07)
+
+### Model and data
+- Disambiguation model retrained on the current lexicon, transducers and corpus: 93.33% of ambiguous test words correct (previous model 92.09%, most-frequent baseline 85.31%).
+- Corpus snapshot for `find_examples`: yakutmorph_dataset ca5b9ac, 19168 sentences.
+- Lexicon and transducer changes: 3 commit(s) since v0.2.0.
+
 ## 0.2.0 (2026-11-06)
 
 ### Added

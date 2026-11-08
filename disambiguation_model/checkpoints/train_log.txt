@@ -1,18 +1,18 @@
-epoch  1 | loss 0.2087 | dev acc 0.9442 (ambig 0.8888/1853, unambig 1.0000/1836) | 90.8s
-epoch  2 | loss 0.1538 | dev acc 0.9482 (ambig 0.8969/1853, unambig 1.0000/1836) | 87.6s
-epoch  3 | loss 0.1393 | dev acc 0.9501 (ambig 0.9007/1853, unambig 1.0000/1836) | 86.4s
-epoch  4 | loss 0.1301 | dev acc 0.9507 (ambig 0.9018/1853, unambig 1.0000/1836) | 85.5s
-epoch  5 | loss 0.1226 | dev acc 0.9558 (ambig 0.9120/1853, unambig 1.0000/1836) | 84.4s
-epoch  6 | loss 0.1171 | dev acc 0.9509 (ambig 0.9023/1853, unambig 1.0000/1836) | 87.2s
-epoch  7 | loss 0.1115 | dev acc 0.9531 (ambig 0.9066/1853, unambig 1.0000/1836) | 87.9s
-epoch  8 | loss 0.1068 | dev acc 0.9591 (ambig 0.9185/1853, unambig 1.0000/1836) | 88.0s
-epoch  9 | loss 0.1035 | dev acc 0.9553 (ambig 0.9110/1853, unambig 1.0000/1836) | 87.4s
-epoch 10 | loss 0.1009 | dev acc 0.9550 (ambig 0.9104/1853, unambig 1.0000/1836) | 87.1s
-epoch 11 | loss 0.1020 | dev acc 0.9572 (ambig 0.9147/1853, unambig 1.0000/1836) | 88.6s
-epoch 12 | loss 0.1003 | dev acc 0.9555 (ambig 0.9115/1853, unambig 1.0000/1836) | 89.0s
-epoch 13 | loss 0.0965 | dev acc 0.9564 (ambig 0.9131/1853, unambig 1.0000/1836) | 92.1s
-epoch 14 | loss 0.0955 | dev acc 0.9583 (ambig 0.9169/1853, unambig 1.0000/1836) | 94.0s
-epoch 15 | loss 0.0941 | dev acc 0.9561 (ambig 0.9126/1853, unambig 1.0000/1836) | 93.3s
+epoch  1 | loss 0.2077 | dev acc 0.9407 (ambig 0.8815/1891, unambig 1.0000/1888) | 89.2s
+epoch  2 | loss 0.1523 | dev acc 0.9465 (ambig 0.8932/1891, unambig 1.0000/1888) | 86.7s
+epoch  3 | loss 0.1371 | dev acc 0.9500 (ambig 0.9001/1891, unambig 1.0000/1888) | 87.4s
+epoch  4 | loss 0.1294 | dev acc 0.9529 (ambig 0.9059/1891, unambig 1.0000/1888) | 87.1s
+epoch  5 | loss 0.1216 | dev acc 0.9558 (ambig 0.9117/1891, unambig 1.0000/1888) | 87.7s
+epoch  6 | loss 0.1154 | dev acc 0.9555 (ambig 0.9112/1891, unambig 1.0000/1888) | 88.1s
+epoch  7 | loss 0.1108 | dev acc 0.9550 (ambig 0.9101/1891, unambig 1.0000/1888) | 87.4s
+epoch  8 | loss 0.1057 | dev acc 0.9587 (ambig 0.9175/1891, unambig 1.0000/1888) | 87.3s
+epoch  9 | loss 0.1015 | dev acc 0.9595 (ambig 0.9191/1891, unambig 1.0000/1888) | 87.4s
+epoch 10 | loss 0.0970 | dev acc 0.9595 (ambig 0.9191/1891, unambig 1.0000/1888) | 88.2s
+epoch 11 | loss 0.0936 | dev acc 0.9585 (ambig 0.9170/1891, unambig 1.0000/1888) | 86.4s
+epoch 12 | loss 0.0928 | dev acc 0.9600 (ambig 0.9201/1891, unambig 1.0000/1888) | 86.7s
+epoch 13 | loss 0.0913 | dev acc 0.9600 (ambig 0.9201/1891, unambig 1.0000/1888) | 85.5s
+epoch 14 | loss 0.0868 | dev acc 0.9611 (ambig 0.9223/1891, unambig 1.0000/1888) | 85.8s
+epoch 15 | loss 0.0856 | dev acc 0.9603 (ambig 0.9207/1891, unambig 1.0000/1888) | 87.8s
 
-Best dev accuracy: 0.9591
-Test accuracy: 0.9625 (ambiguous 0.9215 / 1835, unambiguous 1.0000 / 2001)
+Best dev accuracy: 0.9611
+Test accuracy: 0.9681 (ambiguous 0.9333 / 1859, unambiguous 1.0000 / 2032)

@@ -1,8 +1,8 @@
 {
  "corpus": "https://github.com/nicolascortegoso/yakutmorph_dataset",
- "commit": "393ebe975cc538191569b9b2e861a043c4a9c474",
+ "commit": "ca5b9ac8a6a261f391f13a50e73ad91176b5c105",
  "branch": "main",
- "built": "2026-11-06",
- "sentences": 18873,
+ "built": "2026-11-07",
+ "sentences": 19168,
  "license": "Apache-2.0"
 }
