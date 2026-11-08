@@ -65,6 +65,19 @@ class TestCoNLLU(unittest.TestCase):
         self.assertEqual((form, lemma, upos), ('холобурдаабыт', 'холобурдаа', 'VERB'))
         self.assertEqual(misc, 'Analysis=холоо+V+NMLZ#4+VRBLZ#1+PART_PAST')
 
+    def _feats(self, word):
+        _, rows = self._rows(word)
+        return rows[0][5]
+
+    def test_past_tense_has_no_imperative_mood(self):
+        self.assertEqual(self._feats('кэллилэр'), 'Number=Plur|Person=3|Tense=NearPast')
+        self.assertEqual(self._feats('кэллэ'), 'Number=Sing|Person=3|Tense=NearPast')
+
+    def test_imperatives_keep_imperative_mood(self):
+        for word in ('кэл', 'ааҕыҥ', 'барыма'):
+            with self.subTest(word=word):
+                self.assertIn('Mood=Imp', self._feats(word).split('|'))
+
     def test_punctuation_row(self):
         _, rows = self._rows('мин аатым Кэскил.')
         pos, form, lemma, upos, xpos, feats, head, deprel, deps, misc = rows[-1]

@@ -115,8 +115,16 @@ class CoNLLU(OutputFormat):
             grammemes = __init_zero_affixation(category_morph.map('UPOS'))
             grammemes.update(__lexical_root(category_morph.map('ud'), token.morph.root_text))
 
+            affix_grammemes = dict()
             for affix in inflections:
-                grammemes.update(__affixes(affix))
+                affix_grammemes.update(__affixes(affix))
+            # The default Mood=Imp of a verb (a bare stem is the 2SG
+            # imperative) does not hold for a tensed form whose affixes
+            # bring no mood of their own, e.g. кэл+V+PST.3PL. Forms whose
+            # affix sets both (+IMP.FUT) keep their own mood.
+            if 'Tense' in affix_grammemes and 'Mood' not in affix_grammemes:
+                grammemes.pop('Mood', None)
+            grammemes.update(affix_grammemes)
 
             __combine_grammemes(grammemes)
 
