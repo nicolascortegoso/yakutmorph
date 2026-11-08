@@ -347,7 +347,7 @@ derivational:
     XPOS: adv
     aper: adv
     ud:
-      Advlz: Yes
+      Advlz: "Yes"
   +ADVZ#6:
     ref: -лыы (and allomorphs) forms adverbs from several different nominals, including verbal nouns [Ubryatova et al., §699].
     UPOS: ADV
@@ -709,7 +709,7 @@ inflectional:
   +INT:
     ref: no description
     ud:
-      Int: Yes
+      Int: "Yes"
     aper: unk
   +PART_PRES:
     ref: -ар/-ыыр (and allomorphs) forms a participle that takes part in forming the present and the past imperfect tense of the indicative mood Ubryatova et al., §401]. In Apertium it is indicated as the аorist participle [Apertium].

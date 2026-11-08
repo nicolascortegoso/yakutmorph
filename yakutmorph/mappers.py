@@ -3,6 +3,14 @@ from typing import List, Dict
 from .interfaces import OutputFormat
 from .wrappers import Morph, Parse, Token
 
+# Words whose UPOS in CoNLL-U is AUX: the auxiliaries registered for Sakha in
+# Universal Dependencies (the copula э-, existential баар and negative
+# existential суох), as tagged in the UD_Yakut-YKTDT treebank, when not
+# further derived. буол (copula 'be' and lexical 'become') and the aspectual
+# service verbs (бар, кэбис, олор, ...) stay VERB: whether they are used as
+# auxiliaries depends on their meaning in context (see the grammar, §§ 793-796).
+AUXILIARIES = {'э+V', 'баар+N', 'суох+N'}
+
 
 class CoNLLU(OutputFormat):
     """
@@ -38,7 +46,15 @@ class CoNLLU(OutputFormat):
             kept, _ = token.morph.split_at_last_derivation()
             return kept[-1]
 
+        def __is_auxiliary(token: Token) -> bool:
+            if not token.has_morph:
+                return False
+            kept, _ = token.morph.split_at_last_derivation()
+            return len(kept) == 1 and kept[0].morpheme in AUXILIARIES
+
         def __map_tag(token: Token, tag_type: str) -> str:
+            if tag_type == 'UPOS' and __is_auxiliary(token):
+                return 'AUX'
             if token.has_morph:
                 return __category_morph(token).map(tag_type)
             return __map_token_type(token, tag_type)
@@ -112,7 +128,7 @@ class CoNLLU(OutputFormat):
             category_morph = __category_morph(token)
             _, inflections = token.morph.split_at_last_derivation()
 
-            grammemes = __init_zero_affixation(category_morph.map('UPOS'))
+            grammemes = __init_zero_affixation(__map_tag(token, 'UPOS'))
             grammemes.update(__lexical_root(category_morph.map('ud'), token.morph.root_text))
 
             affix_grammemes = dict()

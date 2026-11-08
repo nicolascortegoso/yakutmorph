@@ -13,6 +13,12 @@
 - CoNLL-U `Voice` follows UD's Sakha feature values: `+REFL/PASS` is
   `PassRfl`, and stacked voices are one value (`+CAUS+PASS` → `CauPass`)
   instead of only the last one.
+- CoNLL-U: the auxiliaries registered for Sakha in UD (copula `э-`,
+  existential `баар`, negative existential `суох`) are `AUX`, without noun
+  features, as in UD_Yakut-YKTDT. `буол` and the aspectual service verbs
+  (`бар`, `кэбис`, ...) stay `VERB`.
+- CoNLL-U: `Int=Yes` and `Advlz=Yes` instead of `Int=True` / `Advlz=True`
+  (YAML read the unquoted `Yes` as a boolean).
 
 ## 0.3.0 (2026-11-07)
 

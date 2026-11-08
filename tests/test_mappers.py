@@ -86,6 +86,25 @@ class TestCoNLLU(unittest.TestCase):
             with self.subTest(word=word):
                 self.assertIn(f'Voice={voice}', self._feats(word).split('|'))
 
+    def _row(self, text, form):
+        _, rows = self._rows(text)
+        return next(row for row in rows if row[1] == form)
+
+    def test_registered_sakha_auxiliaries_are_aux(self):
+        """э-, баар and суох are AUX, as in UD_Yakut-YKTDT, without noun features."""
+        self.assertEqual(self._row('Кини быраас этэ.', 'этэ')[3], 'AUX')
+        баар = self._row('Биһиэхэ биир улахан сылабаар баар.', 'баар')
+        self.assertEqual((баар[3], баар[5]), ('AUX', '_'))
+        self.assertEqual(self._row('Бу сир чиэрбэтэ суох.', 'суох')[3], 'AUX')
+
+    def test_service_verbs_and_copula_buol_stay_verb(self):
+        self.assertEqual(self._row('Кыыс чобуотук эппиэттээн барда.', 'барда')[3], 'VERB')
+        self.assertEqual(self._row('Кини быраас буолла.', 'буолла')[3], 'VERB')
+
+    def test_yes_valued_features_are_not_booleans(self):
+        """PyYAML reads an unquoted Yes as True; the feature value must be Yes."""
+        self.assertIn('Int=Yes', self._row('Ханна баарый?', 'баарый')[5].split('|'))
+
     def test_punctuation_row(self):
         _, rows = self._rows('мин аатым Кэскил.')
         pos, form, lemma, upos, xpos, feats, head, deprel, deps, misc = rows[-1]
